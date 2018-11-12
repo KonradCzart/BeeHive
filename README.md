@@ -1,16 +1,17 @@
-# BeeHive / HivePoint
+# HivePoint
 
 RESTful application for beekeepers and their employees allowing them to manage their apiaries, look after their bees' health and control their business's finances.
 
-# Adding new Apiary
-* choosing localisatio
+# Adding a new Apiary
+* choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
 
-# Adding new Hive to Apiary
-* choosing the race of mother's bees (choose a race from the database, where its attributes are stored)
-* date of birth of mother / date of since the morther Czerws
-* choice of the Hive's type (Warszawski/Wielkopolski, corpuses amount)
-* starting power of the Hive
+# Adding a new Hive to existing Apiary
+* choosing a race of mother's bees (choose a race from the database, where its attributes are stored)
+* bee mother's date of birth | last date when she laid eggs
+* Hive type (Warszawski/Wielkopolski, corpuses amount)
+* starting power
 
-# Commiting to Hive
+# Commiting to a Hive
 * survey
-...
+* honey collection
+
