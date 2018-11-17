@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"
+          name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>Welcome to HivePoint!</title>
+    <script src="libs/vue.js"></script>
+    <link rel="stylesheet" href="libs/reset.css"/>
+    <link rel="stylesheet" href="libs/mdc.css"/>
+    <link rel="stylesheet" href="libs/main.css"/>
+    <!--<link rel="stylesheet" href="libs/bootstrap.min.css"/>-->
+    <!--<link rel="stylesheet" href="libs/bootstrap-grid.min.css"/>-->
+</head>
+<body>
+<div id="container" class="container-resp">
+    <div class="hb vs inblock">
+        <div class="vs hm centering">
+            <h1>Welcome to HivePoint!</h1>
+        </div>
+        <div class="vb hb s1-3 centered">
+            <img class="fit" src="assets/logo.png"/>
+        </div>
+        <div class="centered s2-3 vs">
+            <div class="vs mdc-text-field mdc-text-field--fullwidth themed">
+                <input type="text"
+                       id="email-input"
+                       v-model="user.email"
+                       class="mdc-text-field__input themed">
+                <label class="mdc-floating-label themed"
+                       for="email-input"
+                       v-show="emailEmpty">
+                    E-mail
+                </label>
+                <div class="mdc-line-ripple themed"></div>
+            </div>
+            <div class="vs mdc-text-field mdc-text-field--fullwidth themed">
+                <input type="password"
+                       v-model="user.pass"
+                       id="password-input"
+                       class="mdc-text-field__input themed">
+                <label class="mdc-floating-label themed"
+                       for="password-input"
+                       v-show="passEmpty">
+                    Password
+                </label>
+                <div class="mdc-line-ripple themed"></div>
+            </div>
+            <div class="block centered s2-3 vm">
+                <div class="inblock centering s1-2">
+                    <button v-on:click="register" class="inblock mdc-button themed">Register</button>
+                </div><!--
+                --><div class="inblock centering s1-2">
+                    <button v-on:click="login" class="inblock mdc-button mdc-button--raised themed">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hm vm centered centering">
+            <h2>{{ message }}</h2>
+        </div>
+    </div>
+</div>
+<script>
+    const loginApp = new Vue({
+        el: "#container", data: {
+            user: {
+                email: "",
+                pass: ""
+            },
+            message: ""
+        },
+        methods: {
+            register() {
+                this.message = "Sorry, register function not yet implemented."
+            },
+            login() {
+                this.message = "Sorry, login function not yet implemented"
+            }
+        },
+        computed: {
+            emailEmpty() {
+                return this.user.email.length === 0;
+            },
+            passEmpty() {
+                return this.user.pass.length === 0;
+            }
+        }
+    });
+</script>
+</body>
+</html>

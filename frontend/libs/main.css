@@ -1,0 +1,111 @@
+.themed {
+  --mdc-theme-primary: #ffab00;
+  --mdc-theme-on-primary: #000a12;
+  --mdc-theme-secondary: #263238;
+  --mdc-theme-on-secondary: #ffffff;
+  --mdc-theme-background: #eceff1;
+  --mdc-theme-surface: #ffffff;
+  --mdc-theme-on-surface: #000a12;
+  --mdc-theme-text-primary-on-background: #000a12;
+  --mdc-theme-text-secondary-on-background: #263238;
+}
+
+body {
+  background-color: #263238;
+  color: #ffffff;
+  font-family: "Noto Sans", sans-serif;
+}
+
+#container {
+  background-color: #eceff1;
+  box-shadow: 0 0 16px;
+  color: #000a12;
+}
+
+.container-resp {
+  margin: 0 auto;
+  min-width: 480px;
+  max-width: 768px;
+}
+
+.vs {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.vm {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.vb {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.hm {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.hb {
+  margin-left: 32px;
+  margin-right: 32px;
+}
+
+.inactive {
+  background-color: #cfd8dc;
+  color: #000a12;
+}
+
+.s1-2 {
+  width: 50%;
+}
+
+.s1-3 {
+  width: 33%;
+}
+
+.s2-3 {
+  width: 66%;
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.centering {
+  text-align: center;
+}
+
+header {
+  display: inline-block;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+.fit {
+  display: block;
+  width: 100%;
+}
+
+.inblock {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+/*# sourceMappingURL=main.css.map */
