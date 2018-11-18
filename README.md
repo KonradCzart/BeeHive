@@ -6,7 +6,8 @@ RESTful application for beekeepers and their employees allowing them to manage t
 1. Clone the repo and import it as maven project
 2. Install MySql Server and set password as authentication method 
 2. Go to  BeeHive/JBeeSoft BeeHive/src/main/resources/application.properties. It's file containing server configuration.
-```spring.datasource.url= jdbc:mysql://localhost:3306/beehiveDB
+```
+spring.datasource.url= jdbc:mysql://localhost:3306/beehiveDB
 spring.datasource.username= root
 spring.datasource.password= root123
 ```
