@@ -19,7 +19,7 @@ Create database named beehiveDB with root's password root123.
 INSERT INTO roles(name) VALUES('ROLE_USER');
 INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 ```
-6. Try register and login to your account with Postman.
+6. Try register and login to your account with Postman. (requests examples can be found on slack)
 
 # Adding a new Apiary
 * choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
