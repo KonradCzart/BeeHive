@@ -1,0 +1,123 @@
+@import "reset.css";
+@import "material.css";
+html, body {
+  background-color: #263238;
+  color: #ffffff;
+  height: 100%;
+  font-family: "Noto Sans", sans-serif;
+}
+
+img {
+  display: inline-flex;
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 40px;
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+h3 {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+p {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+#root {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  height: 100%;
+  background-color: #263238;
+  color: #ffffff;
+}
+
+.vmargin-32 {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.hsize-256 {
+  width: 256px;
+}
+
+.vertical-align {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.hmatch-parent {
+  width: 100%;
+}
+
+.vmatch-parent {
+  height: 100%;
+}
+
+.horizontal-align {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.textpiece {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.themed {
+  --mdc-theme-primary: #ffab00;
+  --mdc-theme-on-primary: #000a12;
+  --mdc-theme-surface: #eceff1;
+  --mdc-theme-on-surface: #000a12;
+  --mdc-theme-background: #263238;
+  --mdc-theme-text-primary-on-background: #ffffff;
+  --mdc-theme-text-secondary-on-background: #eceff1;
+}
+
+.textfield {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.logo {
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  min-width: 128px;
+  width: 256px;
+  max-width: 512px;
+}
+
+.container {
+  box-shadow: 0 0 16px #000a12;
+  background-color: #eceff1;
+  color: #000a12;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 512px;
+  width: 768px;
+  max-width: 1024px;
+}
+
+.footer {
+  background-color: #000a12;
+  color: #eceff1;
+}
+
+/*# sourceMappingURL=index.css.map */
