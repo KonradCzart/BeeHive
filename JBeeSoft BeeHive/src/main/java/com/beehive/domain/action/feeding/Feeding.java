@@ -2,11 +2,16 @@ package com.beehive.domain.action.feeding;
 
 import com.beehive.domain.dateaudit.DateAudit;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "feeding", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "feedType"
+        })
+})
 
 public class Feeding extends DateAudit {
     @Id
@@ -28,6 +33,10 @@ public class Feeding extends DateAudit {
         this.feedAmount = feedAmount;
         this.price = price;
     }
+
+    @OneToMany
+    @JoinTable(name = "action",
+            joinColumns = @JoinColumn(name = "concreteActionId"))
 
     public Long getId() {
         return id;

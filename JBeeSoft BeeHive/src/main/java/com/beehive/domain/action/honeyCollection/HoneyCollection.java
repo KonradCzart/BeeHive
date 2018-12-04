@@ -1,12 +1,16 @@
 package com.beehive.domain.action.honeyCollection;
 
 import com.beehive.domain.dateaudit.DateAudit;
+import com.beehive.domain.userrole.Role;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "honeyCollection")
 
 public class HoneyCollection extends DateAudit {
     @Id
@@ -15,26 +19,30 @@ public class HoneyCollection extends DateAudit {
 
     @NotBlank
     @Size(max = 40)
-    private String honeyType;
+    private Long honeyTypeId;
 
     @NotBlank
     private Integer honeyAmount;
 
-    public HoneyCollection(String honeyType, Integer honeyAmount) {
-        this.honeyType = honeyType;
+    public HoneyCollection(Long honeyTypeId, Integer honeyAmount) {
+        this.honeyTypeId = honeyTypeId;
         this.honeyAmount = honeyAmount;
     }
+
+    @OneToMany
+    @JoinTable(name = "action",
+            joinColumns = @JoinColumn(name = "concreteActionId"))
 
     public Long getId() {
         return id;
     }
 
-    public String getHoneyType() {
-        return honeyType;
+    public Long getHoneyTypeId() {
+        return honeyTypeId;
     }
 
-    public void setHoneyType(String honeyType) {
-        this.honeyType = honeyType;
+    public void setHoneyTypeId(Long honeyType) {
+        this.honeyTypeId = honeyType;
     }
 
     public Integer getHoneyAmount() {

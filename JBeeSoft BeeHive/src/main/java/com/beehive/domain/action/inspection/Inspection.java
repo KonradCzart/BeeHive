@@ -2,11 +2,12 @@ package com.beehive.domain.action.inspection;
 
 import com.beehive.domain.dateaudit.DateAudit;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "inspections")
 
 public class Inspection extends DateAudit {
     @Id
@@ -25,12 +26,15 @@ public class Inspection extends DateAudit {
     @Size(max = 100)
     private String comment;
 
-
     public Inspection(String beeQueenCondition, String beeHiverCondition, String comment) {
         this.beeQueenCondition = beeQueenCondition;
         this.beeHiverCondition = beeHiverCondition;
         this.comment = comment;
     }
+
+    @OneToMany
+    @JoinTable(name = "action",
+            joinColumns = @JoinColumn(name = "concreteActionId"))
 
     public Long getId() {
         return id;
@@ -50,5 +54,13 @@ public class Inspection extends DateAudit {
 
     public void setBeeHiverCondition(String beeHiverCondition) {
         this.beeHiverCondition = beeHiverCondition;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

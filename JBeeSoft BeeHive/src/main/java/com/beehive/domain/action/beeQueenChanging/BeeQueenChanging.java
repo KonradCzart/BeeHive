@@ -5,6 +5,9 @@ import com.beehive.domain.dateaudit.DateAudit;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+@Entity
+@Table(name = "beeQueenChanging")
+
 public class BeeQueenChanging extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,10 @@ public class BeeQueenChanging extends DateAudit {
         this.queenAge = queenAge;
         this.price = price;
     }
+
+    @OneToMany
+    @JoinTable(name = "action",
+            joinColumns = @JoinColumn(name = "concreteActionId"))
 
     public Long getId() {
         return id;

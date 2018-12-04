@@ -2,11 +2,16 @@ package com.beehive.domain.action.treatment;
 
 import com.beehive.domain.dateaudit.DateAudit;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "treatment", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "deseaseType"
+        })
+})
 
 public class Treatment extends DateAudit {
     @Id
@@ -22,15 +27,21 @@ public class Treatment extends DateAudit {
     private String appliedMedicine;
 
     @NotBlank
-    @Size(max = 100)
-    private String comment;
+    private Integer dose;
 
+    @NotBlank
+    private Integer price;
 
-    public Treatment(String deseaseType, String appliedMedicine, String comment) {
+    public Treatment(String deseaseType, String appliedMedicine, Integer dose, Integer price) {
         this.deseaseType = deseaseType;
         this.appliedMedicine = appliedMedicine;
-        this.comment = comment;
+        this.dose = dose;
+        this.price = price;
     }
+
+    @OneToMany
+    @JoinTable(name = "action",
+            joinColumns = @JoinColumn(name = "concreteActionId"))
 
     public Long getId() {
         return id;
@@ -52,11 +63,18 @@ public class Treatment extends DateAudit {
         this.appliedMedicine = appliedMedicine;
     }
 
-    public String getComment() {
-        return comment;
+    public Integer getDose() {
+        return dose;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setDose(Integer feedAmount) { this.dose = feedAmount; }
+
+    public Integer getPrice() {
+        return price;
     }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
 }

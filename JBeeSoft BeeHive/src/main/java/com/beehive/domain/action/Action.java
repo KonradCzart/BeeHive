@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
+@Entity
+@Table(name = "action")
+
 public class Action extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +22,7 @@ public class Action extends DateAudit {
     private Long apiaryId;
 
     @NotBlank
-    private Long haverId;
+    private Long hiverId;
 
     @NotBlank
     private Date date;
@@ -28,10 +31,10 @@ public class Action extends DateAudit {
     @Size(max = 40)
     private String weatherCondtion;
 
-    public Action(Long concreteActionId, Long apiaryId, Long haverId, String weatherCondtion) {
+    public Action(Long concreteActionId, Long apiaryId, Long hiverId, String weatherCondtion) {
         this.concreteActionId = concreteActionId;
         this.apiaryId = apiaryId;
-        this.haverId = haverId;
+        this.hiverId = hiverId;
         this.weatherCondtion = weatherCondtion;
     }
 
@@ -39,8 +42,8 @@ public class Action extends DateAudit {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setConcreteActionId(Long concreteActionId) {
+        this.concreteActionId = concreteActionId;
     }
 
     public Long getConcreteActionId() {
@@ -51,8 +54,8 @@ public class Action extends DateAudit {
         return apiaryId;
     }
 
-    public Long getHaverId() {
-        return haverId;
+    public Long getHiverId() {
+        return hiverId;
     }
 
     public String getWeatherCondtion() {
