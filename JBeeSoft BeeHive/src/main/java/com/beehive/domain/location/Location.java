@@ -15,6 +15,9 @@ public class Location {
     private Long id;
 	
 	@NotBlank
-	@NaturalId
-	private String name;
+	private String country;
+	
+	@NotBlank
+	private String city;
+	
 }

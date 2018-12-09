@@ -6,7 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.beehive.domain.apiary.Apiary;
@@ -26,9 +29,18 @@ public class Hive {
     @NotBlank
     @Size(max = 40)
     private String name;
+    
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private HiveType hiveType;
 
     public Hive() {
         
+    }
+    
+    public Apiary getApiary() {
+        return apiary;
     }
 
     public Long getId() {
@@ -42,8 +54,8 @@ public class Hive {
     public void setName(String name) {
         this.name = name;
     }
-
-    public Apiary getApiary() {
-        return apiary;
+    
+    public HiveType getType() {
+    	return hiveType;
     }
 }
