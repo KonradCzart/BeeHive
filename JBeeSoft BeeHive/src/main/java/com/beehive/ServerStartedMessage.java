@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class ServerStartedMessage implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("\nServer start succesfully!");
+        System.out.println("\nServer start succesfully!!!!");
     }
 }
