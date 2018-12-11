@@ -28,7 +28,6 @@ public class Apiary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@NaturalId
     @NotBlank
     @Size(max = 40)
     private String name;
@@ -47,4 +46,53 @@ public class Apiary {
     @JoinColumn(name = "location_id")
     private Location location;
     
+    public Apiary() {
+    	
+    }
+    
+    public Apiary(String name, User owner, Location location ) {
+    	this.name = name;
+    	this.owner = owner;
+    	this.location = location;    	
+    }
+    
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public Set<Hive> getHives() {
+		return hives;
+	}
+
+	public void setHives(Set<Hive> hives) {
+		this.hives = hives;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}    
 }
