@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.beehive.domain.user.User;
+import com.beehive.domain.user.UserController;
 import com.beehive.infrastructure.security.CustomUserDetailsService;
 import com.beehive.infrastructure.security.JwtAuthenticationEntryPoint;
 import com.beehive.infrastructure.security.JwtAuthenticationFilter;
@@ -84,7 +86,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/auth/**")
                 .permitAll()
-                .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+                .antMatchers(
+                		"/api" + 
+                		UserController.MAIN_PATH + 
+                		UserController.CHECK_AVAILABILITY_PATH +
+                		UserController.USERNAME_PATH, 
+                		"/api" +
+                		UserController.MAIN_PATH +
+                		UserController.CHECK_AVAILABILITY_PATH +
+                		UserController.EMAIL_PATH)
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
                 .permitAll()

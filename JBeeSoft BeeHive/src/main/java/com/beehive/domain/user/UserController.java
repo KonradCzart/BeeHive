@@ -24,11 +24,11 @@ public class UserController {
 
 	public static final String MAIN_PATH = "/user";
 	private static final String ME_PATH = "/me";
-	private static final String CHECK_AVAILABILITY_PATH = "/isAvailable";
-	private static final String EMAIL = "requested_email";
-	private static final String EMAIL_PATH = "/email/{" + EMAIL + "}";
-	private static final String USERNAME = "requested_username";
-	private static final String USERNAME_PATH = "/username/{" + USERNAME + "}";
+	public static final String CHECK_AVAILABILITY_PATH = "/isAvailable";
+	public static final String EMAIL = "requested_email";
+	public static final String EMAIL_PATH = "/email/{" + EMAIL + "}";
+	public static final String USERNAME = "requested_username";
+	public static final String USERNAME_PATH = "/username/{" + USERNAME + "}";
 	
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
