@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { getUserProfile } from '../../util/APIUtils';
+import { getCurrentUser } from '../../util/APIUtils';
 import { Avatar} from 'antd';
 import { getAvatarColor } from '../../util/Colors';
-import { formatDate } from '../../util/Helpers';
 import LoadingIndicator  from '../../common/LoadingIndicator';
 import './Profile.css';
 import NotFound from '../../common/NotFound';
@@ -24,7 +23,7 @@ class Profile extends Component {
             isLoading: true
         });
 
-        getUserProfile(username)
+        getCurrentUser(username)
         .then(response => {
             this.setState({
                 user: response,
@@ -85,7 +84,7 @@ class Profile extends Component {
                                     <div className="full-name">{this.state.user.name}</div>
                                     <div className="username">@{this.state.user.username}</div>
                                     <div className="user-joined">
-                                        Joined {formatDate(this.state.user.joinedAt)}
+                                        Email: {this.state.user.email}
                                     </div>
                                 </div>
                             </div> 
