@@ -21,13 +21,13 @@ public class UserService {
 	private static final String EMAIL_ALREADY_TAKEN_MSG = "User with email {0} already exists!";
 	
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	RoleRepository roleRepository;
+	private RoleRepository roleRepository;
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	
 	public User registerUser(SignUpRequest signUpRequest) {
 		

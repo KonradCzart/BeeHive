@@ -28,6 +28,7 @@ import com.beehive.infrastructure.security.JwtAuthenticationFilter;
         prePostEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
