@@ -21,7 +21,10 @@ import java.util.Set;
         })
 })
 public class User extends DateAudit {
-    @Id
+ 
+	private static final long serialVersionUID = 4050814255685071574L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -53,11 +56,12 @@ public class User extends DateAudit {
 
     }
 
-    public User(String name, String username, String email, String password) {
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public User(UserBuilder builder) {
+    	this.id = builder.id;
+        this.name = builder.name;
+        this.username = builder.username;
+        this.email = builder.email;
+        this.password = builder.password;
     }
 
     public Long getId() {
@@ -107,4 +111,48 @@ public class User extends DateAudit {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+    
+    public static UserBuilder builder() {
+    	return new UserBuilder();
+    }
+    
+    public static class UserBuilder {
+    	
+    	private Long id;
+        private String name;
+        private String username;
+        private String email;
+        private String password;
+        
+        public UserBuilder withId(Long id) {
+			this.id = id;
+			return this;
+		}
+        
+        public UserBuilder withName(String name) {
+			this.name = name;
+			return this;
+		}
+        
+        public UserBuilder withUsername(String username) {
+			this.username = username;
+			return this;
+		}
+        
+        public UserBuilder withEmail(String email) {
+			this.email = email;
+			return this;
+		}
+        
+        public UserBuilder withPassword(String password) {
+			this.password = password;
+			return this;
+		}
+        
+        public User build() {
+			return new User(this);
+		}
+    	
+    }
+    
 }
