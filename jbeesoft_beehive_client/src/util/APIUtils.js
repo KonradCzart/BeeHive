@@ -67,14 +67,14 @@ export function signup(signupRequest) {
 
 export function checkUsernameAvailability(username) {
     return request({
-        url: API_BASE_URL + "/user/checkUsernameAvailability?username=" + username,
+        url: API_BASE_URL + "/user/isAvailable/username/" + username,
         method: 'GET'
     });
 }
 
 export function checkEmailAvailability(email) {
     return request({
-        url: API_BASE_URL + "/user/checkEmailAvailability?email=" + email,
+        url: API_BASE_URL + "/user/isAvailable/email/" + email,
         method: 'GET'
     });
 }
