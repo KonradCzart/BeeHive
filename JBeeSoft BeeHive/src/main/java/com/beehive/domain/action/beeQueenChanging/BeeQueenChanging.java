@@ -9,10 +9,6 @@ import javax.validation.constraints.NotBlank;
 @Table(name = "beeQueenChanging")
 
 public class BeeQueenChanging extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank
     private Long queenId;
 
@@ -31,10 +27,6 @@ public class BeeQueenChanging extends DateAudit {
     @OneToMany
     @JoinTable(name = "action",
             joinColumns = @JoinColumn(name = "concreteActionId"))
-
-    public Long getId() {
-        return id;
-    }
 
     public Long getQueenId() {
         return queenId;

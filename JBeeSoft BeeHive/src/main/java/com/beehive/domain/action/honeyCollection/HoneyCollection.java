@@ -13,10 +13,6 @@ import java.util.Set;
 @Table(name = "honeyCollection")
 
 public class HoneyCollection extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank
     @Size(max = 40)
     private Long honeyTypeId;
@@ -32,10 +28,6 @@ public class HoneyCollection extends DateAudit {
     @OneToMany
     @JoinTable(name = "action",
             joinColumns = @JoinColumn(name = "concreteActionId"))
-
-    public Long getId() {
-        return id;
-    }
 
     public Long getHoneyTypeId() {
         return honeyTypeId;

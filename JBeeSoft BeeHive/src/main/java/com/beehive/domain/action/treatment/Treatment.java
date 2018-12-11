@@ -14,10 +14,6 @@ import javax.validation.constraints.Size;
 })
 
 public class Treatment extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank
     @Size(max = 40)
     private String deseaseType;
@@ -42,10 +38,6 @@ public class Treatment extends DateAudit {
     @OneToMany
     @JoinTable(name = "action",
             joinColumns = @JoinColumn(name = "concreteActionId"))
-
-    public Long getId() {
-        return id;
-    }
 
     public String getDeseaseType() {
         return deseaseType;

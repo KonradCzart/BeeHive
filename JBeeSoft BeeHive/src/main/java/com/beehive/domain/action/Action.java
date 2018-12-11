@@ -11,10 +11,6 @@ import java.sql.Date;
 @Table(name = "action")
 
 public class Action extends DateAudit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank
     private Long concreteActionId;
 
@@ -36,10 +32,6 @@ public class Action extends DateAudit {
         this.apiaryId = apiaryId;
         this.hiverId = hiverId;
         this.weatherCondtion = weatherCondtion;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setConcreteActionId(Long concreteActionId) {
