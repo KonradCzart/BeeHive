@@ -42,19 +42,22 @@ While the server is running, you may interact with it in the following ways:
 3. check, whether an email is taken, through `localhost:5000/api/user/isAvailable/email/{GIVEN_EMAIL}` (GET); returns JSON:
 ```
 {
-  TODO
+  "isAvailable": "true"
 }
 ```
 4. check, whether a username is taken, through `localhost:5000/api/user/isAvailable/username/{GIVEN_USERNAME}` (GET); returns JSON:
 ```
 {
-  TODO
+  "isAvailable": "true"
 }
 ```
 5. get user's data suited for userpanel through `localhost:5000/api/user/me` (GET) (signed-in-user's session token in request's header); returns JSON:
 ```
 {
-  TODO
+  "id": 1,
+  "username": "janek12",
+  "name": "Jan Kowalski",
+  "email": "janek@wp.pl"
 }
 ```
 # Adding a new Apiary
