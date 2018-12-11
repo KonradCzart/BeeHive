@@ -39,6 +39,24 @@ While the server is running, you may interact with it in the following ways:
   "password": "myweakpassword123"
 }
 ```
+3. check, whether an email is taken, through `localhost:5000/api/user/isAvailable/email/{GIVEN_EMAIL}` (GET); returns JSON:
+```
+{
+  TODO
+}
+```
+4. check, whether a username is taken, through `localhost:5000/api/user/isAvailable/username/{GIVEN_USERNAME}` (GET); returns JSON:
+```
+{
+  TODO
+}
+```
+5. get user's data suited for userpanel through `localhost:5000/api/user/me` (GET) (signed-in-user's session token in request's header); returns JSON:
+```
+{
+  TODO
+}
+```
 # Adding a new Apiary
 * choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
 
