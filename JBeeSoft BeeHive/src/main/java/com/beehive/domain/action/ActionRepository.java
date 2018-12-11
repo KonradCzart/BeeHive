@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ActionRepository extends JpaRepository<Action, Long> {
-    Optional<Action> findByActionId(Action actionId);
+    
 }
 

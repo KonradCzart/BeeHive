@@ -1,4 +1,4 @@
-package com.beehive.domain.action.beeQueenChanging;
+package com.beehive.domain.bee.race;
 
 import com.beehive.domain.dateaudit.DateAudit;
 
@@ -24,25 +24,17 @@ public class BeeRace extends DateAudit {
 
     @NotBlank
     @Size(max = 40)
-    private String agression;
-
-    @NotBlank
-    @Size(max = 40)
-    private String hivingLevel;
+    private AgressionLevel agression;
 
     @Size(max = 100)
     private String description;
 
-    public BeeRace(String name, String agression, String hivingLevel, String description) {
+    public BeeRace(String name, String agression, String description) {
         this.name = name;
-        this.agression = agression;
-        this.hivingLevel = hivingLevel;
+        this.agression = AgressionLevel.valueOf(agression);
         this.description = description;
     }
 
-    @OneToOne
-    @JoinTable(name = "beeQueen",
-            joinColumns = @JoinColumn(name = "raceId"))
 
     public Long getId() {
         return id;
@@ -56,22 +48,20 @@ public class BeeRace extends DateAudit {
         this.name = name;
     }
 
-    public String getAgression() {
+    public AgressionLevel getAgression() {
         return agression;
     }
 
-    public void setAgression(String agression) { this.agression = agression; }
-
-    public String getHivingLevel() {
-        return hivingLevel;
+    public void setAgression(String agression) { 
+    	this.agression = AgressionLevel.valueOf(agression); 
     }
-
-    public void setHivingLevel(String hivingLevel) { this.hivingLevel = hivingLevel; }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) { 
+    	this.description = description; 
+    }
 
 }

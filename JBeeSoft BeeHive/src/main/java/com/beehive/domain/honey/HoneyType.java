@@ -1,4 +1,4 @@
-package com.beehive.domain.action.honeyCollection;
+package com.beehive.domain.honey;
 
 import com.beehive.domain.dateaudit.DateAudit;
 
@@ -29,11 +29,6 @@ public class HoneyType extends DateAudit {
         this.price = price;
     }
 
-
-    @OneToOne
-    @JoinTable(name = "honeyCollection",
-            joinColumns = @JoinColumn(name = "honeyTypeId"))
-
     public Long getId() {
         return id;
     }
@@ -50,5 +45,7 @@ public class HoneyType extends DateAudit {
         return price;
     }
 
-    public void setPrice(Integer honeyAmount) { this.price = price; }
+    public void setPrice(Integer price) { 
+    	this.price = price; 
+    }
 }
