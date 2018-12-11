@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.beehive.infrastructure.payload.ApiResponse;
+import com.beehive.infrastructure.payload.AvailabilityResponse;
 import com.beehive.infrastructure.payload.UserDTO;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
+
 
 @RestController
 @RequestMapping("/api" + UserController.MAIN_PATH)
@@ -43,15 +44,15 @@ public class UserController {
     }
     
     @GetMapping(CHECK_AVAILABILITY_PATH + USERNAME_PATH)
-    public ApiResponse checkUsernameAvailability(@PathVariable(USERNAME) String username) {
+    public AvailabilityResponse checkUsernameAvailability(@PathVariable(USERNAME) String username) {
         Boolean isAvailable = !userRepository.existsByUsername(username);
-        return new ApiResponse(isAvailable, username);
+        return new AvailabilityResponse(isAvailable);
     }
 
     @GetMapping(CHECK_AVAILABILITY_PATH + EMAIL_PATH)
-    public ApiResponse checkEmailAvailability(@PathVariable(EMAIL) String email) {
+    public AvailabilityResponse checkEmailAvailability(@PathVariable(EMAIL) String email) {
         Boolean isAvailable = !userRepository.existsByEmail(email);
-        return new ApiResponse(isAvailable, email);
+        return new AvailabilityResponse(isAvailable);
     }
 
 
