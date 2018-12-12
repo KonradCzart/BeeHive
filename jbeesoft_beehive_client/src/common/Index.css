@@ -1,7 +1,5 @@
 .index-welcome {
-    max-width: 700px;
-    margin: 0 auto;
-    margin-top: 50px;
-    padding: 40px;
-    text-align: center;   
+    max-width: 768px;
+    margin: 32px auto 0;
+    text-align: center;
 }
