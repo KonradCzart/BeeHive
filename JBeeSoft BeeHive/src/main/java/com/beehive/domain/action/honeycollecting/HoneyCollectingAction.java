@@ -1,7 +1,7 @@
 package com.beehive.domain.action.honeycollecting;
 
 import com.beehive.domain.action.Action;
-
+import com.beehive.domain.honey.HoneyType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
