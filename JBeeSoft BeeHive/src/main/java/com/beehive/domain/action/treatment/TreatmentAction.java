@@ -99,7 +99,7 @@ public class TreatmentAction extends Action {
 		}
 
 		@Override
-		public Action build() {
+		public TreatmentAction build() {
 			return new TreatmentAction(this);
 		}
     	

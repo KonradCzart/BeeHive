@@ -80,7 +80,7 @@ public class FeedingAction extends Action {
 		}
 
 		@Override
-		public Action build() {
+		public FeedingAction build() {
 			return new FeedingAction(this);
 		}
 		
