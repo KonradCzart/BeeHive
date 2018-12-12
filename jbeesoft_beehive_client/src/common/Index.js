@@ -13,7 +13,7 @@ function WelcomeScreen() {
     );
 }
 
-class UserPanel extends Component {
+/*class UserPanel extends Component {
 
     render() {
         return (
@@ -23,7 +23,7 @@ class UserPanel extends Component {
             </div>
         );
     }
-}
+}*/
 
 class Index extends Component {
 

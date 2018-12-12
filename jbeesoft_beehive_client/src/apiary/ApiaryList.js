@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { login } from '../util/APIUtils';
+import { addApiary } from '../util/APIUtils';
 import './ApiaryList.css';
-import { Link, Redirect } from 'react-router-dom';
-import { Form, Input, Button, Icon, notification, Modal } from 'antd';
+import { Form, Input, Button, notification, Modal } from 'antd';
 const FormItem = Form.Item;
 
 class ApiaryList extends Component {
@@ -38,13 +37,33 @@ class ApiaryList extends Component {
 	handleCreate = () => {
 		const form = this.formRef.props.form;
 		form.validateFields((err, values) => {
-		if (err) {
-			return;
-		}
-		values.owner_id=this.props.currentUser.id;
-		console.log('Received values of form: ', values);
-		form.resetFields();
-		this.setState({ visible: false });
+			if (err) {
+				return;
+			}
+
+			const apiaryRequest = values;
+			apiaryRequest.owner_id=this.props.currentUser.id;
+			form.resetFields();
+			this.setState({ visible: false });
+			addApiary(apiaryRequest)
+			.then(response => {
+					notification.success({
+						message: 'BeeHive App',
+						description: apiaryRequest.name + " created successfully!"
+					});
+				}).catch(error => {
+					if(error.status === 401) {
+						notification.error({
+							message: 'BeeHive App',
+							description: 'Data is incorrect. Please try again!'
+						});					
+					} else {
+						notification.error({
+							message: 'BeeHive App',
+							description: 'Sorry! Something went wrong. Please try again!'
+						});											
+					}
+				});
 		});
 	}
 

@@ -117,3 +117,11 @@ export function getUserVotedPolls(username, page, size) {
         method: 'GET'
     });
 }
+
+export function addApiary(apiaryData) {
+    return request({
+        url: API_BASE_URL + "/apiary/new",
+        method: 'POST',
+        body: JSON.stringify(apiaryData)         
+    });
+}
