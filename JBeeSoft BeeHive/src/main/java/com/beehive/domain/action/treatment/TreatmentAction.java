@@ -1,19 +1,17 @@
 package com.beehive.domain.action.treatment;
 
-import com.beehive.domain.dateaudit.DateAudit;
+import com.beehive.domain.action.Action;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "treatment", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "deseaseType"
-        })
-})
+@Table(name = "treatment")
 
-public class Treatment extends DateAudit {
+public class TreatmentAction extends Action {
+	
     @NotBlank
     @Size(max = 40)
     private String deseaseType;
@@ -22,22 +20,19 @@ public class Treatment extends DateAudit {
     @Size(max = 40)
     private String appliedMedicine;
 
-    @NotBlank
-    private Integer dose;
+    @NotNull
+    private Double dose;
 
-    @NotBlank
-    private Integer price;
+    @NotNull
+    private Double price;
 
-    public Treatment(String deseaseType, String appliedMedicine, Integer dose, Integer price) {
-        this.deseaseType = deseaseType;
-        this.appliedMedicine = appliedMedicine;
-        this.dose = dose;
-        this.price = price;
+    public TreatmentAction(Builder builder) {
+    	super(builder);
+        this.deseaseType = builder.deseaseType;
+        this.appliedMedicine = builder.appliedMedicine;
+        this.dose = builder.dose;
+        this.price = builder.price;
     }
-
-    @OneToMany
-    @JoinTable(name = "action",
-            joinColumns = @JoinColumn(name = "concreteActionId"))
 
     public String getDeseaseType() {
         return deseaseType;
@@ -55,18 +50,59 @@ public class Treatment extends DateAudit {
         this.appliedMedicine = appliedMedicine;
     }
 
-    public Integer getDose() {
+    public Double getDose() {
         return dose;
     }
 
-    public void setDose(Integer feedAmount) { this.dose = feedAmount; }
+    public void setDose(Double dose) { 
+    	this.dose = dose; 
+    }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
+    }
+    
+    public static class Builder extends Action.Builder<Builder> {
+
+    	private String deseaseType;
+        private String appliedMedicine;
+        private Double dose;
+        private Double price;
+        
+		@Override
+		protected Builder self() {
+			return this;
+		}
+		
+		public Builder withDeseaseType(String deseaseType) {
+			this.deseaseType = deseaseType;
+			return this;
+		}
+		
+		public Builder withAppliedMedicine(String appliedMedicine) {
+			this.appliedMedicine = appliedMedicine;
+			return this;
+		}
+		
+		public Builder withDose(Double dose) {
+			this.dose = dose;
+			return this;
+		}
+		
+		public Builder withPrice(Double price) {
+			this.price = price;
+			return this;
+		}
+
+		@Override
+		public Action build() {
+			return new TreatmentAction(this);
+		}
+    	
     }
 
 }
