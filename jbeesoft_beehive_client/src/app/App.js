@@ -105,11 +105,13 @@ class App extends Component {
 						currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
 				</Route>
 				<Route path="/login" 
-					render={(props) => <Login onLogin={this.handleLogin} {...props} />}></Route>
-				<Route path="/signup" component={Signup}></Route>
-				<Route path="/user/me" 
-					render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}	/>}>
+					render={(props) => <Login isAuthenticated={this.state.isAuthenticated} onLogin={this.handleLogin} {...props} />}></Route>
+				<Route path="/signup" 
+					render={(props) => <Signup isAuthenticated={this.state.isAuthenticated} {...props} />}>
 				</Route>
+				<PrivateRoute path="/user/me" 
+					render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}	/>}>
+				</PrivateRoute>
 				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}></PrivateRoute>
 				<Route component={NotFound}></Route>
 				</Switch>

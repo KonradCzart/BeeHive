@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { login } from '../../util/APIUtils';
 import './Login.css';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { ACCESS_TOKEN } from '../../constants';
 
 import { Form, Input, Button, Icon, notification } from 'antd';
@@ -9,6 +9,12 @@ const FormItem = Form.Item;
 
 class Login extends Component {
 	render() {
+		if(this.props.isAuthenticated){
+			return(
+				<Redirect to="/"/>
+			)
+		}
+		
 		const AntWrappedLoginForm = Form.create()(LoginForm)
 		return (
 			<div className="login-container">

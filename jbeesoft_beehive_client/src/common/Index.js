@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import "./Index.css";
 import logoSrc from "../logo.svg"
+import ApiaryList from "../apiary/ApiaryList"
 
 function WelcomeScreen() {
     return (
@@ -27,7 +28,7 @@ class UserPanel extends Component {
 class Index extends Component {
 
     render() {
-        return this.props.isAuthenticated? <UserPanel {...this.props}/> :
+        return this.props.isAuthenticated? <ApiaryList {...this.props}/> :
             <WelcomeScreen/>;
     }
 }

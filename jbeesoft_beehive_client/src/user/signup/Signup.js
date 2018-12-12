@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { signup, checkUsernameAvailability, checkEmailAvailability } from '../../util/APIUtils';
 import './Signup.css';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { 
     NAME_MIN_LENGTH, NAME_MAX_LENGTH, 
     USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH,
@@ -82,6 +82,12 @@ class Signup extends Component {
     }
 
     render() {
+        if(this.props.isAuthenticated){
+            return(
+                <Redirect to="/"/>
+            )
+        }
+
         return (
             <div className="signup-container">
                 <h1 className="page-title">Sign Up</h1>
