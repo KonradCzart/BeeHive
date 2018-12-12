@@ -30,7 +30,11 @@ public class HiveType {
     
     @NotNull
     private int frameCapacity;
-
+    
+    public HiveType() {
+    	
+    }
+    
     public HiveType(String name, String description, int frameCapacity) {
         this.name = name;
         this.description = description;

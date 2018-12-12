@@ -11,7 +11,7 @@ public class ApiaryRequest {
 	private String name;
 	
 	@NotNull
-	private long owner_id;
+	private Long owner_id;
 	
 	@NotBlank
 	@Size(max = 40)
@@ -29,11 +29,11 @@ public class ApiaryRequest {
 		this.name = name;
 	}
 
-	public long getOwner_id() {
+	public Long getOwner_id() {
 		return owner_id;
 	}
 
-	public void setOwner_id(long owner_id) {
+	public void setOwner_id(Long owner_id) {
 		this.owner_id = owner_id;
 	}
 

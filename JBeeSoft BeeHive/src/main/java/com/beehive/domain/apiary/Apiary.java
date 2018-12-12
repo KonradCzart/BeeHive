@@ -1,5 +1,6 @@
 package com.beehive.domain.apiary;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -51,6 +52,7 @@ public class Apiary {
     }
     
     public Apiary(String name, User owner, Location location ) {
+    	this.hives = new HashSet<>();
     	this.name = name;
     	this.owner = owner;
     	this.location = location;    	
@@ -94,5 +96,9 @@ public class Apiary {
 
 	public void setLocation(Location location) {
 		this.location = location;
-	}    
+	}
+	
+	public boolean addHive(Hive hive) {
+		return hives.add(hive);
+	}
 }
