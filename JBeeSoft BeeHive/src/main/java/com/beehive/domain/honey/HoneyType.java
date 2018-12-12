@@ -1,18 +1,17 @@
 package com.beehive.domain.honey;
 
-import com.beehive.domain.dateaudit.DateAudit;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 @Entity
-@Table(name = "honeyRype", uniqueConstraints = {
+@Table(name = "honeyType", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
                 "name"
         })
 })
 
-public class HoneyType extends DateAudit {
+public class HoneyType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,17 +20,26 @@ public class HoneyType extends DateAudit {
     @Size(max = 40)
     private String name;
 
+    @NotNull
+    private Double price;
+    
     @NotBlank
-    private Integer price;
+	@Size(max = 100)
+	private String description;
 
-    public HoneyType(String name, Integer price) {
+    public HoneyType(String name, Double price, String description) {
         this.name = name;
         this.price = price;
+        this.description = description;
     }
 
     public Long getId() {
         return id;
     }
+    
+    public void setId(Long id) {
+		this.id = id;
+	}
 
     public String getName() {
         return name;
@@ -41,11 +49,21 @@ public class HoneyType extends DateAudit {
         this.name = name;
     }
 
-    public Integer getPrice() {
-        return price;
-    }
+	public Double getPrice() {
+		return price;
+	}
 
-    public void setPrice(Integer price) { 
-    	this.price = price; 
-    }
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+    
 }
