@@ -12,6 +12,12 @@ body {
   padding-right: 15px;
 }
 
+.logo {
+  width: 33%;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
 @media (max-width: 768px) {
   h1 {
     font-size: 1.7em;

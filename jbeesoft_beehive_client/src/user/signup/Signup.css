@@ -11,9 +11,9 @@
 
 .signup-form-button[disabled], .signup-form-button[disabled]:hover, .signup-form-button[disabled]:focus {
     opacity: 0.6;
-    color: #fff;
-    background-color: #1890ff;
-    border-color: #1890ff;
+    /*color: #fff;*/
+    /*background-color: #1890ff;*/
+    /*border-color: #1890ff;*/
 }
 
 .signup-form input {

@@ -14,7 +14,7 @@ class Profile extends Component {
         this.state = {
             user: null,
             isLoading: false
-        }
+        };
         this.loadUserProfile = this.loadUserProfile.bind(this);
     }
 
@@ -83,7 +83,7 @@ class Profile extends Component {
                                 <div className="user-summary">
                                     <div className="full-name">{this.state.user.name}</div>
                                     <div className="username">@{this.state.user.username}</div>
-                                    <div className="user-joined">
+                                    <div className="email">
                                         Email: {this.state.user.email}
                                     </div>
                                 </div>
