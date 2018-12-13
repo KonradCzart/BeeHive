@@ -4,6 +4,7 @@ import { Avatar} from 'antd';
 import { getAvatarColor } from '../../util/Colors';
 import LoadingIndicator  from '../../common/LoadingIndicator';
 import './Profile.css';
+import { Redirect } from 'react-router-dom';
 import NotFound from '../../common/NotFound';
 import ServerError from '../../common/ServerError';
 
@@ -56,6 +57,12 @@ class Profile extends Component {
     }
 
     render() {
+        if(!this.props.isAuthenticated){
+            return(
+                <Redirect to="/"/>
+            )
+        }
+
         if(this.state.isLoading) {
             return <LoadingIndicator />;
         }

@@ -1,26 +1,106 @@
 import React, { Component } from 'react';
-import { addApiary } from '../util/APIUtils';
+import { addApiary, getAllApiaries } from '../util/APIUtils';
 import './ApiaryList.css';
-import { Form, Input, Button, notification, Modal } from 'antd';
+import { Form, Input, Button, notification, Modal, Table } from 'antd';
+import { withRouter } from 'react-router-dom';
 const FormItem = Form.Item;
 
 class ApiaryList extends Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			apiaries: [],
+			page: 0,
+			size: 10,
+			totalElements: 0,
+			totalPages: 0,
+			last: true,
+			currentVotes: [],
+			isLoading: false
+		};
+		this.loadApiaryList = this.loadApiaryList.bind(this);
+	}
+
 	render() {
+		const columns = [{
+			title: 'Name',
+			dataIndex: 'name',
+			key: 'name'
+		}, {
+			title: 'Country',
+			dataIndex: 'country',
+			key: 'country',
+		}, {
+			title: 'City',
+			dataIndex: 'city',
+			key: 'city',
+		}];
 		const WrappedAddApiaryForm = Form.create()(AddApiaryForm)
 		return (
 			<div className="apiary-list">
-				<Button type="primary" onClick={this.showModal}>New apiary</Button>
+				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New apiary</Button>
 				<WrappedAddApiaryForm
 					wrappedComponentRef={this.saveFormRef}
 					visible={this.state.visible}
 					onCancel={this.handleCancel}
 					onCreate={this.handleCreate}
 					userID={this.props.currentUser.id}
-          		/>
+					/>
+				<h1>Your apiaries:</h1>
+				<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries} />
 			</div>
 		);
 	}
+
+	loadApiaryList(page = 0, size = 30) {
+		let promise;
+
+		promise = getAllApiaries();
+
+		if(!promise) {
+			return;
+		}
+
+		this.setState({
+			isLoading: true
+		});
+
+		promise			
+		.then(response => {
+
+			this.setState({
+				apiaries: response,
+				isLoading: false
+			})
+		}).catch(error => {
+			this.setState({
+				isLoading: false
+			})
+		});	
+		
+	}
+
+	componentDidMount() {
+		this.loadApiaryList();
+	}
+
+	componentDidUpdate(nextProps) {
+        if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
+            // Reset State
+            this.setState({
+                polls: [],
+                page: 0,
+                size: 10,
+                totalElements: 0,
+                totalPages: 0,
+                last: true,
+                currentVotes: [],
+                isLoading: false
+            });    
+            this.loadPollList();
+        }
+    }
 
 	state = {
 		visible: false,
@@ -124,4 +204,4 @@ class AddApiaryForm extends Component {
 	}
 }
 
-export default ApiaryList;
+export default withRouter(ApiaryList);

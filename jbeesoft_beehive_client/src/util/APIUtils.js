@@ -125,3 +125,10 @@ export function addApiary(apiaryData) {
         body: JSON.stringify(apiaryData)         
     });
 }
+
+export function getAllApiaries() {
+    return request({
+        url: API_BASE_URL + "/apiary/me",
+        method: 'GET'
+    })
+}

@@ -109,9 +109,9 @@ class App extends Component {
 				<Route path="/signup" 
 					render={(props) => <Signup isAuthenticated={this.state.isAuthenticated} {...props} />}>
 				</Route>
-				<PrivateRoute path="/user/me" 
-					render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}	/>}>
-				</PrivateRoute>
+				<Route path="/user/me" 
+					render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+				</Route>
 				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}></PrivateRoute>
 				<Route component={NotFound}></Route>
 				</Switch>
