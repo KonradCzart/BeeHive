@@ -3,6 +3,8 @@ package com.beehive.domain.bee.queen;
 import com.beehive.domain.bee.race.BeeRace;
 import com.beehive.domain.dateaudit.DateAudit;
 
+import java.sql.Date;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,14 +31,18 @@ public class BeeQueen extends DateAudit {
     private String color;
 
     @NotNull
-    private Integer age;
+    private Date age;
 
     @NotNull
     private Boolean isReproducting;
 
     @Size(max = 100)
     private String description;
-
+    
+    public BeeQueen() {
+    	
+    }
+    
     public BeeQueen(BeeQueenBuilder builder) {
         this.id = builder.id;
         this.beeRace = builder.beeRace;
@@ -66,11 +72,11 @@ public class BeeQueen extends DateAudit {
         this.color = color;
     }
 
-    public Integer getAge() {
+    public Date getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(Date age) {
         this.age = age;
     }
 
@@ -89,13 +95,17 @@ public class BeeQueen extends DateAudit {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
+    public static BeeQueenBuilder builder() {
+    	return new BeeQueenBuilder();
+    }
+    
     static public class BeeQueenBuilder {
     	
         private Long id;
         private BeeRace beeRace;
         private String color;
-        private Integer age;
+        private Date age;
         private Boolean isReproducting;
         private String description;
         
@@ -114,7 +124,7 @@ public class BeeQueen extends DateAudit {
 			return this;
 		}
         
-        public BeeQueenBuilder withAge(Integer age) {
+        public BeeQueenBuilder withAge(Date age) {
 			this.age = age;
 			return this;
 		}

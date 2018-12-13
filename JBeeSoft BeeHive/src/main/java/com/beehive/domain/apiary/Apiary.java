@@ -15,8 +15,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.NaturalId;
-
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.location.Location;
 import com.beehive.domain.user.User;

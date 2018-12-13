@@ -1,6 +1,5 @@
 package com.beehive.domain.bee.race;
 
-import com.beehive.domain.dateaudit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,7 +12,7 @@ import javax.validation.constraints.Size;
         })
 })
 
-public class BeeRace extends DateAudit {
+public class BeeRace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +27,10 @@ public class BeeRace extends DateAudit {
 
     @Size(max = 100)
     private String description;
+    
+    public BeeRace() {
+    	
+    }
 
     public BeeRace(String name, String agression, String description) {
         this.name = name;
