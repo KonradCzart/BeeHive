@@ -1,7 +1,10 @@
 package com.beehive.domain.bee.queen;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+import org.hibernate.validator.internal.metadata.location.ConstraintLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,8 +12,10 @@ import com.beehive.domain.bee.race.BeeRace;
 import com.beehive.domain.bee.race.BeeRaceRepository;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveRepository;
+import com.beehive.domain.hive.HiveType;
 import com.beehive.infrastructure.payload.BeeQueenDTO;
 import com.beehive.infrastructure.payload.BeeQueenRequest;
+import com.beehive.infrastructure.payload.ValueResponse;
 
 @Service
 public class BeeQueenService {
@@ -49,6 +54,20 @@ public class BeeQueenService {
 		}
 		
 		return newQueen;
+	}
+	
+	public List<ValueResponse> getAllQueenRace(){
+		
+		List<BeeRace> races = beeRaceRepository.findAll();
+		
+		return races.stream()
+				.map( race -> mapBeeRaceToValueResponse(race))
+				.collect(Collectors.toList());
+	}
+	
+	public ValueResponse mapBeeRaceToValueResponse(BeeRace race) {
+		
+		return new ValueResponse(race.getId(),race.getName());
 	}
 	
 	public BeeQueenDTO mapBeeQueenToBeeQueenDTO(BeeQueen queen) {

@@ -1,7 +1,9 @@
 package com.beehive.domain.hive;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import com.beehive.domain.bee.queen.BeeQueenService;
 import com.beehive.infrastructure.payload.BeeQueenDTO;
 import com.beehive.infrastructure.payload.HiveDTO;
 import com.beehive.infrastructure.payload.HiveRequest;
+import com.beehive.infrastructure.payload.ValueResponse;
 
 @Service
 public class HiveService {
@@ -43,6 +46,20 @@ public class HiveService {
 		hive = hiveRepository.save(hive);
 		
 		return hive;
+	}
+	
+	public List<ValueResponse> getAllHiveType(){
+		
+		List<HiveType> types = hiveTypeRepository.findAll();
+		
+		return types.stream()
+				.map( type -> mapHiveTypeToValueResponse(type))
+				.collect(Collectors.toList());
+	}
+	
+	public ValueResponse mapHiveTypeToValueResponse(HiveType type) {
+		
+		return new ValueResponse(type.getId(),type.getName());
 	}
 	
 	public HiveDTO mapHiveToHiveDTO(Hive hive) {
