@@ -1,6 +1,7 @@
-package com.beehive.domain.user;
+package com.beehive.domain.notification;
 
 import com.beehive.domain.dateaudit.DateAudit;
+import com.beehive.domain.user.User;
 import com.beehive.domain.userrole.Role;
 
 import org.hibernate.annotations.NaturalId;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,12 +34,7 @@ public class Notification extends DateAudit {
     @Size(max = 1000)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "users",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-
-    public Notificarion() {
+    public Notification() {
 
     }
 
@@ -66,9 +63,5 @@ public class Notification extends DateAudit {
     }
 
     public void setDescription(String description) { this.description = description;   }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
 
 }

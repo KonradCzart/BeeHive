@@ -1,6 +1,7 @@
 package com.beehive.domain.user;
 
 import com.beehive.domain.dateaudit.DateAudit;
+import com.beehive.domain.notification.Notification;
 import com.beehive.domain.userrole.Role;
 
 import org.hibernate.annotations.NaturalId;
@@ -51,6 +52,9 @@ public class User extends DateAudit {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "users")
+    private Set<Notification> notifications;
 
     public User() {
 
