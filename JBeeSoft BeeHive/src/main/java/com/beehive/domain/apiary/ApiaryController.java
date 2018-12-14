@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.beehive.domain.user.UserRepository;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.ApiaryDTO;
+import com.beehive.infrastructure.payload.ApiaryINFO;
 import com.beehive.infrastructure.payload.ApiaryRequest;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
@@ -38,12 +40,20 @@ public class ApiaryController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public List<ApiaryDTO> getMeApiary(@CurrentUser UserPrincipal currentUser) {
+    public List<ApiaryINFO> getMeApiary(@CurrentUser UserPrincipal currentUser) {
     	
         return apiaryService.getCurrentUserApiary(currentUser);
     }
     
+    @GetMapping("/{apiaryId}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiaryDTO getApiaryById(@CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
+    	
+        return apiaryService.getApiaryById(apiaryId);
+    }
+    
     @PostMapping("/new")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createApiary(@Valid @RequestBody ApiaryRequest apiaryRequest) {
 
     	Apiary apiary;

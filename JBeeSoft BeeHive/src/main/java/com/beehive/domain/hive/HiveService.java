@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.apiary.ApiaryRepository;
+import com.beehive.domain.bee.queen.BeeQueen;
+import com.beehive.domain.bee.queen.BeeQueenService;
+import com.beehive.infrastructure.payload.BeeQueenDTO;
+import com.beehive.infrastructure.payload.HiveDTO;
 import com.beehive.infrastructure.payload.HiveRequest;
 
 @Service
@@ -21,6 +25,9 @@ public class HiveService {
 	
 	@Autowired
 	private ApiaryRepository apiaryRepository;
+	
+	@Autowired
+	private BeeQueenService beeQueenService;
 
 	public Hive createHive(HiveRequest hiveRequest) throws NoSuchElementException{
 		
@@ -36,5 +43,23 @@ public class HiveService {
 		hive = hiveRepository.save(hive);
 		
 		return hive;
+	}
+	
+	public HiveDTO mapHiveToHiveDTO(Hive hive) {
+		
+		BeeQueen queen = hive.getBeeQueen();
+		BeeQueenDTO queenDTO = null;
+		
+		if(queen != null) {
+			queenDTO = beeQueenService.mapBeeQueenToBeeQueenDTO(queen);
+		}
+		
+		return HiveDTO.builder()
+				.withId(hive.getId())
+				.withName(hive.getName())
+				.withQueenDTO(queenDTO)
+				.withTypeName(hive.getType().getName())
+				.withBoxNumber(hive.getBoxNumber())
+				.build();
 	}
 }

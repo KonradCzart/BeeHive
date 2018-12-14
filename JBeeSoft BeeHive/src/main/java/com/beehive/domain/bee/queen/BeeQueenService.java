@@ -9,6 +9,7 @@ import com.beehive.domain.bee.race.BeeRace;
 import com.beehive.domain.bee.race.BeeRaceRepository;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveRepository;
+import com.beehive.infrastructure.payload.BeeQueenDTO;
 import com.beehive.infrastructure.payload.BeeQueenRequest;
 
 @Service
@@ -48,6 +49,17 @@ public class BeeQueenService {
 		}
 		
 		return newQueen;
+	}
+	
+	public BeeQueenDTO mapBeeQueenToBeeQueenDTO(BeeQueen queen) {
+		return	BeeQueenDTO.builder()
+				.withId(queen.getId())
+				.withDescription(queen.getDescription())
+				.withAge(queen.getAge())
+				.withColor(queen.getColor())
+				.withIsReproducting(queen.getIsReproducting())
+				.withRaceName(queen.getBeeRace().getName())
+				.build();
 	}
 	
 }
