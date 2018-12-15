@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,5 +51,35 @@ public class HiveController {
     public List<ValueResponse> getAllHiveType(@CurrentUser UserPrincipal currentUser){
     	
     	return hiveService.getAllHiveType();
+    }
+    
+    @DeleteMapping("/delete/{hiveId}/queen")
+    @PreAuthorize("hasRole('USER')")
+    public  ResponseEntity<?> deleteQueenWithHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
+    	
+    	try {
+    		hiveService.deleteQueenWithHive(hiveId);
+    	}
+        catch (NoSuchElementException e) {
+        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        			HttpStatus.BAD_REQUEST);
+		}
+    	
+    	return ResponseEntity.ok(new ApiResponse(true, "Queen delete successfully"));
+    }
+    
+    @DeleteMapping("/delete/{hiveId}/all")
+    @PreAuthorize("hasRole('USER')")
+    public  ResponseEntity<?> deleteHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
+    	
+    	try {
+    		hiveService.deleteHive(hiveId);
+    	}
+        catch (NoSuchElementException e) {
+        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        			HttpStatus.BAD_REQUEST);
+		}
+    	
+    	return ResponseEntity.ok(new ApiResponse(true, "Hive delete successfully"));
     }
 }

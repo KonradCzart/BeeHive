@@ -38,8 +38,11 @@ public class HiveService {
 		Optional<Apiary> apiary = apiaryRepository.findById(hiveRequest.getApiary_id());
 		Optional<HiveType> type = hiveTypeRepository.findById(hiveRequest.getHiveType_id());
 		
-		Apiary apiaryForHive = apiary.orElseThrow(() -> new NoSuchElementException("Apiary id is not correct"));
-		HiveType hiveType = type.orElseThrow(() -> new NoSuchElementException("Hive type id is not correct"));
+		Apiary apiaryForHive = apiary
+				.orElseThrow(() -> new NoSuchElementException("Apiary id is not correct"));
+		
+		HiveType hiveType = type
+				.orElseThrow(() -> new NoSuchElementException("Hive type id is not correct"));
 		
 		Hive hive = new Hive(hiveRequest.getName(), apiaryForHive, hiveType, hiveRequest.getBoxNumber());
 		apiaryForHive.addHive(hive);
@@ -56,6 +59,35 @@ public class HiveService {
 				.map( type -> mapHiveTypeToValueResponse(type))
 				.collect(Collectors.toList());
 	}
+	
+	public void deleteQueenWithHive(Long hiveId) throws NoSuchElementException {
+		
+		Hive hive = hiveRepository.findById(hiveId)
+				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
+		
+		BeeQueen queen = hive.getBeeQueen();
+		
+		if(queen != null) {
+			hive.setBeeQueen(null);
+			beeQueenService.deleteQueenById(queen.getId());
+		}
+		
+	}
+	
+	public void deleteHive(Long hiveId) {
+		
+		Hive hive = hiveRepository.findById(hiveId)
+				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
+		
+		Apiary apiary = hive.getApiary();
+		apiary.removeHive(hive);
+		
+		this.deleteQueenWithHive(hiveId);
+		
+		hiveRepository.delete(hive);		
+	}
+	
+	
 	
 	public ValueResponse mapHiveTypeToValueResponse(HiveType type) {
 		
