@@ -132,3 +132,19 @@ export function getAllApiaries() {
         method: 'GET'
     })
 }
+
+/**
+ * # returned JSON (early concept):
+ * notifications: {
+ *   date_x: [
+ *     {id: x, datetime: datetime_x, title: "foo", desc: "bar", checked: false},
+ *     {id: y, datetime: datetime_y, title: "foo", desc: "bar", checked: false},
+ *   ],
+ * },
+ */
+export function getNotifications() {
+    return request({
+        url: API_BASE_URL + "/notifications/me",
+        method: "GET"
+    })
+}
