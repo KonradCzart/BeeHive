@@ -29,6 +29,7 @@ public class NotificationService {
 	public Notification createNotification(NotificationRequest notifyRequest) {
 		
 		List<User> usersList = userRepository.findAllById(notifyRequest.getUsersId());
+
 		Set<User> users = new HashSet<>(usersList);
 		
 		Notification notification = Notification.builder()
@@ -36,8 +37,11 @@ public class NotificationService {
 				.withDescription(notifyRequest.getDescription())
 				.withDate(notifyRequest.getDate())
 				.withUsers(users)
+				.withIsRealize(notifyRequest.getIsRealize())
 				.build();
 		
+		
+		System.out.println("dsada");
 		return notificationRepository.save(notification);
 	}
 	

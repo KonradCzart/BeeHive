@@ -36,7 +36,9 @@ public class NotificationController {
 	  @PostMapping("/new")
 	  @PreAuthorize("hasRole('USER')")
 	  public ResponseEntity<?> createNotification(@Valid @RequestBody NotificationRequest notificationRequest){
-		  
+		
+		System.out.println(notificationRequest.getUsersId());
+		
 		try {
 			notificationService.createNotification(notificationRequest);
   		}

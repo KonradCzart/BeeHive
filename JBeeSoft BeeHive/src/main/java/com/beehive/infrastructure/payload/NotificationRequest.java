@@ -19,6 +19,9 @@ public class NotificationRequest {
     private Date date;
 	
 	@NotNull
+	private Boolean isRealize;
+	
+	@NotNull
     private List<Long> usersId;
 
 	public String getTitle() {
@@ -52,5 +55,15 @@ public class NotificationRequest {
 	public void setUsers(List<Long> usersId) {
 		this.usersId = usersId;
 	}
+
+	public Boolean getIsRealize() {
+		return isRealize;
+	}
+
+	public void setIsRealize(Boolean isRealize) {
+		this.isRealize = isRealize;
+	}
+	
+	
 	
 }
