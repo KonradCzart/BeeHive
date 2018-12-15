@@ -1,5 +1,6 @@
 package com.beehive.domain.notification;
 
+
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,9 @@ public class Notification {
     @NotNull
     private Date date;
     
+    @NotNull
+    private Boolean isRealize;
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "notification_user",
             joinColumns = @JoinColumn(name = "notification_id"),
@@ -53,6 +57,7 @@ public class Notification {
     	this.description = builder.description;
     	this.date = builder.date;
     	this.users = builder.users;
+    	this.isRealize = builder.isRealize;
     	
     }
     
@@ -102,8 +107,27 @@ public class Notification {
     	users.add(user);
     }
 	
+	
+	public Boolean getIsRealize() {
+		return isRealize;
+	}
+
+	public void setIsRealize(Boolean isRealize) {
+		this.isRealize = isRealize;
+	}
+	
 	public static NotificationBuilder builder() {
 		return new NotificationBuilder();
+	}
+	
+
+	public static Date getDayDate(Notification note) {
+		
+		Date date = note.getDate();
+		int year = date.getYear();
+		int month = date.getMonth();
+		int day = date.getDay();
+		return new Date(year, month, day);
 	}
 	
 	public static class NotificationBuilder{
@@ -111,6 +135,7 @@ public class Notification {
 	    private String title;
 	    private String description;
 	    private Date date;
+	    private Boolean isRealize;
 	    private Set<User> users;
 	    
 	    public NotificationBuilder() {
@@ -139,6 +164,11 @@ public class Notification {
 	    
 	    public NotificationBuilder withUser(User user) {
 	    	this.users.add(user);
+	    	return this;
+	    }
+	    
+	    public NotificationBuilder withIsRealize(Boolean isRealize) {
+	    	this.isRealize = isRealize;
 	    	return this;
 	    }
 	    
