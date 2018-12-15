@@ -74,6 +74,20 @@ public class BeeQueenService {
 		beeQueenRepository.delete(queen);
 	}
 	
+	public BeeQueenDTO modifyQueen(BeeQueenDTO queenDTO) throws NoSuchElementException{
+		
+		BeeQueen queen = beeQueenRepository.findById(queenDTO.getId())
+				.orElseThrow(() -> new NoSuchElementException("BeeQueen id os not correct"));
+		
+		queen.setColor(queenDTO.getColor());
+		queen.setDescription(queenDTO.getDescription());
+		queen.setIsReproducting(queenDTO.getIsReproducting());
+		
+		queen = beeQueenRepository.save(queen);
+		
+		return mapBeeQueenToBeeQueenDTO(queen);
+	}
+	
 	public ValueResponse mapBeeRaceToValueResponse(BeeRace race) {
 		
 		return new ValueResponse(race.getId(),race.getName());

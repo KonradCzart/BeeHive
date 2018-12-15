@@ -87,7 +87,22 @@ public class HiveService {
 		hiveRepository.delete(hive);		
 	}
 	
-	
+	public HiveDTO modifyHive(HiveDTO hiveDTO) {
+		
+		Hive hive = hiveRepository.findById(hiveDTO.getId())
+				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
+		
+		HiveType type = hiveTypeRepository.findByName(hiveDTO.getTypeName())
+				.orElseThrow(() -> new NoSuchElementException("Name hiveType is not correct"));
+		
+		hive.setBoxNumber(hiveDTO.getBoxNumber());
+		hive.setName(hiveDTO.getName());
+		hive.setHiveType(type);
+		
+		hive = hiveRepository.save(hive);
+		
+		return mapHiveToHiveDTO(hive);
+	}	
 	
 	public ValueResponse mapHiveTypeToValueResponse(HiveType type) {
 		

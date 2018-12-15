@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beehive.infrastructure.payload.ApiResponse;
+import com.beehive.infrastructure.payload.HiveDTO;
 import com.beehive.infrastructure.payload.HiveRequest;
 import com.beehive.infrastructure.payload.ValueResponse;
 import com.beehive.infrastructure.security.CurrentUser;
@@ -81,5 +83,12 @@ public class HiveController {
 		}
     	
     	return ResponseEntity.ok(new ApiResponse(true, "Hive delete successfully"));
+    }
+    
+    @PutMapping("/modify")
+    @PreAuthorize("hasRole('USER')")
+    public HiveDTO modifyHive(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody HiveDTO hiveDTO) {
+    	
+    	return hiveService.modifyHive(hiveDTO);
     }
 }
