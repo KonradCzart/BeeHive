@@ -3,6 +3,8 @@ import { addApiary, getAllApiaries } from '../util/APIUtils';
 import './ApiaryList.css';
 import { Form, Input, Button, notification, Modal, Table } from 'antd';
 import { withRouter } from 'react-router-dom';
+import { NotificationCalendar} from "../common/NotificationCalendar";
+
 const FormItem = Form.Item;
 
 class ApiaryList extends Component {
@@ -36,7 +38,7 @@ class ApiaryList extends Component {
 			dataIndex: 'city',
 			key: 'city',
 		}];
-		const WrappedAddApiaryForm = Form.create()(AddApiaryForm)
+		const WrappedAddApiaryForm = Form.create()(AddApiaryForm);
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New apiary</Button>
@@ -48,7 +50,7 @@ class ApiaryList extends Component {
 					userID={this.props.currentUser.id}
 					/>
 				<h1>Your apiaries:</h1>
-				<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries} />
+				<Table className="col-1-2" rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries} />
 			</div>
 		);
 	}
