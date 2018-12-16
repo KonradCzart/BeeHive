@@ -1,7 +1,6 @@
 package com.beehive.domain.apiary;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,13 +8,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.beehive.domain.hive.HiveService;
 import com.beehive.domain.location.Location;
 import com.beehive.domain.location.LocationRepository;
 import com.beehive.domain.location.LocationService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserRepository;
 import com.beehive.infrastructure.payload.ApiaryDTO;
+import com.beehive.infrastructure.payload.ApiaryINFO;
 import com.beehive.infrastructure.payload.ApiaryRequest;
+import com.beehive.infrastructure.payload.HiveDTO;
 import com.beehive.infrastructure.security.UserPrincipal;
 
 @Service
@@ -33,6 +35,9 @@ public class ApiaryService {
 	@Autowired
 	private LocationRepository locationRepository;
 	
+	@Autowired
+	private HiveService hiveService;
+	
 	
 	public Apiary createApiary(ApiaryRequest apiaryRequest) throws NoSuchElementException {
 		
@@ -47,18 +52,38 @@ public class ApiaryService {
 		return apiaryRepository.save(apiary);
 	}
 	
-	public List<ApiaryDTO> getCurrentUserApiary(UserPrincipal currentUser){
+	public ApiaryDTO getApiaryById(Long id)  throws NoSuchElementException{
 		
-		List<Apiary> apiaries= apiaryRepository.findByOwnerId(currentUser.getId());		
+		Apiary apiary = apiaryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Apiary id is not correct"));
 		
-		return apiaries.stream().map(apiary -> mapApiatyToApiaryDTO(apiary)).collect(Collectors.toList());
+		ApiaryINFO apiaryINFO = mapApiatyToApiaryINFO(apiary);
+		
+		List<HiveDTO> hives = apiary.getHives().stream()
+				.map(hive -> hiveService.mapHiveToHiveDTO(hive) )
+				.collect(Collectors.toList());
+		
+		return new ApiaryDTO(apiaryINFO, hives);
 	}
 	
-	public ApiaryDTO mapApiatyToApiaryDTO(Apiary apiary) {
-		return ApiaryDTO.builder()
+	public List<ApiaryINFO> getCurrentUserApiary(UserPrincipal currentUser){
+		
+		List<Apiary> apiaries = apiaryRepository.findByOwnerId(currentUser.getId());
+		
+		return apiaries.stream()
+				.map(apiary -> mapApiatyToApiaryINFO(apiary))
+				.collect(Collectors.toList());
+	}
+	
+	public ApiaryINFO mapApiatyToApiaryINFO(Apiary apiary) {
+		
+		long hiveNumber = apiary.getHives().stream().count();
+		
+		return ApiaryINFO.builder()
 				.withId(apiary.getId())
 				.withName(apiary.getName())
 				.withLocation(apiary.getLocation())
+				.withHiveNumber(hiveNumber)
+				.withOwnerName(apiary.getOwner().getName())
 				.build();
 	}
 	

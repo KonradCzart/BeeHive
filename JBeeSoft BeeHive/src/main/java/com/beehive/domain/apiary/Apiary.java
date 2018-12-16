@@ -99,4 +99,8 @@ public class Apiary {
 	public boolean addHive(Hive hive) {
 		return hives.add(hive);
 	}
+	
+	public boolean removeHive(Hive hive) {
+		return hives.remove(hive);
+	}
 }

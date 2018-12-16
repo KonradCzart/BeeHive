@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -95,6 +94,13 @@ public class Hive {
 	public void setApiary(Apiary apiary) {
 		this.apiary = apiary;
 	}
-    
-    
+
+	public HiveType getHiveType() {
+		return hiveType;
+	}
+
+	public void setHiveType(HiveType hiveType) {
+		this.hiveType = hiveType;
+	}
+  
 }

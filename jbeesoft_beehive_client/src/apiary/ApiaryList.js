@@ -3,6 +3,8 @@ import { addApiary, getAllApiaries } from '../util/APIUtils';
 import './ApiaryList.css';
 import { Form, Input, Button, notification, Modal, Table } from 'antd';
 import { withRouter } from 'react-router-dom';
+import { NotificationCalendar} from "../common/NotificationCalendar";
+
 const FormItem = Form.Item;
 
 class ApiaryList extends Component {
@@ -42,7 +44,7 @@ class ApiaryList extends Component {
 			dataIndex: 'city',
 			key: 'city',
 		}];
-		const WrappedAddApiaryForm = Form.create()(AddApiaryForm)
+		const WrappedAddApiaryForm = Form.create()(AddApiaryForm);
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New apiary</Button>
@@ -52,8 +54,8 @@ class ApiaryList extends Component {
 					onCancel={this.handleCancel}
 					onCreate={this.handleCreate}
 					userID={this.props.currentUser.id}
-					/>
-				
+				/>
+
 				{
 					!this.state.isLoading && this.state.apiaries.length === 0 ? (
 						<div className="no-polls-found">
@@ -87,7 +89,7 @@ class ApiaryList extends Component {
 		.then(response => {
 
 			this.setState({
-				apiaries: response,
+				hives: response,
 				isLoading: false
 			})
 		}).catch(error => {

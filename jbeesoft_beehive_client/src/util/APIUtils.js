@@ -134,5 +134,30 @@ export function getAllApiaries() {
 }
 
 export function addHive(apiaryData) {
-    
+    return request({
+        url: API_BASE_URL + "/hive/new",
+        method: 'POST',
+        body: JSON.stringify(apiaryData)         
+    });
+}
+ 
+export function getNotifications() {
+    return request({
+        url: API_BASE_URL + "/notifications/me",
+        method: "GET"
+    })
+}
+
+export function getAllHiveTypes() {
+    return request({
+        url: API_BASE_URL + "/hive/type",
+        method: 'GET'
+    })
+}
+
+export function getAllHives(apiaryId) {
+    return request({
+        url: API_BASE_URL + "/apiary/" + apiaryId,
+        method: 'GET'
+    })
 }
