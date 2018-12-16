@@ -132,3 +132,7 @@ export function getAllApiaries() {
         method: 'GET'
     })
 }
+
+export function addHive(apiaryData) {
+    
+}

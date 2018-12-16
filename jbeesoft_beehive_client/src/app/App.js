@@ -17,6 +17,7 @@ import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
 import PrivateRoute from '../common/PrivateRoute';
 import Index from '../common/Index';
+import Apiary from '../apiary/Apiary';
 
 import { Layout, notification } from 'antd';
 const { Content } = Layout;
@@ -111,6 +112,9 @@ class App extends Component {
 				</Route>
 				<Route path="/user/me" 
 					render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+				</Route>
+				<Route path="/apiary/:id" 
+					render={(props) => <Apiary isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 				</Route>
 				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}></PrivateRoute>
 				<Route component={NotFound}></Route>
