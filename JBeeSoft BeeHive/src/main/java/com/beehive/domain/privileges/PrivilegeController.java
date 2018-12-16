@@ -83,11 +83,5 @@ public class PrivilegeController {
 		}
     	return new ApiResponse(true, MessageFormat.format(GRANTED_SUCCESFULLY, grantPrivilegesRequest.getTargetUser()));
     }
-    
-//    @GetMapping(ME_PATH)
-//    @PreAuthorize("hasRole('USER')")
-//    public PrivilegesProfileRequest getPrivilegesProfile(@PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
-//    	
-//    }
 
 }
