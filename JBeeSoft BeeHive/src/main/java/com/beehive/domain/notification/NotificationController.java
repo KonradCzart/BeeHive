@@ -1,7 +1,7 @@
 package com.beehive.domain.notification;
 
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,13 +38,12 @@ public class NotificationController {
 	  @PreAuthorize("hasRole('USER')")
 	  public ResponseEntity<?> createNotification(@Valid @RequestBody NotificationRequest notificationRequest){
 		
-		System.out.println(notificationRequest.getUsersId());
 		
 		try {
 			notificationService.createNotification(notificationRequest);
   		}
 	    catch (Exception e) {
-	      	return new ResponseEntity(new ApiResponse(false, "User id is not correct!"),
+	      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, "User id is not correct!"),
 	      			HttpStatus.BAD_REQUEST);
 		}
 
@@ -54,7 +54,13 @@ public class NotificationController {
 	  @PreAuthorize("hasRole('USER')")
 	  public  ResponseEntity<?> deleteHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long noteId){
 		  
-		  notificationService.deleteNotificationById(noteId);
+		  try {
+			  notificationService.deleteNotificationById(noteId);
+		  }
+		  catch (Exception e) {
+			  return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
+		      			HttpStatus.BAD_REQUEST);
+		}
 		  
 		  return ResponseEntity.ok(new ApiResponse(true, "Notification delete successfully"));
 		  
@@ -62,8 +68,40 @@ public class NotificationController {
 	  
 	  @GetMapping("/me")
 	  @PreAuthorize("hasRole('USER')")
-	  public Map<Date, List<NotificationDTO>> getMeAllNotification(@CurrentUser UserPrincipal currentUser){
+	  public Map<String, List<NotificationDTO>> getMeAllNotification(@CurrentUser UserPrincipal currentUser){
 		  
 		  return notificationService.getUserAllNotification(currentUser);
+	  }
+	  
+	  @PutMapping("/modify")
+	  @PreAuthorize("hasRole('USER')")
+	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody NotificationDTO note) {
+		  
+			try {
+				note = notificationService.modifyNotification(note);
+	  		}
+		    catch (Exception e) {
+		      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
+		      			HttpStatus.BAD_REQUEST);
+			}
+			
+			return ResponseEntity.ok(note);
+	  }
+	  
+	  @PutMapping("/realize/{noteId}")
+	  @PreAuthorize("hasRole('USER')")
+	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @PathVariable Long noteId) {
+		 
+		 NotificationDTO note;
+		try {
+			note = notificationService.realizeNotification(noteId);
+  		}
+	    catch (Exception e) {
+	      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
+	      			HttpStatus.BAD_REQUEST);
+	    }
+		      	
+		      			
+		return ResponseEntity.ok(note);
 	  }
 }

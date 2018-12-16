@@ -1,6 +1,5 @@
 package com.beehive.domain.notification;
 
-import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,6 @@ public class NotificationService {
 				.build();
 		
 		
-		System.out.println("dsada");
 		return notificationRepository.save(notification);
 	}
 	
@@ -54,18 +52,45 @@ public class NotificationService {
 		notificationRepository.delete(note);
 	}
 	
-	public Map<Date, List<NotificationDTO>> getUserAllNotification(UserPrincipal currentUser){
+	public Map<String, List<NotificationDTO>> getUserAllNotification(UserPrincipal currentUser){
 
 		User user = userRepository.findById(currentUser.getId()).orElseThrow();
 
-		Map<Date, List<NotificationDTO>> mapNote = notificationRepository.findAllByUsers(user)
+		Map<String, List<NotificationDTO>> mapNote = notificationRepository.findAllByUsers(user)
 				.stream()
-				.collect(Collectors.groupingBy(Notification::getDate, Collectors.mapping(this::mapNotificationToNotificationDTO, Collectors.toList())));
+				.collect(Collectors.groupingBy(Notification::getDayDate, Collectors.mapping(this::mapNotificationToNotificationDTO, Collectors.toList())));
 		
 		return mapNote;
 	}
 	
+	public NotificationDTO modifyNotification(NotificationDTO noteDTO) throws NoSuchElementException{
+		
+		Notification note = notificationRepository.findById(noteDTO.getId())
+				.orElseThrow(() -> new NoSuchElementException("Notification id is not correct"));
+		
+		
+		note.setDate(noteDTO.getDate());
+		note.setDescription(noteDTO.getDescription());
+		note.setTitle(noteDTO.getTitle());
+		note.setIsRealize(noteDTO.getIsRealize());		
+		
+		note = notificationRepository.save(note);
+		
+		return mapNotificationToNotificationDTO(note);
+	}
 	
+	public NotificationDTO realizeNotification(Long id) throws NoSuchElementException{
+		
+		Notification note = notificationRepository.findById(id)
+				.orElseThrow(() -> new NoSuchElementException("Notification id is not correct"));
+		
+		note.setIsRealize(true);
+		
+		note = notificationRepository.save(note);
+		
+		return mapNotificationToNotificationDTO(note);
+		
+	}
 	
 	
 	public NotificationDTO mapNotificationToNotificationDTO(Notification note) {
