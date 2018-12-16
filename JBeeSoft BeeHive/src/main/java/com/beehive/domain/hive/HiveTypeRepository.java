@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface HiveTypeRepository extends JpaRepository<HiveType, Long>{
 	
 	Optional<HiveType> findById(Long id);
+	
+	Optional<HiveType> findByName(String name);
 }

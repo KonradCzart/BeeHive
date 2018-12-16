@@ -85,6 +85,10 @@ public class Apiary {
 		return hives.add(hive);
 	}
 	
+	public boolean removeHive(Hive hive) {
+		return hives.remove(hive);
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this) {
@@ -103,4 +107,5 @@ public class Apiary {
 	public int hashCode() {
 		return id.hashCode();
 	}
+
 }
