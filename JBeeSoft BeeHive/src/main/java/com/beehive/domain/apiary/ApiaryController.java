@@ -65,14 +65,17 @@ public class ApiaryController {
     
     @PostMapping("/new")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createApiary(@Valid @RequestBody ApiaryRequest apiaryRequest) {
+    public ResponseEntity<?> createApiary(@Valid @RequestBody ApiaryRequest apiaryRequest, @CurrentUser UserPrincipal currentUser) {
 
     	Apiary apiary;
     	try {
-    		apiary = apiaryService.createApiary(apiaryRequest);
+    		User user = userRepository.findById(currentUser.getId()).orElseThrow(
+    				() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER_MSG, currentUser.getId())));
+    		
+    		apiary = apiaryService.createApiary(apiaryRequest, user);
     	}
-        catch (NoSuchElementException e) {
-        	return new ResponseEntity(new ApiResponse(false, "User id is not correct!"),
+        catch (IllegalArgumentException e) {
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, "User id is not correct!"),
         			HttpStatus.BAD_REQUEST);
 		}
 

@@ -48,21 +48,17 @@ public class ApiaryService {
 	private PrivilegeService privilegeService;
 	
 	
-	public Apiary createApiary(ApiaryRequest apiaryRequest) throws NoSuchElementException {
+	public Apiary createApiary(ApiaryRequest apiaryRequest, User owner) {
 		
 		Optional<Location> location = locationRepository.findByCountryAndCity(apiaryRequest.getCountry(), apiaryRequest.getCity());
-		Location apiaryLocation = location.orElseGet(() -> locationService.createLocation(apiaryRequest.getCountry(), apiaryRequest.getCity()));
-		
-		Apiary apiary = new Apiary(apiaryRequest.getName(), apiaryLocation);
-		
+		Location apiaryLocation = location.orElseGet(
+				() -> locationService.createLocation(apiaryRequest.getCountry(), apiaryRequest.getCity()));		
+		Apiary apiary = new Apiary(apiaryRequest.getName(), apiaryLocation);		
 		apiaryRepository.save(apiary);
-		
-		User owner = userRepository.findById(apiaryRequest.getOwner_id()).orElseThrow();
 		
 		privilegeService.grantPrivileges(owner, apiary, Privilege.getAllAvailablePrivileges());
 		
 		return apiary;
-		
 	}
 	
 	public ApiaryDTO getApiaryById(Long id)  throws NoSuchElementException{

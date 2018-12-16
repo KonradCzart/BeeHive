@@ -1,7 +1,6 @@
 package com.beehive.infrastructure.payload;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ApiaryRequest {
@@ -9,9 +8,6 @@ public class ApiaryRequest {
 	@NotBlank
 	@Size(max = 40)
 	private String name;
-	
-	@NotNull
-	private Long owner_id;
 	
 	@NotBlank
 	@Size(max = 40)
@@ -27,14 +23,6 @@ public class ApiaryRequest {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Long getOwner_id() {
-		return owner_id;
-	}
-
-	public void setOwner_id(Long owner_id) {
-		this.owner_id = owner_id;
 	}
 
 	public String getCountry() {
