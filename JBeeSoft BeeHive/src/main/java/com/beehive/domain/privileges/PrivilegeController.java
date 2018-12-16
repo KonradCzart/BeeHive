@@ -43,13 +43,7 @@ public class PrivilegeController {
 	private PrivilegeService privilegeService;
 
 	public static final String MAIN_PATH = "/privileges";
-	private static final String USER_ID = "user_id";
 	private static final String GRANT_PRIVILEGES_PATH = "/grant";
-	private static final String CHECK_PRIVILEGES_PATH = "/check/{" + USER_ID + "}";
-	private static final String APIARY_ID = "apiary_id";
-	private static final String GET_PRIVILEGES_PATH = "/get";
-	private static final String ME_PATH = "/me/{" + APIARY_ID + "}";
-	
 	private static final String NO_SUCH_USER = "There is no user with id {0}";
 	private static final String NO_SUCH_APIARY = "There is no apiary with id {0}";
 	private static final String GRANTED_SUCCESFULLY = "New privileges for user with id {0} granted succesfully";
