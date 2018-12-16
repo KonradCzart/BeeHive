@@ -1,10 +1,12 @@
 package com.beehive.domain.notification;
 
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -37,6 +39,7 @@ public class Notification {
     private String description;
     
     @NotNull
+    @Column(columnDefinition="DATETIME")
     private Date date;
     
     @NotNull
@@ -121,13 +124,11 @@ public class Notification {
 	}
 	
 
-	public static Date getDayDate(Notification note) {
+	public static String getDayDate(Notification note) {
 		
 		Date date = note.getDate();
-		int year = date.getYear();
-		int month = date.getMonth();
-		int day = date.getDay();
-		return new Date(year, month, day);
+
+		return new  SimpleDateFormat("yyyy-MM-dd").format(date);
 	}
 	
 	public static class NotificationBuilder{

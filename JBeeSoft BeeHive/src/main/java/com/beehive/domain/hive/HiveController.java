@@ -40,7 +40,7 @@ public class HiveController {
     		hiveService.createHive(hiveRequest);
     	}
         catch (NoSuchElementException e) {
-        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
     	
@@ -63,7 +63,7 @@ public class HiveController {
     		hiveService.deleteQueenWithHive(hiveId);
     	}
         catch (NoSuchElementException e) {
-        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
     	
@@ -78,7 +78,7 @@ public class HiveController {
     		hiveService.deleteHive(hiveId);
     	}
         catch (NoSuchElementException e) {
-        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
     	
@@ -87,8 +87,16 @@ public class HiveController {
     
     @PutMapping("/modify")
     @PreAuthorize("hasRole('USER')")
-    public HiveDTO modifyHive(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody HiveDTO hiveDTO) {
+    public  ResponseEntity<?> modifyHive(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody HiveDTO hiveDTO) {
     	
-    	return hiveService.modifyHive(hiveDTO);
+    	try {
+    		hiveDTO = hiveService.modifyHive(hiveDTO);
+    	}
+        catch (NoSuchElementException e) {
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
+        			HttpStatus.BAD_REQUEST);
+		}
+    	
+    	return ResponseEntity.ok(hiveDTO);
     }
 }
