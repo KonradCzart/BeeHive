@@ -11,6 +11,7 @@ class ApiaryList extends Component {
 
 	constructor(props) {
 		super(props);
+		const date = new Date();
 		this.state = {
 			apiaries: [],
 			page: 0,
@@ -19,7 +20,9 @@ class ApiaryList extends Component {
 			totalPages: 0,
 			last: true,
 			currentVotes: [],
-			isLoading: false
+			isLoading: false,
+			date: date,
+			oldDate: date
 		};
 		this.loadApiaryList = this.loadApiaryList.bind(this);
 	}
@@ -28,7 +31,10 @@ class ApiaryList extends Component {
 		const columns = [{
 			title: 'Name',
 			dataIndex: 'name',
-			key: 'name'
+			key: 'name',
+			render: (text, record) => (
+				<a href={'/apiary/' + record.id}>{text}</a>
+			)
 		}, {
 			title: 'Country',
 			dataIndex: 'country',
@@ -48,9 +54,20 @@ class ApiaryList extends Component {
 					onCancel={this.handleCancel}
 					onCreate={this.handleCreate}
 					userID={this.props.currentUser.id}
-					/>
-				<h1>Your apiaries:</h1>
-				<Table className="col-1-2" rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries} />
+				/>
+
+				{
+					!this.state.isLoading && this.state.apiaries.length === 0 ? (
+						<div className="no-polls-found">
+							<h1>You haven't got any apiaries yet.</h1>
+						</div>	
+					): (
+						<div>
+							<h1>Your apiaries:</h1>
+							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries} />
+						</div>
+					)
+				}
 			</div>
 		);
 	}
@@ -72,7 +89,7 @@ class ApiaryList extends Component {
 		.then(response => {
 
 			this.setState({
-				apiaries: response,
+				hives: response,
 				isLoading: false
 			})
 		}).catch(error => {
@@ -88,21 +105,28 @@ class ApiaryList extends Component {
 	}
 
 	componentDidUpdate(nextProps) {
-        if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
-            // Reset State
-            this.setState({
-                polls: [],
-                page: 0,
-                size: 10,
-                totalElements: 0,
-                totalPages: 0,
-                last: true,
-                currentVotes: [],
-                isLoading: false
-            });    
-            this.loadPollList();
-        }
-    }
+		if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
+			// Reset State
+			this.setState({
+				polls: [],
+				page: 0,
+				size: 10,
+				totalElements: 0,
+				totalPages: 0,
+				last: true,
+				currentVotes: [],
+				isLoading: false
+			});	
+			this.loadApiaryList();
+		}
+		if(this.state.date !== this.state.oldDate) {
+			this.loadApiaryList();
+			const date = this.state.date;
+			this.setState({
+				oldDate: date
+			})
+		}
+	}
 
 	state = {
 		visible: false,
@@ -133,6 +157,7 @@ class ApiaryList extends Component {
 						message: 'BeeHive App',
 						description: apiaryRequest.name + " created successfully!"
 					});
+					this.setState({date: new Date()})
 				}).catch(error => {
 					if(error.status === 401) {
 						notification.error({
