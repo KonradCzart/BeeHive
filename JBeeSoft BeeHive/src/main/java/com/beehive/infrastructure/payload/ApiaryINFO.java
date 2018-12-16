@@ -8,7 +8,6 @@ public class ApiaryINFO {
 	private String name;
 	private String country;
 	private String city;
-	private String ownerName;
 	private long hiveNumber;
 	
 	public ApiaryINFO() {
@@ -20,7 +19,6 @@ public class ApiaryINFO {
 		this.name = builder.name;
 		this.country = builder.country;
 		this.city = builder.city;
-		this.ownerName = builder.ownerName;
 		this.hiveNumber = builder.hiveNumber;
 	}
 	
@@ -49,15 +47,6 @@ public class ApiaryINFO {
 		this.city = city;
 	}	
 	
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-	
-	
 	public long getHiveNumber() {
 		return hiveNumber;
 	}
@@ -76,7 +65,6 @@ public class ApiaryINFO {
 		private String name;
 		private String country;
 		private String city;
-		private String ownerName;
 		private long hiveNumber;
 		
 		public ApiaryINFOBuilder withId(Long id) {
@@ -89,10 +77,6 @@ public class ApiaryINFO {
 			return this;
 		}
 		
-		public ApiaryINFOBuilder withOwnerName(String ownerName) {
-			this.ownerName = ownerName;
-			return this;
-		}
 		public ApiaryINFOBuilder withHiveNumber(long hiveNumber) {
 			this.hiveNumber = hiveNumber;
 			return this;

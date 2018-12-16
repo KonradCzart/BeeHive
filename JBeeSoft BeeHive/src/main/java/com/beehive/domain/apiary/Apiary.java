@@ -17,7 +17,6 @@ import javax.validation.constraints.Size;
 
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.location.Location;
-import com.beehive.domain.user.User;
 
 
 @Entity
@@ -30,11 +29,6 @@ public class Apiary {
     @NotBlank
     @Size(max = 40)
     private String name;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
     
     @OneToMany(mappedBy = "apiary")
     private Set<Hive> hives;
@@ -49,10 +43,9 @@ public class Apiary {
     	
     }
     
-    public Apiary(String name, User owner, Location location ) {
+    public Apiary(String name, Location location ) {
     	this.hives = new HashSet<>();
     	this.name = name;
-    	this.owner = owner;
     	this.location = location;    	
     }
     
@@ -70,14 +63,6 @@ public class Apiary {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public User getOwner() {
-		return owner;
-	}
-
-	public void setOwner(User owner) {
-		this.owner = owner;
 	}
 
 	public Set<Hive> getHives() {
@@ -98,5 +83,24 @@ public class Apiary {
 	
 	public boolean addHive(Hive hive) {
 		return hives.add(hive);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) {
+			return true;
+		}
+		
+		if(!(obj instanceof Apiary)) {
+			return false;
+		}
+		
+		Apiary apiary = (Apiary) obj;
+		return apiary.id.equals(id);
+	}
+	
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

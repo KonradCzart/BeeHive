@@ -2,11 +2,6 @@ package com.beehive.domain.userrole;
 
 import org.hibernate.annotations.NaturalId;
 
-import com.beehive.domain.privilege.Privilege;
-
-import java.util.Collections;
-import java.util.Set;
-
 import javax.persistence.*;
 
 @Entity
@@ -21,9 +16,6 @@ public class Role {
     @Column(length = 60)
     private RoleName name;
     
-    @ManyToMany
-    @JoinTable(name = "userrole_privilege")
-    private Set<Privilege> privileges;
 
     public Role() {
 
@@ -48,8 +40,5 @@ public class Role {
     public void setName(RoleName name) {
         this.name = name;
     }
-    
-    public Set<Privilege> getPrivileges() {
-    	return Collections.unmodifiableSet(privileges);
-    }
+ 
 }

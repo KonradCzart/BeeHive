@@ -96,5 +96,4 @@ public class Hive {
 		this.apiary = apiary;
 	}
     
-    
 }

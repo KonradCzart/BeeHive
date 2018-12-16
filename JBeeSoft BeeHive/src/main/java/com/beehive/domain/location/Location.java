@@ -6,14 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
-import org.hibernate.annotations.NaturalId;
 
 @Entity
 public class Location {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    	private Long id;
+    private Long id;
 	
 	@NotBlank
 	private String country;
@@ -53,5 +52,5 @@ public class Location {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
+
 }
