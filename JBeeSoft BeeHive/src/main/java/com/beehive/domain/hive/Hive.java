@@ -55,13 +55,21 @@ public class Hive {
     	this.beeQueen = null;
     }
     
-    public Apiary getApiary() {
-        return apiary;
-    }
-
     public Long getId() {
         return id;
     }
+    
+    public void setId(Long id) {
+    	this.id = id;
+    }
+    
+    public Apiary getApiary() {
+        return apiary;
+    }
+    
+    public void setApiary(Apiary apiary) {
+		this.apiary = apiary;
+	}
 
     public String getName() {
         return name;
@@ -89,10 +97,6 @@ public class Hive {
 
 	public void setBeeQueen(BeeQueen beeQueen) {
 		this.beeQueen = beeQueen;
-	}
-
-	public void setApiary(Apiary apiary) {
-		this.apiary = apiary;
 	}
 
 	public HiveType getHiveType() {

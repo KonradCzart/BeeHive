@@ -1,6 +1,8 @@
 package com.beehive.domain.user;
 
+import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.dateaudit.DateAudit;
+import com.beehive.domain.privileges.PrivilegeProfile;
 import com.beehive.domain.userrole.Role;
 
 import org.hibernate.annotations.NaturalId;
@@ -8,7 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -51,6 +56,10 @@ public class User extends DateAudit {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    
+    @OneToMany(mappedBy = "targetUser")
+    @MapKey(name = "affectedApiary")
+    private Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap;
 
     public User() {
 
@@ -62,6 +71,7 @@ public class User extends DateAudit {
         this.username = builder.username;
         this.email = builder.email;
         this.password = builder.password;
+        this.privilegeProfileForApiaryMap = builder.privilegeProfileForApiaryMap;
     }
 
     public Long getId() {
@@ -112,6 +122,30 @@ public class User extends DateAudit {
         this.roles = roles;
     }
     
+    public Map<Apiary, PrivilegeProfile> getPrivilegeProfileForApiaryMap() {
+		return privilegeProfileForApiaryMap;
+	}
+
+	public void setPrivilegeProfileForApiaryMap(Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap) {
+		this.privilegeProfileForApiaryMap = privilegeProfileForApiaryMap;
+	}
+
+	public PrivilegeProfile getPrivilegeProfileForApiary(Apiary apiary) {
+		return privilegeProfileForApiaryMap.get(apiary);
+	}
+
+	public void updatePrivilegeProfileForApiary(PrivilegeProfile profile, Apiary apiary) {
+		privilegeProfileForApiaryMap.put(apiary, profile);
+	}
+	
+	public void removePrivilegeProfileForApiary(Apiary apiary) {
+		privilegeProfileForApiaryMap.remove(apiary);
+	}
+	
+	public Collection<PrivilegeProfile> getAllPrivilegeProfiles() {
+		return privilegeProfileForApiaryMap.values();
+	}
+    
     public static UserBuilder builder() {
     	return new UserBuilder();
     }
@@ -123,6 +157,7 @@ public class User extends DateAudit {
         private String username;
         private String email;
         private String password;
+        private Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap;
         
         public UserBuilder withId(Long id) {
 			this.id = id;
@@ -146,6 +181,11 @@ public class User extends DateAudit {
         
         public UserBuilder withPassword(String password) {
 			this.password = password;
+			return this;
+		}
+        
+        public UserBuilder withPrivilegeProfileForApiaryMap(Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap) {
+			this.privilegeProfileForApiaryMap = privilegeProfileForApiaryMap;
 			return this;
 		}
         

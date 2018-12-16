@@ -1,6 +1,7 @@
 package com.beehive.domain.apiary;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.beehive.domain.privileges.PrivilegeService;
+import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserRepository;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.ApiaryDTO;
 import com.beehive.infrastructure.payload.ApiaryINFO;
 import com.beehive.infrastructure.payload.ApiaryRequest;
+import com.beehive.infrastructure.payload.AssociatedApiariesResponse;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
 
@@ -37,12 +41,19 @@ public class ApiaryController {
 	
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    PrivilegeService privilegeService;
+    
+    private static final String NO_SUCH_USER_MSG = "There is no user with id {0}";
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public List<ApiaryINFO> getMeApiary(@CurrentUser UserPrincipal currentUser) {
+    public AssociatedApiariesResponse getMeApiary(@CurrentUser UserPrincipal currentUser) {
+    	User user = userRepository.findById(currentUser.getId()).orElseThrow(
+    			() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER_MSG, currentUser.getId())));
     	
-        return apiaryService.getCurrentUserApiary(currentUser);
+        return apiaryService.getAssociatedApiaries(user);
     }
     
     @GetMapping("/{apiaryId}")
