@@ -17,7 +17,7 @@ import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
 import PrivateRoute from '../common/PrivateRoute';
 import Index from '../common/Index';
-import Apiary from '../apiary/Apiary';
+import Apiary from '../apiary/Apiary1';
 
 import { Layout, notification } from 'antd';
 const { Content } = Layout;

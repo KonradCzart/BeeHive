@@ -64,7 +64,7 @@ class ApiaryList extends Component {
 					): (
 						<div>
 							<h1>Your apiaries:</h1>
-							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries} />
+							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaries.ownedApiaries} />
 						</div>
 					)
 				}
@@ -87,9 +87,8 @@ class ApiaryList extends Component {
 
 		promise			
 		.then(response => {
-
 			this.setState({
-				hives: response,
+				apiaries: response,
 				isLoading: false
 			})
 		}).catch(error => {
@@ -148,7 +147,6 @@ class ApiaryList extends Component {
 			}
 
 			const apiaryRequest = values;
-			apiaryRequest.owner_id=this.props.currentUser.id;
 			form.resetFields();
 			this.setState({ visible: false });
 			addApiary(apiaryRequest)
