@@ -5,11 +5,11 @@ import java.util.List;
 public class AssociatedApiariesResponse {
 	
 	List<ApiaryINFO> ownedApiaries;
-	List<ApiaryINFO> otherAppiaries;
+	List<ApiaryINFO> otherApiaries;
 	
 	public AssociatedApiariesResponse(List<ApiaryINFO> ownedApiaries, List<ApiaryINFO> otherApiaries) {
 		this.ownedApiaries = ownedApiaries;
-		this.otherAppiaries = otherApiaries;
+		this.otherApiaries = otherApiaries;
 	}
 	
 	public List<ApiaryINFO> getOwnedApiaries() {
@@ -21,11 +21,11 @@ public class AssociatedApiariesResponse {
 	}
 	
 	public List<ApiaryINFO> getOtherAppiaries() {
-		return otherAppiaries;
+		return otherApiaries;
 	}
 	
 	public void setOtherAppiaries(List<ApiaryINFO> otherAppiaries) {
-		this.otherAppiaries = otherAppiaries;
+		this.otherApiaries = otherAppiaries;
 	}
 
 }
