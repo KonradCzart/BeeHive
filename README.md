@@ -60,6 +60,56 @@ While the server is running, you may interact with it in the following ways:
   "email": "janek@wp.pl"
 }
 ```
+6. create new apiary through `localhost:5000/api/apiary/new` (POST) (signed-in-user's session token in request's header); returns JSON:
+```
+{
+  "name": "Pasieka11",
+  "country": "Poland",
+  "city": "Kraków"
+}
+```
+7. get associaded apiaries list through `localhost:5000/api/apiary/me` (GET) (signed-in-user's session token in request's header); returns JSON:
+```
+{
+    "ownedApiaries": [
+        {
+            "id": 2,
+            "name": "Pasieka2",
+            "country": "Poland",
+            "city": "Kraków",
+            "hiveNumber": 0
+        },
+        {
+            "id": 6,
+            "name": "Pasieka11",
+            "country": "Poland",
+            "city": "Kraków",
+            "hiveNumber": 0
+        }
+    ],
+    "otherAppiaries": [
+        {
+            "id": 1,
+            "name": "Pasieka1",
+            "country": "Poland",
+            "city": "Kraków",
+            "hiveNumber": 0
+        }
+    ]
+}
+```
+8. grant privileges for owned appiary through `http://localhost:5000/api/privileges/grant` (POST) (signed-in-user's session token in request's header); returns JSON:
+```
+{
+	"targetUser": 2,
+	"privileges": 
+	[
+		"HIVE_EDITING",
+		"OWNER_PRIVILEGE"
+	],
+	"affectedApiaryId": 2
+}
+```
 # Adding a new Apiary
 * choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
 
