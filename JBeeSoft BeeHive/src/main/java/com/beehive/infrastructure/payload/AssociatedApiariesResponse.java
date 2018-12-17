@@ -20,12 +20,12 @@ public class AssociatedApiariesResponse {
 		this.ownedApiaries = ownedApiaries;
 	}
 	
-	public List<ApiaryINFO> getOtherAppiaries() {
+	public List<ApiaryINFO> getOtherApiaries() {
 		return otherApiaries;
 	}
 	
-	public void setOtherAppiaries(List<ApiaryINFO> otherAppiaries) {
-		this.otherApiaries = otherAppiaries;
+	public void setOtherApiaries(List<ApiaryINFO> otherApiaries) {
+		this.otherApiaries = otherApiaries;
 	}
 
 }
