@@ -125,6 +125,19 @@ While the server is running, you may interact with it in the following ways:
 	"boxNumber": 5
 }
 ```
+10. perform action on hives through `localhost:5000/api/action/feeding/{apiary_id}` (POST) (signed-in-user's session token in request's header); JSON body:
+```
+{
+	"affectedHives": 
+	[
+		1,
+		2
+	],
+	"feedType": "Bezglutenowy Chleb",
+	"feedAmount": 2.5,
+	"price": 3.99
+}
+```
 # Adding a new Apiary
 * choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
 
