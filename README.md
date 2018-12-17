@@ -98,7 +98,7 @@ While the server is running, you may interact with it in the following ways:
     ]
 }
 ```
-8. grant privileges for owned appiary through `http://localhost:5000/api/privileges/grant` (POST) (signed-in-user's session token in request's header); returns JSON:
+8. grant privileges for owned appiary through `localhost:5000/api/privileges/grant` (POST) (signed-in-user's session token in request's header); returns JSON:
 ```
 {
 	"targetUser": 2,
