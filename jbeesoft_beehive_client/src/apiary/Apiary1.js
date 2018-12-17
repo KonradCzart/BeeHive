@@ -3,6 +3,7 @@ import './ApiaryList.css';
 import { Form, Input, Button, notification, Modal, Table, Menu, Dropdown, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { addHive, getAllApiaries, getAllHiveTypes,getAllHives } from '../util/APIUtils';
+import LoadingIndicator  from '../common/LoadingIndicator';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -60,6 +61,10 @@ class Apiary extends Component {
 						</div>
 					)
 				}
+				{
+                    this.state.isLoading ? 
+                    <LoadingIndicator />: null                     
+                }
 			</div>
 		)
 	}
@@ -148,6 +153,7 @@ class Apiary extends Component {
 						message: 'BeeHive App',
 						description: apiaryRequest.name + " created successfully!"
 					});
+					this.setState({date: new Date()})
 				}).catch(error => {
 					if(error.status === 401) {
 						notification.error({
@@ -277,7 +283,7 @@ class AddHiveForm extends Component {
 	}
 
 	componentDidMount() {
-		//this.getHiveTypes();
+		this.getHiveTypes();
 	}
 
 	componentDidUpdate(nextProps) {
@@ -293,10 +299,10 @@ class AddHiveForm extends Component {
 				currentVotes: [],
 				isLoading: false
 			});	
-			//this.getHiveTypes();
+			this.getHiveTypes();
 		}
 		if(this.state.date !== this.state.oldDate) {
-			//this.getHiveTypes();
+			this.getHiveTypes();
 			const date = this.state.date;
 			this.setState({
 				oldDate: date
