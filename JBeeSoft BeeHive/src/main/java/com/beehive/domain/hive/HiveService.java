@@ -35,8 +35,8 @@ public class HiveService {
 	public Hive createHive(HiveRequest hiveRequest) throws NoSuchElementException{
 		
 		
-		Optional<Apiary> apiary = apiaryRepository.findById(hiveRequest.getApiary_id());
-		Optional<HiveType> type = hiveTypeRepository.findById(hiveRequest.getHiveType_id());
+		Optional<Apiary> apiary = apiaryRepository.findById(hiveRequest.getApiaryId());
+		Optional<HiveType> type = hiveTypeRepository.findById(hiveRequest.getHiveTypeId());
 		
 		Apiary apiaryForHive = apiary
 				.orElseThrow(() -> new NoSuchElementException("Apiary id is not correct"));
