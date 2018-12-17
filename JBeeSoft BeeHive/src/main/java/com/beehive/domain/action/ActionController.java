@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.beehive.domain.action.feeding.FeedingAction;
 import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
+import com.beehive.domain.action.inspection.InspectionAction;
 import com.beehive.domain.action.treatment.TreatmentAction;
 import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.hive.Hive;
@@ -25,6 +26,7 @@ import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.FeedingActionRequest;
 import com.beehive.infrastructure.payload.HoneyCollectiongActionRequest;
+import com.beehive.infrastructure.payload.InspectionActionRequest;
 import com.beehive.infrastructure.payload.TreatmentActionRequest;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
@@ -53,6 +55,7 @@ public class ActionController {
 	public static final String FEEDING_PATH = "/feeding/{" + APIARY_ID + "}";
 	public static final String HONEY_COLLECTIONG_PATH = "/honeycollecting/{" + APIARY_ID + "}";
 	public static final String TREATMENT_PATH = "/treatment/{" + APIARY_ID + "}";
+	public static final String INSPECTION_PATH = "/inspection/{" + APIARY_ID + "}";
 
 	
 	@PostMapping(FEEDING_PATH)
@@ -109,5 +112,25 @@ public class ActionController {
 		
 		actionService.registerPerformedAction(treatmentAction);
 		return new ApiResponse(true, "Treatment action performed succesfully");
+	}
+	
+	@PostMapping(INSPECTION_PATH)
+	public ApiResponse performInspectionAction(@Valid @RequestBody InspectionActionRequest inspectionActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
+		User performer = userService.getUserFormDatabase(currentUser.getId());
+		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(inspectionActionRequest.getAffectedHives(), apiaryId);
+		
+		InspectionAction inspectionAction= InspectionAction.builder()
+				.withAffectedHives(affectedHives)
+				.withPerformer(performer)
+				.withDate(new Date())
+				.withIsMaggotPresent(inspectionActionRequest.getIsMaggotPresent())
+				.withIsLairPresent(inspectionActionRequest.getIsLairPresent())
+				.withframesWithWaxFoundation(inspectionActionRequest.getFramesWithWaxFoundation())
+				.withHiveStrength(inspectionActionRequest.getHiveStrength())
+				.withDescription(inspectionActionRequest.getDecription())
+				.build();
+		
+		actionService.registerPerformedAction(inspectionAction);
+		return new ApiResponse(true, "Inspection action performed succesfully");
 	}
 }
