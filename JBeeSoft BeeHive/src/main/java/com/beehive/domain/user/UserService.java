@@ -19,6 +19,7 @@ public class UserService {
 	
 	private static final String USERNAME_ALREADY_TAKEN_MSG = "User with username {0} already exists!";
 	private static final String EMAIL_ALREADY_TAKEN_MSG = "User with email {0} already exists!";
+	private static final String NO_SUCH_USER = "There is no user with id {0}";
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -29,8 +30,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public User registerUser(SignUpRequest signUpRequest) {
-		
+	public User registerUser(SignUpRequest signUpRequest) {	
 		if(userRepository.existsByUsername(signUpRequest.getUsername())) {
 			throw new IllegalArgumentException(MessageFormat.format(USERNAME_ALREADY_TAKEN_MSG, signUpRequest.getUsername()));
 		}
@@ -45,6 +45,7 @@ public class UserService {
         		.withEmail(signUpRequest.getEmail())
         		.withPassword(signUpRequest.getPassword())
         		.build();
+		
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
@@ -53,6 +54,11 @@ public class UserService {
         user.setRoles(Collections.singleton(userRole));
 
         return userRepository.save(user);
+	}
+	
+	public User getUserFormDatabase(Long userId) {
+		return userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER, userId)));
 	}
 	
 	public UserDTO mapToUserDTO(User user) {

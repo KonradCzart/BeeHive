@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.beehive.domain.action.feeding.FeedingAction;
 import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.apiary.ApiaryRepository;
+import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveRepository;
+import com.beehive.domain.hive.HiveService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserRepository;
+import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.FeedingActionRequest;
 import com.beehive.infrastructure.security.CurrentUser;
@@ -30,13 +33,13 @@ import com.beehive.infrastructure.security.UserPrincipal;
 public class ActionController {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Autowired
-	private HiveRepository hiveRepository;
+	private HiveService hiveService;
 	
 	@Autowired
-	private ApiaryRepository apiaryRepository;
+	private ApiaryService apiaryService;
 	
 	@Autowired
 	ActionService actionService;
@@ -44,22 +47,14 @@ public class ActionController {
 	public static final String MAIN_PATH = "/action";
 	private static final String APIARY_ID = "apiary_id";
 	public static final String FEEDING_PATH = "/feeding/{" + APIARY_ID + "}";
-	
-	private static final String NO_SUCH_USER = "There is no user with id {0}";
-	private static final String NO_SUCH_APIARY = "There is no apiary with id {0}";
-	private static final String WRONG_HIVE_IDS = "There are wrong hive ids in affected hives set!";
-	private static final String NOT_ALL_HIVES_BELONG_TO_APIARY = "There are hives that don't belong to specified apiary!";
+	public static final String HONEY_COLLECTIONG_PATH = "/honeycollectiong/{" + APIARY_ID + "}";
+
 	
 	@PostMapping(FEEDING_PATH)
 	public ApiResponse performFeedingAction(@Valid @RequestBody FeedingActionRequest feedingActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
-		User performer = userRepository.findById(currentUser.getId()).orElseThrow(
-				() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER, currentUser.getId())));
-		
-		Apiary apiary = apiaryRepository.findById(apiaryId).orElseThrow(
-				() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_APIARY, apiaryId)));
-		
-		Set<Hive> affectedHives = hiveRepository.findAllByIdIn(feedingActionRequest.getAffectedHives());
-		validateHives(affectedHives, feedingActionRequest.getAffectedHives(), apiary);
+		User performer = userService.getUserFormDatabase(currentUser.getId());		
+		//Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);	
+		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(feedingActionRequest.getAffectedHives(), apiaryId);
 		
 		FeedingAction feedingAction = FeedingAction.builder()
 				.withAffectedHives(affectedHives)
@@ -75,19 +70,11 @@ public class ActionController {
 		
 	}
 	
-	private void validateHives(Set<Hive> hives, Set<Long> ids, Apiary apiary) {
-		if(hives.size() != ids.size()) {
-			throw new IllegalArgumentException(WRONG_HIVE_IDS);
-		} 
-		
-		if(!allHivesBelongsToApiary(hives, apiary)) {
-			throw new IllegalAccessError(NOT_ALL_HIVES_BELONG_TO_APIARY);
-		}				
+	@PostMapping(HONEY_COLLECTIONG_PATH)
+	public ApiResponse performHoneyCollectiongAction(@Valid @RequestBody FeedingActionRequest feedingActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
+		return null;
 	}
 	
-	private boolean allHivesBelongsToApiary(Set<Hive> hives, Apiary apiary) {
-		return hives.stream()
-				.allMatch(hive -> hive.getApiary().equals(apiary));
-	}	
+	
 	
 }
