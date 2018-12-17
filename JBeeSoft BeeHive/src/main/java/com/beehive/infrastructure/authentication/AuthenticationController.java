@@ -1,8 +1,10 @@
 package com.beehive.infrastructure.authentication;
 
 import com.beehive.domain.user.User;
-import com.beehive.domain.user.UserRepository;
 import com.beehive.domain.user.UserService;
+import com.beehive.domain.userrole.Role;
+import com.beehive.domain.userrole.RoleName;
+import com.beehive.domain.userrole.RoleService;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.JwtAuthenticationResponse;
 import com.beehive.infrastructure.payload.LoginRequest;
@@ -16,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +32,13 @@ import java.net.URI;
 public class AuthenticationController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private AuthenticationManager authenticationManager;
     
     @Autowired
-    UserService userService;
+    private UserService userService;
+    
+    @Autowired
+	private RoleService roleService;
 
     @Autowired
     JwtTokenProvider tokenProvider;
@@ -65,15 +63,21 @@ public class AuthenticationController {
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 		User newUser; 
 		try {
-			newUser = userService.registerUser(signUpRequest);
+			Role userRole = roleService.getUserRoleFromDatabase(RoleName.ROLE_USER);
+			User user = userService.mapToUser(signUpRequest);
+			newUser = userService.registerUser(user, userRole);		
+			
 		} catch (IllegalArgumentException e) {
-			return new ResponseEntity(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{username}")
-				.buildAndExpand(newUser.getUsername()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/api/users/{username}")
+				.buildAndExpand(newUser.getUsername())
+				.toUri();
 
-		return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+		return ResponseEntity.created(location)
+				.body(new ApiResponse(true, "User registered successfully"));
 	}
 }
 

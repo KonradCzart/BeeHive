@@ -85,8 +85,6 @@ public class PrivilegeService {
 				.map(Privilege::getName)
 				.collect(Collectors.toList());
 		return new HashSet<Privilege>(privilegeRepository.findAllByNameIn(privilegeNames));
-	}
-	
-	
+	}	
 	
 }
