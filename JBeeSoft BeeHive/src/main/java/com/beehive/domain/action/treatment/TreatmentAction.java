@@ -66,6 +66,10 @@ public class TreatmentAction extends Action {
         this.price = price;
     }
     
+    public static Builder builder() {
+		return new Builder();
+	}
+    
     public static class Builder extends Action.Builder<Builder> {
 
     	private String deseaseType;

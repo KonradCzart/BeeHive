@@ -1,6 +1,5 @@
 package com.beehive.domain.action;
 
-import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -15,20 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.beehive.domain.action.feeding.FeedingAction;
 import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
-import com.beehive.domain.apiary.Apiary;
-import com.beehive.domain.apiary.ApiaryRepository;
+import com.beehive.domain.action.treatment.TreatmentAction;
 import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.hive.Hive;
-import com.beehive.domain.hive.HiveRepository;
 import com.beehive.domain.hive.HiveService;
 import com.beehive.domain.honey.HoneyType;
 import com.beehive.domain.honey.HoneyTypeService;
 import com.beehive.domain.user.User;
-import com.beehive.domain.user.UserRepository;
 import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.FeedingActionRequest;
 import com.beehive.infrastructure.payload.HoneyCollectiongActionRequest;
+import com.beehive.infrastructure.payload.TreatmentActionRequest;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
 
@@ -55,6 +52,7 @@ public class ActionController {
 	private static final String APIARY_ID = "apiary_id";
 	public static final String FEEDING_PATH = "/feeding/{" + APIARY_ID + "}";
 	public static final String HONEY_COLLECTIONG_PATH = "/honeycollecting/{" + APIARY_ID + "}";
+	public static final String TREATMENT_PATH = "/treatment/{" + APIARY_ID + "}";
 
 	
 	@PostMapping(FEEDING_PATH)
@@ -94,4 +92,22 @@ public class ActionController {
 		return new ApiResponse(true, "Honey collectiong action performed succesfully");
 	}
 	
+	@PostMapping(TREATMENT_PATH)
+	public ApiResponse performTreatmentAction(@Valid @RequestBody TreatmentActionRequest treatmentActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
+		User performer = userService.getUserFormDatabase(currentUser.getId());
+		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(treatmentActionRequest.getAffectedHives(), apiaryId);
+		
+		TreatmentAction treatmentAction = TreatmentAction.builder()
+				.withAffectedHives(affectedHives)
+				.withPerformer(performer)
+				.withDate(new Date())
+				.withDeseaseType(treatmentActionRequest.getDeseaseType())
+				.withAppliedMedicine(treatmentActionRequest.getAppliedMedicine())
+				.withDose(treatmentActionRequest.getDose())
+				.withPrice(treatmentActionRequest.getPrice())
+				.build();
+		
+		actionService.registerPerformedAction(treatmentAction);
+		return new ApiResponse(true, "Treatment action performed succesfully");
+	}
 }
