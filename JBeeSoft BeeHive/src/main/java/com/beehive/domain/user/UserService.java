@@ -8,9 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.beehive.domain.userrole.Role;
-import com.beehive.domain.userrole.RoleName;
-import com.beehive.domain.userrole.RoleRepository;
-import com.beehive.infrastructure.exceptions.AppException;
 import com.beehive.infrastructure.payload.SignUpRequest;
 import com.beehive.infrastructure.payload.UserDTO;
 
@@ -24,36 +21,24 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	private RoleRepository roleRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
 	
-	public User registerUser(SignUpRequest signUpRequest) {	
-		if(userRepository.existsByUsername(signUpRequest.getUsername())) {
-			throw new IllegalArgumentException(MessageFormat.format(USERNAME_ALREADY_TAKEN_MSG, signUpRequest.getUsername()));
+	public User registerUser(User newUser, Role userRole) {	
+		if(userRepository.existsByUsername(newUser.getUsername())) {
+			throw new IllegalArgumentException(MessageFormat.format(USERNAME_ALREADY_TAKEN_MSG, newUser.getUsername()));
 		}
 		
-		if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-			throw new IllegalArgumentException(MessageFormat.format(EMAIL_ALREADY_TAKEN_MSG, signUpRequest.getEmail()));
+		if(userRepository.existsByEmail(newUser.getEmail())) {
+			throw new IllegalArgumentException(MessageFormat.format(EMAIL_ALREADY_TAKEN_MSG, newUser.getEmail()));
 		}
 		
-		User user = User.builder()
-        		.withName(signUpRequest.getName())
-        		.withUsername(signUpRequest.getUsername())
-        		.withEmail(signUpRequest.getEmail())
-        		.withPassword(signUpRequest.getPassword())
-        		.build();
-		
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
+        newUser.setRoles(Collections.singleton(userRole));
 
-        user.setRoles(Collections.singleton(userRole));
-
-        return userRepository.save(user);
+        return userRepository.save(newUser);
 	}
 	
 	public User getUserFormDatabase(Long userId) {
@@ -70,12 +55,13 @@ public class UserService {
 				.build();
 	}
 	
-	public User mapToUser(UserDTO userDTO) {
+	public User mapToUser(SignUpRequest signUpRequest) {
 		return User.builder()
-				.withId(userDTO.getId())
-				.withUsername(userDTO.getUsername())
-				.withName(userDTO.getName())
-				.withEmail(userDTO.getEmail())
+				.withUsername(signUpRequest.getUsername())
+				.withName(signUpRequest.getName())
+				.withEmail(signUpRequest.getEmail())
+				.withPassword(signUpRequest.getPassword())
 				.build();
 	}
+	
 }

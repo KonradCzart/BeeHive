@@ -21,6 +21,9 @@ public class UserController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	public static final String MAIN_PATH = "/user";
 	private static final String ME_PATH = "/me";
@@ -35,12 +38,8 @@ public class UserController {
     @GetMapping(ME_PATH)
     @PreAuthorize("hasRole('USER')")
     public UserDTO getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        return UserDTO.builder()
-        		.withId(currentUser.getId())
-        		.withName(currentUser.getName())
-        		.withUsername(currentUser.getUsername())
-        		.withEmail(currentUser.getEmail())
-        		.build();
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+    	return userService.mapToUserDTO(user);
     }
     
     @GetMapping(CHECK_AVAILABILITY_PATH + USERNAME_PATH)
