@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "feeding")
+@Table(name = "feeding_actions")
 public class FeedingAction extends Action {
 	
     @NotBlank
@@ -51,6 +51,10 @@ public class FeedingAction extends Action {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+    
+    public static Builder builder() {
+    	return new Builder();
     }
     
     public static class Builder extends Action.Builder<Builder> {

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "inspection")
+@Table(name = "inspection_actions")
 
 public class InspectionAction extends Action {
 	

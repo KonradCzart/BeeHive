@@ -5,11 +5,11 @@ import com.beehive.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "action")
+@Table(name = "actions")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Action {
 	
@@ -22,6 +22,7 @@ public abstract class Action {
     private Set<Hive> affectedHives;
 
     @NotNull
+    @Column(columnDefinition="DATETIME")
     private Date date;
     
     @NotNull
@@ -36,7 +37,6 @@ public abstract class Action {
         this.date = builder.date;
         this.performer = builder.performer;
     }
-    
     
     public static abstract class Builder<T extends Builder<T>> {
     	

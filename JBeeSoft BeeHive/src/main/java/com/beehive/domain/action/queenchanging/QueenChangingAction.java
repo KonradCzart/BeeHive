@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "queenchanging")
+@Table(name = "queen_changing_actions")
 public class QueenChangingAction extends Action {
 	
 //    @ManyToMany

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "honeycollecting")
+@Table(name = "honey_collecting_actions")
 public class HoneyCollectingAction extends Action {
 	
     @ManyToOne
