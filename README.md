@@ -93,7 +93,7 @@ While the server is running, you may interact with it in the following ways:
             "hiveNumber": 0
         }
     ],
-    "otherAppiaries": [
+    "otherApiaries": [
         {
             "id": 1,
             "name": "Pasieka1",
