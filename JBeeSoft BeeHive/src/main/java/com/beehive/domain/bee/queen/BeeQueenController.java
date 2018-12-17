@@ -41,7 +41,7 @@ public class BeeQueenController {
     		beeQueenService.addBeeQueenToHive(beeQueenRequest);
     	}
         catch (NoSuchElementException e) {
-        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
     	

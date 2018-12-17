@@ -11,28 +11,29 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "queen_changing_actions")
 public class QueenChangingAction extends Action {
-	
-//    @ManyToMany
-//    private Set<BeeQueen> changedBeeQueens;
     
     @NotNull
-    private int price;
+    private Double price;
     
     public QueenChangingAction(Builder builder) {
 		super(builder);
 		this.price = builder.price;
 	}
     
+    public static Builder builder() {
+		return new Builder();
+	}
+    
     public static class Builder extends Action.Builder<Builder> {
 
-    	private int price;
+    	private Double price;
     	
 		@Override
 		protected Builder self() {
 			return this;
 		}
 
-		public Builder withPrice(int price) {
+		public Builder withPrice(Double price) {
 			this.price = price;
 			return this;
 		}
