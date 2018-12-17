@@ -41,6 +41,9 @@ public class HoneyCollectingAction extends Action {
 		this.honeyAmount = honeyAmount;
 	}
 
+	public static Builder builder() {
+		return new Builder();
+	}
 
 	public static class Builder extends Action.Builder<Builder> {
 		

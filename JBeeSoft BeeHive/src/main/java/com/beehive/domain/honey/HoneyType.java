@@ -26,6 +26,8 @@ public class HoneyType {
     @NotBlank
 	@Size(max = 100)
 	private String description;
+    
+    public HoneyType() {}
 
     public HoneyType(String name, Double price, String description) {
         this.name = name;
@@ -64,6 +66,5 @@ public class HoneyType {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
     
 }
