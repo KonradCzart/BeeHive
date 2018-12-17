@@ -140,13 +140,29 @@ export function addHive(apiaryData) {
         body: JSON.stringify(apiaryData)         
     });
 }
- 
+
+/**
+ * output = {date-x: [{id, title, description, isRealize, usersId}, ...], ...}
+ * date-x = YYYY-MM-DD
+ * usersId = [...]
+ */
 export function getNotifications() {
     return request({
-        url: API_BASE_URL + "/notifications/me",
-        method: "GET"
+        url: API_BASE_URL + "/notification/me",
+        method: "GET",
     })
 }
+/**
+ * dict = {title, description, date, isRealize, usersId}
+ */
+export function addNotification(dict) {
+    return request({
+        url: API_BASE_URL + "/notification/new",
+        method: "POST",
+        body: JSON.stringify(dict),
+    });
+}
+
 
 export function getAllHiveTypes() {
     return request({
