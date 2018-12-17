@@ -1,10 +1,6 @@
 package com.beehive.domain.apiary;
 
 import java.net.URI;
-import java.text.MessageFormat;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +17,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
-import com.beehive.domain.user.UserRepository;
+import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.ApiaryDTO;
-import com.beehive.infrastructure.payload.ApiaryINFO;
 import com.beehive.infrastructure.payload.ApiaryRequest;
 import com.beehive.infrastructure.payload.AssociatedApiariesResponse;
 import com.beehive.infrastructure.security.CurrentUser;
@@ -40,27 +35,24 @@ public class ApiaryController {
     ApiaryService apiaryService;
 	
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
     
     @Autowired
     PrivilegeService privilegeService;
     
-    private static final String NO_SUCH_USER_MSG = "There is no user with id {0}";
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public AssociatedApiariesResponse getMeApiary(@CurrentUser UserPrincipal currentUser) {
-    	User user = userRepository.findById(currentUser.getId()).orElseThrow(
-    			() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER_MSG, currentUser.getId())));
-    	
+    	User user = userService.getUserFormDatabase(currentUser.getId());   	
         return apiaryService.getAssociatedApiaries(user);
     }
     
     @GetMapping("/{apiaryId}")
     @PreAuthorize("hasRole('USER')")
     public ApiaryDTO getApiaryById(@CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
-    	
-        return apiaryService.getApiaryById(apiaryId);
+    	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+    	return apiaryService.mapToApiaryDTO(apiary);
     }
     
     @PostMapping("/new")
@@ -69,14 +61,11 @@ public class ApiaryController {
 
     	Apiary apiary;
     	try {
-    		User user = userRepository.findById(currentUser.getId()).orElseThrow(
-    				() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER_MSG, currentUser.getId())));
-    		
+    		User user = userService.getUserFormDatabase(currentUser.getId());  		
     		apiary = apiaryService.createApiary(apiaryRequest, user);
     	}
         catch (IllegalArgumentException e) {
-        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, "User id is not correct!"),
-        			HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 
         URI location = ServletUriComponentsBuilder

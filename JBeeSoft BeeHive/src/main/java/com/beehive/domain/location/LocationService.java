@@ -12,13 +12,13 @@ public class LocationService {
 	
 	
 	public Location createLocation(String country, String city) {
-		
-		Location location = new Location(country, city);
-		
+		Location location = new Location(country, city);	
 		return locationRepository.save(location);
 	}
 	
+	public Location getOrCreateLocationIfNotExist(String country, String city) {
+		return locationRepository.findByCountryAndCity(country, city)
+				.orElseGet(() -> createLocation(country, city));
+	}
 	
-	
-
 }

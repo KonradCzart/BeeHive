@@ -6,23 +6,23 @@ import javax.validation.constraints.NotNull;
 public class HiveRequest {
 	
 	@NotNull
-	private Long apiary_id;
+	private Long apiaryId;
 	
 	@NotBlank
 	private String name;
 	
 	@NotNull
-	private Long hiveType_id;
+	private Long hiveTypeId;
 	
 	@NotNull
-	private int boxNumber;
+	private Integer boxNumber;
 
-	public Long getApiary_id() {
-		return apiary_id;
+	public Long getApiaryId() {
+		return apiaryId;
 	}
 
-	public void setApiary_id(Long apiary_id) {
-		this.apiary_id = apiary_id;
+	public void setApiaryId(Long apiaryId) {
+		this.apiaryId = apiaryId;
 	}
 
 	public String getName() {
@@ -33,25 +33,20 @@ public class HiveRequest {
 		this.name = name;
 	}
 
-	public Long getHiveType_id() {
-		return hiveType_id;
+	public Long getHiveTypeId() {
+		return hiveTypeId;
 	}
 
-	public void setHiveType_id(Long hiveType_id) {
-		this.hiveType_id = hiveType_id;
+	public void setHiveTypeId(Long hiveTypeId) {
+		this.hiveTypeId = hiveTypeId;
 	}
 
-	public int getBoxNumber() {
+	public Integer getBoxNumber() {
 		return boxNumber;
 	}
 
-	public void setBoxNumber(int boxNumber) {
+	public void setBoxNumber(Integer boxNumber) {
 		this.boxNumber = boxNumber;
-	}
-	
-	
-	
-	
-	
+	}	
 	
 }

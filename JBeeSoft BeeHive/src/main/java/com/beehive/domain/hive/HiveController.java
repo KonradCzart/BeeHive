@@ -50,8 +50,7 @@ public class HiveController {
     
     @GetMapping("/type")
     @PreAuthorize("hasRole('USER')")
-    public List<ValueResponse> getAllHiveType(@CurrentUser UserPrincipal currentUser){
-    	
+    public List<ValueResponse> getAllHiveType(@CurrentUser UserPrincipal currentUser){  	
     	return hiveService.getAllHiveType();
     }
     

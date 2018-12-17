@@ -3,6 +3,7 @@ package com.beehive.domain.hive;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,15 @@ public class HiveService {
 	
 	@Autowired
 	private BeeQueenService beeQueenService;
+	
+	private static final String NO_SUCH_HIVES = "Some hives with passed ids don't exist";
+	private static final String NOT_ALL_HIVES_BELONG_TO_APIARY = "There are hives that don't belong to specified apiary!";
 
 	public Hive createHive(HiveRequest hiveRequest) throws NoSuchElementException{
 		
 		
-		Optional<Apiary> apiary = apiaryRepository.findById(hiveRequest.getApiary_id());
-		Optional<HiveType> type = hiveTypeRepository.findById(hiveRequest.getHiveType_id());
+		Optional<Apiary> apiary = apiaryRepository.findById(hiveRequest.getApiaryId());
+		Optional<HiveType> type = hiveTypeRepository.findById(hiveRequest.getHiveTypeId());
 		
 		Apiary apiaryForHive = apiary
 				.orElseThrow(() -> new NoSuchElementException("Apiary id is not correct"));
@@ -108,6 +112,31 @@ public class HiveService {
 		
 		return new ValueResponse(type.getId(),type.getName());
 	}
+	
+	public Set<Hive> getHivesFromDatabase(Set<Long> ids) {
+		Set<Hive> hives = hiveRepository.findAllByIdIn(ids);
+		
+		if(ids.size() != hives.size()) {
+			throw new IllegalArgumentException(NO_SUCH_HIVES);
+		}
+		
+		return hives;
+	}
+	
+	public Set<Hive> getHivesInApiaryFromDatabase(Set<Long> ids, Long apiaryId) {
+		Set<Hive> hives = getHivesFromDatabase(ids);
+		
+		if(!allHivesBelongsToApiary(hives, apiaryId)) {
+			throw new IllegalAccessError(NOT_ALL_HIVES_BELONG_TO_APIARY);
+		}
+		
+		return hives;
+	}
+	
+	private boolean allHivesBelongsToApiary(Set<Hive> hives, Long apiaryId) {
+		return hives.stream()
+				.allMatch(hive -> hive.getApiary().getId().equals(apiaryId));
+	}	
 	
 	public HiveDTO mapHiveToHiveDTO(Hive hive) {
 		

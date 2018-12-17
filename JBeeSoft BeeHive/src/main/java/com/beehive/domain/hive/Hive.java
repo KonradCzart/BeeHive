@@ -36,7 +36,7 @@ public class Hive {
     private HiveType hiveType;
     
     @NotNull
-    private int boxNumber;
+    private Integer boxNumber;
     
     @OneToOne
     @JoinColumn(name = "queen_id")
@@ -47,7 +47,7 @@ public class Hive {
         
     }
     
-    public Hive(String name, Apiary apiary, HiveType hiveType, int boxNumber) {
+    public Hive(String name, Apiary apiary, HiveType hiveType, Integer boxNumber) {
     	this.name = name;
     	this.apiary = apiary;
     	this.hiveType = hiveType;
@@ -83,11 +83,11 @@ public class Hive {
     	return hiveType;
     }
 
-	public int getBoxNumber() {
+	public Integer getBoxNumber() {
 		return boxNumber;
 	}
 
-	public void setBoxNumber(int boxNumber) {
+	public void setBoxNumber(Integer boxNumber) {
 		this.boxNumber = boxNumber;
 	}
 
