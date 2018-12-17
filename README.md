@@ -116,6 +116,15 @@ While the server is running, you may interact with it in the following ways:
 	"affectedApiaryId": 2
 }
 ```
+9. add new hive to apiary through `localhost:5000/api/hive/new` (POST) (signed-in-user's session token in request's header); JSON body:
+```
+{
+	"name": "ul4",
+	"apiaryId": 2,
+	"hiveTypeId": 1,
+	"boxNumber": 5
+}
+```
 # Adding a new Apiary
 * choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
 
