@@ -66,7 +66,7 @@ While the server is running, you may interact with it in the following ways:
   "email": "janek@wp.pl"
 }
 ```
-6. create new apiary through `localhost:5000/api/apiary/new` (POST) (signed-in-user's session token in request's header); returns JSON:
+6. create new apiary through `localhost:5000/api/apiary/new` (POST) (signed-in-user's session token in request's header); JSON body:
 ```
 {
   "name": "Pasieka11",
@@ -104,7 +104,7 @@ While the server is running, you may interact with it in the following ways:
     ]
 }
 ```
-8. grant privileges for owned appiary through `localhost:5000/api/privileges/grant` (POST) (signed-in-user's session token in request's header); returns JSON:
+8. grant privileges for owned appiary through `localhost:5000/api/privileges/grant` (POST) (signed-in-user's session token in request's header); JSON body:
 ```
 {
 	"targetUser": 2,
