@@ -79,13 +79,13 @@ public class NotificationDTO {
 	    	return this;
 	    }
 	    
-	    public NotificationDTOBuilder withTitle(String description) {
-	    	this.description = description;
+	    public NotificationDTOBuilder withTitle(String title) {
+	    	this.title = title;
 	    	return this;
 	    }
 	    
-	    public NotificationDTOBuilder withDescription(String title) {
-	    	this.title = title;
+	    public NotificationDTOBuilder withDescription(String description) {
+	    	this.description = description;
 	    	return this;
 	    }
 	    
