@@ -1,3 +1,5 @@
+package com.beehive.domain.weather;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -6,40 +8,29 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class weatherHelper {
+public class WeatherHelper {
 
     private  String url = "http://api.openweathermap.org/data/2.5/";
     private  String appid = "appid=e68fc9cac657fcc8ebc1711aa6c8957d";
 
-    public JSONObject Current(String city){
-        String REST_URI = String.format("%s%s%s%s%s",url, "weatherHelper?q=", city, "&units=imperial&type=accurate&", appid);
-
-        String jsonS = ClientBuilder.newClient().target(REST_URI).request().accept(MediaType.APPLICATION_JSON).get(String.class);
-        JSONObject obj = new JSONObject(jsonS);
-        return  obj;
-    }
-
-    public JSONObject Forcast(String city){
+    public List<Record> Forcast(String city){
         String REST_URI = String.format("%s%s%s%s%s",url, "forecast?q=", city, "&units=imperial&type=accurate&", appid);
 
         String jsonS = ClientBuilder.newClient().target(REST_URI).request().accept(MediaType.APPLICATION_JSON).get(String.class);
         JSONObject obj = new JSONObject(jsonS);
-        return  obj;
+        return  DeserializedForcast(obj);
     }
 
-    public static void main(String[] args){
-        weatherHelper w = new weatherHelper();
-        JSONObject obj = w.Forcast("London");
-
+    private List<Record> DeserializedForcast(JSONObject obj){
         JSONArray arr = (JSONArray) obj.get("list");
-        List<record> recordList = new ArrayList<>();
+        List<Record> recordList = new ArrayList<>();
 
         JSONObject jo;
         JSONObject temp;
         JSONArray temp2;
         for(int i = 0; i<40; i++)
         {
-            record r = new record();
+            Record r = new Record();
             jo = arr.optJSONObject(i);
 
             temp = (JSONObject) jo.get("rain");
@@ -69,5 +60,10 @@ public class weatherHelper {
 
             recordList.add(r);
         }
+    }
+
+    public static void main(String[] args){
+        WeatherHelper w = new WeatherHelper();
+        List<Record> recordList = w.Forcast("London");
     }
 }
