@@ -1,8 +1,6 @@
 package com.beehive.domain.hive;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +55,13 @@ public class HiveController {
     	return hiveService.getAllHiveType();
     }
     
+    @GetMapping("/{hiveId}")
+    @PreAuthorize("hasRole('USER')")
+    public HiveDTO getHiveById(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId) {
+    	Hive hive = hiveService.getHiveFromDatabase(hiveId);
+    	return hiveService.mapHiveToHiveDTO(hive);
+    }
+    
     @DeleteMapping("/delete/{hiveId}/queen")
     @PreAuthorize("hasRole('USER')")
     public  ResponseEntity<?> deleteQueenWithHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
@@ -87,16 +92,17 @@ public class HiveController {
     	return ResponseEntity.ok(new ApiResponse(true, "Hive delete successfully"));
     }
     
-    @PutMapping("/modify")
+    @PutMapping("/modify/{hiveId}")
     @PreAuthorize("hasRole('USER')")
-    public  ResponseEntity<?> modifyHive(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody HiveDTO hiveDTO) {
+    public  ResponseEntity<?> modifyHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId, @Valid @RequestBody HiveRequest hiveRequest) {
     	
+    	HiveDTO hiveDTO;
     	try {
-    		Hive hive = hiveService.getHiveFromDatabase(hiveDTO.getId());		
-    		HiveType type = hiveTypeService.getHiveTypeFromDatabase(hiveDTO.getTypeName());
+    		Hive hive = hiveService.getHiveFromDatabase(hiveId);		
+    		HiveType type = hiveTypeService.getHiveTypeFromDatabase(hiveRequest.getHiveTypeId());
     		
-    		hive.setBoxNumber(hiveDTO.getBoxNumber());
-    		hive.setName(hiveDTO.getName());
+    		hive.setBoxNumber(hiveRequest.getBoxNumber());
+    		hive.setName(hiveRequest.getName());
     		hive.setHiveType(type);
     		
     		hive = hiveService.modifyHive(hive);
