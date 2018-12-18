@@ -32,6 +32,9 @@ public class HiveController {
 	@Autowired
 	HiveService hiveService;
 	
+	@Autowired
+	HiveTypeService hiveTypeService;
+	
     @PostMapping("/new")
     public ResponseEntity<?> createHive(@Valid @RequestBody HiveRequest hiveRequest) {
 
@@ -39,7 +42,7 @@ public class HiveController {
     	try {
     		hiveService.createHive(hiveRequest);
     	}
-        catch (NoSuchElementException e) {
+        catch (Exception e) {
         	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
@@ -61,7 +64,7 @@ public class HiveController {
     	try {
     		hiveService.deleteQueenWithHive(hiveId);
     	}
-        catch (NoSuchElementException e) {
+        catch (Exception e) {
         	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
@@ -76,7 +79,7 @@ public class HiveController {
     	try {
     		hiveService.deleteHive(hiveId);
     	}
-        catch (NoSuchElementException e) {
+        catch (Exception e) {
         	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
@@ -89,9 +92,17 @@ public class HiveController {
     public  ResponseEntity<?> modifyHive(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody HiveDTO hiveDTO) {
     	
     	try {
-    		hiveDTO = hiveService.modifyHive(hiveDTO);
+    		Hive hive = hiveService.getHiveFromDatabase(hiveDTO.getId());		
+    		HiveType type = hiveTypeService.getHiveTypeFromDatabase(hiveDTO.getTypeName());
+    		
+    		hive.setBoxNumber(hiveDTO.getBoxNumber());
+    		hive.setName(hiveDTO.getName());
+    		hive.setHiveType(type);
+    		
+    		hive = hiveService.modifyHive(hive);
+    		hiveDTO = hiveService.mapHiveToHiveDTO(hive);
     	}
-        catch (NoSuchElementException e) {
+        catch (Exception e) {
         	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}

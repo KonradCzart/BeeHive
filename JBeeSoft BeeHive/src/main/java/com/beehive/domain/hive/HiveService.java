@@ -1,8 +1,7 @@
 package com.beehive.domain.hive;
 
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.beehive.domain.apiary.Apiary;
-import com.beehive.domain.apiary.ApiaryRepository;
+import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.bee.queen.BeeQueen;
 import com.beehive.domain.bee.queen.BeeQueenService;
 import com.beehive.infrastructure.payload.BeeQueenDTO;
@@ -25,50 +24,38 @@ public class HiveService {
 	private HiveRepository hiveRepository;
 	
 	@Autowired
-	private HiveTypeRepository hiveTypeRepository;
-	
-	@Autowired
-	private ApiaryRepository apiaryRepository;
+	private HiveTypeService hiveTypeService;
 	
 	@Autowired
 	private BeeQueenService beeQueenService;
 	
+	@Autowired
+	private ApiaryService apiaryService;
+	
 	private static final String NO_SUCH_HIVES = "Some hives with passed ids don't exist";
 	private static final String NOT_ALL_HIVES_BELONG_TO_APIARY = "There are hives that don't belong to specified apiary!";
+	private static final String NO_SUCH_HIVE = "Hive with id {0} doesn't exist";
 
-	public Hive createHive(HiveRequest hiveRequest) throws NoSuchElementException{
-		
-		
-		Optional<Apiary> apiary = apiaryRepository.findById(hiveRequest.getApiaryId());
-		Optional<HiveType> type = hiveTypeRepository.findById(hiveRequest.getHiveTypeId());
-		
-		Apiary apiaryForHive = apiary
-				.orElseThrow(() -> new NoSuchElementException("Apiary id is not correct"));
-		
-		HiveType hiveType = type
-				.orElseThrow(() -> new NoSuchElementException("Hive type id is not correct"));
+	public Hive createHive(HiveRequest hiveRequest){		
+		Apiary apiaryForHive = apiaryService.getApiaryFromDatabase(hiveRequest.getApiaryId());	
+		HiveType hiveType = hiveTypeService.getHiveTypeFromDatabase(hiveRequest.getHiveTypeId());
 		
 		Hive hive = new Hive(hiveRequest.getName(), apiaryForHive, hiveType, hiveRequest.getBoxNumber());
 		apiaryForHive.addHive(hive);
-		hive = hiveRepository.save(hive);
 		
-		return hive;
+		return hiveRepository.save(hive);
 	}
 	
 	public List<ValueResponse> getAllHiveType(){
-		
-		List<HiveType> types = hiveTypeRepository.findAll();
+		List<HiveType> types = hiveTypeService.getAllHiveTypeFromDatabase();
 		
 		return types.stream()
 				.map( type -> mapHiveTypeToValueResponse(type))
 				.collect(Collectors.toList());
 	}
 	
-	public void deleteQueenWithHive(Long hiveId) throws NoSuchElementException {
-		
-		Hive hive = hiveRepository.findById(hiveId)
-				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
-		
+	public void deleteQueenWithHive(Long hiveId) {
+		Hive hive = getHiveFromDatabase(hiveId);
 		BeeQueen queen = hive.getBeeQueen();
 		
 		if(queen != null) {
@@ -79,10 +66,7 @@ public class HiveService {
 	}
 	
 	public void deleteHive(Long hiveId) {
-		
-		Hive hive = hiveRepository.findById(hiveId)
-				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
-		
+		Hive hive = getHiveFromDatabase(hiveId);
 		Apiary apiary = hive.getApiary();
 		apiary.removeHive(hive);
 		
@@ -91,25 +75,11 @@ public class HiveService {
 		hiveRepository.delete(hive);		
 	}
 	
-	public HiveDTO modifyHive(HiveDTO hiveDTO) {
-		
-		Hive hive = hiveRepository.findById(hiveDTO.getId())
-				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
-		
-		HiveType type = hiveTypeRepository.findByName(hiveDTO.getTypeName())
-				.orElseThrow(() -> new NoSuchElementException("Name hiveType is not correct"));
-		
-		hive.setBoxNumber(hiveDTO.getBoxNumber());
-		hive.setName(hiveDTO.getName());
-		hive.setHiveType(type);
-		
-		hive = hiveRepository.save(hive);
-		
-		return mapHiveToHiveDTO(hive);
+	public Hive modifyHive(Hive hive) {
+		return hiveRepository.save(hive);
 	}	
 	
-	public ValueResponse mapHiveTypeToValueResponse(HiveType type) {
-		
+	public ValueResponse mapHiveTypeToValueResponse(HiveType type) {		
 		return new ValueResponse(type.getId(),type.getName());
 	}
 	
@@ -131,6 +101,11 @@ public class HiveService {
 		}
 		
 		return hives;
+	}
+	
+	public Hive getHiveFromDatabase(Long id) {
+		return hiveRepository.findById(id)
+				.orElseThrow( () -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_HIVE, id)));
 	}
 	
 	private boolean allHivesBelongsToApiary(Set<Hive> hives, Long apiaryId) {

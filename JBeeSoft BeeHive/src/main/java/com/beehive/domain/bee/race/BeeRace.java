@@ -25,7 +25,7 @@ public class BeeRace {
     @Size(max = 40)
     private AgressionLevel agression;
 
-    @Size(max = 100)
+    @NotBlank
     private String description;
     
     public BeeRace() {

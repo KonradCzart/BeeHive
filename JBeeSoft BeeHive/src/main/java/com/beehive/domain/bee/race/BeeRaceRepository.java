@@ -7,5 +7,8 @@ import java.util.Optional;
 
 @Repository
 public interface BeeRaceRepository extends JpaRepository<BeeRace, Long> {
+	
     Optional<BeeRace> findById(Long id);
+    
+    Optional<BeeRace> findByName(String name);
 }

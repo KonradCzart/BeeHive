@@ -1,7 +1,7 @@
 package com.beehive.domain.bee.queen;
 
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.beehive.domain.bee.race.BeeRace;
 import com.beehive.domain.bee.race.BeeRaceRepository;
 import com.beehive.domain.hive.Hive;
-import com.beehive.domain.hive.HiveRepository;
+import com.beehive.domain.hive.HiveService;
 import com.beehive.infrastructure.payload.BeeQueenDTO;
 import com.beehive.infrastructure.payload.BeeQueenRequest;
 import com.beehive.infrastructure.payload.ValueResponse;
@@ -19,7 +19,7 @@ import com.beehive.infrastructure.payload.ValueResponse;
 public class BeeQueenService {
 	
 	@Autowired
-	private HiveRepository hiveRepository;
+	private HiveService hiveService;
 	
 	@Autowired
 	private BeeRaceRepository beeRaceRepository;
@@ -27,13 +27,12 @@ public class BeeQueenService {
 	@Autowired
 	private BeeQueenRepository beeQueenRepository;
 	
-	public BeeQueen addBeeQueenToHive(BeeQueenRequest beeQueenRequest) throws NoSuchElementException{
-		
-		Hive hive = hiveRepository.findById(beeQueenRequest.getHive_id())
-				.orElseThrow(() -> new NoSuchElementException("Hive id is not correct"));
-		
-		BeeRace race = beeRaceRepository.findById(beeQueenRequest.getRace_id())
-				.orElseThrow( () -> new NoSuchElementException("BeeRace id os not correct"));
+	private static final String NO_SUCH_QUEEN = "Queen with id {0} doesn't exist";
+	private static final String NO_SUCH_RACE = "Bee race with id {0} doesn't exist";
+	
+	public BeeQueen addBeeQueenToHive(BeeQueenRequest beeQueenRequest) {		
+		Hive hive = hiveService.getHiveFromDatabase(beeQueenRequest.getHiveId());
+		BeeRace race = getBeeRaceFromDatabase(beeQueenRequest.getRaceId());
 		
 		BeeQueen newQueen = BeeQueen.builder()
 				.withBeeRace(race)
@@ -48,7 +47,7 @@ public class BeeQueenService {
 		
 		BeeQueen oldQueen = hive.getBeeQueen();
 		hive.setBeeQueen(newQueen);
-		hiveRepository.save(hive);
+		hiveService.modifyHive(hive);
 		
 		if(oldQueen != null) {
 			beeQueenRepository.delete(oldQueen);
@@ -66,27 +65,27 @@ public class BeeQueenService {
 				.collect(Collectors.toList());
 	}
 	
-	public void deleteQueenById(Long id) throws NoSuchElementException {
+	public void deleteQueenById(Long id) {
 		
-		BeeQueen queen = beeQueenRepository.findById(id)
-				.orElseThrow(() -> new NoSuchElementException("BeeQueen id os not correct"));
-		
+		BeeQueen queen = getBeeQueenFromDatabase(id);
 		beeQueenRepository.delete(queen);
 	}
 	
-	public BeeQueenDTO modifyQueen(BeeQueenDTO queenDTO) throws NoSuchElementException{
-		
-		BeeQueen queen = beeQueenRepository.findById(queenDTO.getId())
-				.orElseThrow(() -> new NoSuchElementException("BeeQueen id os not correct"));
-		
-		queen.setColor(queenDTO.getColor());
-		queen.setDescription(queenDTO.getDescription());
-		queen.setIsReproducting(queenDTO.getIsReproducting());
-		
-		queen = beeQueenRepository.save(queen);
-		
-		return mapBeeQueenToBeeQueenDTO(queen);
+	public BeeQueen modifyQueen(BeeQueen queen){
+		return beeQueenRepository.save(queen);
 	}
+	
+	
+	public BeeRace getBeeRaceFromDatabase(Long id) {
+		return beeRaceRepository.findById(id)
+				.orElseThrow( () -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_RACE , id)) );
+	}
+	
+	public BeeQueen getBeeQueenFromDatabase(Long id) {
+		return beeQueenRepository.findById(id)
+				.orElseThrow( () -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_QUEEN , id)) );
+	}
+	
 	
 	public ValueResponse mapBeeRaceToValueResponse(BeeRace race) {
 		

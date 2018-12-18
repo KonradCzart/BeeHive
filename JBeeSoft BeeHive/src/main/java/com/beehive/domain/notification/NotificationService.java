@@ -1,5 +1,6 @@
 package com.beehive.domain.notification;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ import com.beehive.infrastructure.security.UserPrincipal;
 
 @Service
 public class NotificationService {
+	
+	private static final String NO_SUCH_NOTIFICATION = "Notification with id {0} doesn't exist";
 	
 	@Autowired
 	private NotificationRepository notificationRepository;
@@ -63,33 +66,13 @@ public class NotificationService {
 		return mapNote;
 	}
 	
-	public NotificationDTO modifyNotification(NotificationDTO noteDTO) throws NoSuchElementException{
-		
-		Notification note = notificationRepository.findById(noteDTO.getId())
-				.orElseThrow(() -> new NoSuchElementException("Notification id is not correct"));
-		
-		
-		note.setDate(noteDTO.getDate());
-		note.setDescription(noteDTO.getDescription());
-		note.setTitle(noteDTO.getTitle());
-		note.setIsRealize(noteDTO.getIsRealize());		
-		
-		note = notificationRepository.save(note);
-		
-		return mapNotificationToNotificationDTO(note);
+	public Notification modifyNotification(Notification notification){
+		return notificationRepository.save(notification);
 	}
 	
-	public NotificationDTO realizeNotification(Long id) throws NoSuchElementException{
-		
-		Notification note = notificationRepository.findById(id)
-				.orElseThrow(() -> new NoSuchElementException("Notification id is not correct"));
-		
-		note.setIsRealize(true);
-		
-		note = notificationRepository.save(note);
-		
-		return mapNotificationToNotificationDTO(note);
-		
+	public Notification getNotificationFromDatabase(Long id) {
+		return notificationRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_NOTIFICATION, id)));
 	}
 	
 	

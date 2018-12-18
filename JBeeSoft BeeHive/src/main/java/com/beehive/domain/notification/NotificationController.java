@@ -1,7 +1,6 @@
 package com.beehive.domain.notification;
 
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -75,26 +74,39 @@ public class NotificationController {
 	  
 	  @PutMapping("/modify")
 	  @PreAuthorize("hasRole('USER')")
-	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody NotificationDTO note) {
-		  
+	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody NotificationDTO noteDTO) {
+			
 			try {
+				Notification note = notificationService.getNotificationFromDatabase(noteDTO.getId());
+				
+				
+				note.setDate(noteDTO.getDate());
+				note.setDescription(noteDTO.getDescription());
+				note.setTitle(noteDTO.getTitle());
+				note.setIsRealize(noteDTO.getIsRealize());		
+				
 				note = notificationService.modifyNotification(note);
+				noteDTO = notificationService.mapNotificationToNotificationDTO(note);
 	  		}
 		    catch (Exception e) {
 		      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
 		      			HttpStatus.BAD_REQUEST);
 			}
 			
-			return ResponseEntity.ok(note);
+			return ResponseEntity.ok(noteDTO);
 	  }
 	  
 	  @PutMapping("/realize/{noteId}")
 	  @PreAuthorize("hasRole('USER')")
 	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @PathVariable Long noteId) {
 		 
-		 NotificationDTO note;
+		NotificationDTO noteDTO;
 		try {
-			note = notificationService.realizeNotification(noteId);
+			Notification note = notificationService.getNotificationFromDatabase(noteId);
+			note.setIsRealize(true);
+			note = notificationService.modifyNotification(note);
+			noteDTO = notificationService.mapNotificationToNotificationDTO(note);
+			
   		}
 	    catch (Exception e) {
 	      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
@@ -102,6 +114,6 @@ public class NotificationController {
 	    }
 		      	
 		      			
-		return ResponseEntity.ok(note);
+		return ResponseEntity.ok(noteDTO);
 	  }
 }

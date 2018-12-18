@@ -1,7 +1,6 @@
 package com.beehive.domain.bee.queen;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
@@ -9,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,13 +32,11 @@ public class BeeQueenController {
 	
 	@PostMapping("/new")
     public ResponseEntity<?> createHive(@Valid @RequestBody BeeQueenRequest beeQueenRequest) {
-
-    	    	
     	try {
     		beeQueenService.addBeeQueenToHive(beeQueenRequest);
     	}
-        catch (NoSuchElementException e) {
-        	return new ResponseEntity(new ApiResponse(false, e.getMessage()),
+        catch (Exception e) {
+        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
         			HttpStatus.BAD_REQUEST);
 		}
     	
@@ -52,15 +47,21 @@ public class BeeQueenController {
     @GetMapping("/race")
     @PreAuthorize("hasRole('USER')")
     public List<ValueResponse> getAllQueenRace(@CurrentUser UserPrincipal currentUser){
-    	
     	return beeQueenService.getAllQueenRace();
     }
     
     @PutMapping("/modify")
     @PreAuthorize("hasRole('USER')")
     public BeeQueenDTO modifyQueen(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody BeeQueenDTO queenDTO) {
+		BeeQueen queen = beeQueenService.getBeeQueenFromDatabase(queenDTO.getId());
+		
+		queen.setColor(queenDTO.getColor());
+		queen.setDescription(queenDTO.getDescription());
+		queen.setIsReproducting(queenDTO.getIsReproducting());
+		
+		queen = beeQueenService.modifyQueen(queen);
     	
-    	return beeQueenService.modifyQueen(queenDTO);
+    	return beeQueenService.mapBeeQueenToBeeQueenDTO(queen);
     }
     
 }

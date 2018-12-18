@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 public class BeeQueenRequest {
 	
 	@NotNull
-	private Long race_id;
+	private Long raceId;
 	
 	@NotBlank
 	private String color;
@@ -23,14 +23,14 @@ public class BeeQueenRequest {
 	private String description;
 	
 	@NotNull
-	private Long hive_id;
+	private Long hiveId;
 
-	public Long getRace_id() {
-		return race_id;
+	public Long getRaceId() {
+		return raceId;
 	}
 
-	public void setRace_id(Long race_id) {
-		this.race_id = race_id;
+	public void setRaceId(Long raceId) {
+		this.raceId = raceId;
 	}
 
 	public String getColor() {
@@ -65,12 +65,12 @@ public class BeeQueenRequest {
 		this.description = description;
 	}
 
-	public Long getHive_id() {
-		return hive_id;
+	public Long getHiveId() {
+		return hiveId;
 	}
 
-	public void setHive_id(Long hive_id) {
-		this.hive_id = hive_id;
+	public void setHiveId(Long hiveId) {
+		this.hiveId = hiveId;
 	}
 
 }
