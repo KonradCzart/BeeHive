@@ -1,12 +1,30 @@
 import React, { Component } from 'react';
 import './ApiaryList.css';
-import { Form, Input, Button, notification, Modal, Table, Menu, Dropdown, Select } from 'antd';
+import { Form, Input, Button, notification, Modal, Table, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { addHive, getAllApiaries, getAllHiveTypes,getAllHives } from '../util/APIUtils';
+import { addHive, getAllHiveTypes, getAllHives } from '../util/APIUtils';
+import LoadingIndicator  from '../common/LoadingIndicator';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class Apiary extends Component {
+	_isMounted = false;
+
+	constructor(props) {
+		super(props);
+		const date = new Date();
+		this.receivedElements = [];
+		this.loadApiaryData = this.loadApiaryData.bind(this);
+
+		this.state = {
+			apiaryData: [],
+			isLoading: false,
+			date: date,
+			oldDate: date,
+			error: null
+		};
+	}
+
 	render() {
 		const columns = [{
 			title: 'Name',
@@ -33,11 +51,18 @@ class Apiary extends Component {
 				</div>
 			)
 		}];
+
+		const {isLoading} = this.state;
+
+		if(isLoading || this.state.apiaryData.apiaryINFO === undefined) {
+			return <LoadingIndicator />;
+		}
+
 		const WrappedAddHiveForm = Form.create()(AddHiveForm);
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New hive</Button>
-				<h1>Hives in apiary <span className='apiary-name'>{this.props.match.params.id}</span>:</h1>
+				<h1>Hives in apiary <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span>:</h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
 					visible={this.state.visible}
@@ -47,65 +72,26 @@ class Apiary extends Component {
 					onBoxNumChange={this.handleBoxNumChange}
 					{...this.props}
 				/>
-
 				{
-					!this.state.isLoading && this.state.hives.length === 0 ? (
+					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
 						<div className="no-polls-found">
-							<h1>You haven't got any apiaries yet.</h1>
+							<h2>You haven't got any hives in this apiary yet.</h2>
 						</div>	
-					): (
+					) : null
+				}
+				{
+					!this.state.isLoading && this.state.apiaryData.hives.length > 0 ? (
 						<div>
-							<h1>Your apiaries:</h1>
-							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.hives.hives} />
+							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaryData.hives} />
 						</div>
-					)
+					) : null
+				}
+				{
+					this.state.isLoading ? 
+					<LoadingIndicator /> : null
 				}
 			</div>
 		)
-	}
-
-	constructor(props) {
-		super(props);
-		const date = new Date();
-		this.receivedElements = [];
-		this.state = {
-			hives: [],
-			page: 0,
-			size: 10,
-			totalElements: 0,
-			totalPages: 0,
-			last: true,
-			currentVotes: [],
-			isLoading: false,
-			date: date,
-			oldDate: date
-		};
-	}
-
-	loadHivesList(page = 0, size = 30) {
-		let promise;
-        promise = getAllHives(this.props.match.params.id);
-
-        if(!promise) {
-            return;
-        }
-
-        this.setState({
-            isLoading: true
-        });
-
-        promise            
-        .then(response => {
-
-            this.setState({
-                hives: response,
-                isLoading: false
-            })
-        }).catch(error => {
-            this.setState({
-                isLoading: false
-            })
-        });
 	}
 
 	state = {
@@ -126,7 +112,6 @@ class Apiary extends Component {
 
 	handleBoxNumChange = (num) => {
 		this.receivedElements.boxNum = num;
-		console.log(num);
 	}
 
 	handleCreate = () => {
@@ -137,9 +122,9 @@ class Apiary extends Component {
 			}
 
 			const apiaryRequest = values;
-			apiaryRequest.apiary_id=this.props.match.params.id;
-			apiaryRequest.hiveType_id=this.receivedElements.type;
-			apiaryRequest.boxNumber=this.receivedElements.boxNum;
+			apiaryRequest.apiaryId = this.props.match.params.id;
+			apiaryRequest.hiveTypeId = this.receivedElements.type;
+			apiaryRequest.boxNumber = this.receivedElements.boxNum;
 			form.resetFields();
 			this.setState({ visible: false });
 			addHive(apiaryRequest)
@@ -148,6 +133,7 @@ class Apiary extends Component {
 						message: 'BeeHive App',
 						description: apiaryRequest.name + " created successfully!"
 					});
+					this.setState({date: new Date()})
 				}).catch(error => {
 					if(error.status === 401) {
 						notification.error({
@@ -164,17 +150,40 @@ class Apiary extends Component {
 		});
 	}
 
+	loadApiaryData() {
+		let promise = getAllHives(this.props.match.params.id);
+
+		if(!promise) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		promise
+		.then(response => {
+			if(this._isMounted) {
+				this.setState({
+					apiaryData: response,
+					isLoading: false
+				});
+			}
+		})
+		.catch(error => {
+			this.setState({error, isLoading: false});
+		});
+	}
+
 	componentDidUpdate(nextProps) {
 		if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
-			// Reset State
 			this.setState({
-				polls: [],
+				apiaryData: [],
 				isLoading: false
-			});	
-			this.loadHivesList();
+			});
+			this.loadApiaryData();
 		}
+
 		if(this.state.date !== this.state.oldDate) {
-			this.loadHivesList();
+			this.loadApiaryData();
 			const date = this.state.date;
 			this.setState({
 				oldDate: date
@@ -183,8 +192,13 @@ class Apiary extends Component {
 	}
 
 	componentDidMount() {
-        this.loadHivesList();
-    }
+		this._isMounted = true;
+		this.loadApiaryData();
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
 
 	saveFormRef = (formRef) => {
 		this.formRef = formRef;
@@ -195,7 +209,9 @@ class Apiary extends Component {
 
 
 class AddHiveForm extends Component {
-	mounted = false;
+
+	_isMounted = false;
+
 	constructor(props) {
 		super(props);
 		const date = new Date();
@@ -205,7 +221,6 @@ class AddHiveForm extends Component {
 			isLoading: false,
 			oldDate: date
 		}
-		this.getHiveTypes=this.getHiveTypes.bind(this);
 	}
 
 	render() {
@@ -246,22 +261,22 @@ class AddHiveForm extends Component {
 				</FormItem>
 				
 				{
-					!this.state.isLoading && this.state.hiveTypes.length === 0 ? (
-						<div className="no-polls-found">
-							<h1>You haven't got any apiaries yet.</h1>
-						</div>	
-					): (
-						<FormItem label="Hive type:">
-						{getFieldDecorator('hive_type_id', {
-							rules: [{ required: true, message: 'This field is required.' }],
-						})(
-							<Select name='hive_type_id' placeholder='Hive type' onChange={onTypeChange}>
-								{hiveTypeDrop}
-							</Select>				
-						)}
-						</FormItem>
-					)
+					!this.state.isLoading && this.state.hiveTypes.length > 0 ? (
+					<FormItem label="Hive type:">
+					{getFieldDecorator('hive_type_id', {
+						rules: [{ required: true, message: 'This field is required.' }],
+					})(
+						<Select name='hive_type_id' placeholder='Hive type' onChange={onTypeChange}>
+							{hiveTypeDrop}
+						</Select>				
+					)}
+					</FormItem> ) : null
 				}
+				{
+					this.state.isLoading ? 
+					<LoadingIndicator /> : null
+				}
+
 				<FormItem label="Box number:">
 				{getFieldDecorator('boxNumber', {
 					rules: [{ required: true, message: 'This field is required.' }],
@@ -276,27 +291,32 @@ class AddHiveForm extends Component {
 		);
 	}
 
-	componentDidMount() {
-		//this.getHiveTypes();
+	loadHiveTypes() {
+		let promise = getAllHiveTypes();
+
+		if(!promise) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		promise
+		.then(response => {
+			if(this._isMounted) {
+				this.setState({
+					hiveTypes: response,
+					isLoading: false
+				});
+			}
+		})
+		.catch(error => {
+			this.setState({error, isLoading: false});
+		});
 	}
 
 	componentDidUpdate(nextProps) {
-		if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
-			// Reset State
-			this.setState({
-				polls: [],
-				page: 0,
-				size: 10,
-				totalElements: 0,
-				totalPages: 0,
-				last: true,
-				currentVotes: [],
-				isLoading: false
-			});	
-			//this.getHiveTypes();
-		}
 		if(this.state.date !== this.state.oldDate) {
-			//this.getHiveTypes();
+			this.loadHiveTypes();
 			const date = this.state.date;
 			this.setState({
 				oldDate: date
@@ -304,31 +324,13 @@ class AddHiveForm extends Component {
 		}
 	}
 
-	getHiveTypes() {
-		let promise;
+	componentDidMount() {
+		this._isMounted = true;
+		this.loadHiveTypes();
+	}
 
-		promise = getAllHiveTypes();
-
-		if(!promise) {
-			return;
-		}
-
-		this.setState({
-			isLoading: true
-		});
-
-		promise			
-		.then(response => {
-
-			this.setState({
-				hiveTypes: response,
-				isLoading: false
-			})
-		}).catch(error => {
-			this.setState({
-				isLoading: false
-			})
-		});
+	componentWillUnmount() {
+		this._isMounted = false;
 	}
 
 }

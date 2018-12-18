@@ -13,16 +13,16 @@ import javax.validation.constraints.Size;
 public class InspectionAction extends Action {
 	
     @NotNull
-    private boolean isMaggotPresent;
+    private Boolean isMaggotPresent;
     
     @NotNull
-    private boolean isLairPresent;
+    private Boolean isLairPresent;
     
     @NotNull
-    private int hiveStrength;
+    private Integer hiveStrength;
     
     @NotNull
-    private int framesWithWaxFoundation;
+    private Integer framesWithWaxFoundation;
     
     @NotBlank
     @Size(max = 250)
@@ -37,12 +37,56 @@ public class InspectionAction extends Action {
 		this.decription = builder.decription;
 	}
     
+    public Boolean getIsMaggotPresent() {
+		return isMaggotPresent;
+	}
+
+	public void setIsMaggotPresent(Boolean isMaggotPresent) {
+		this.isMaggotPresent = isMaggotPresent;
+	}
+
+	public Boolean getIsLairPresent() {
+		return isLairPresent;
+	}
+
+	public void setIsLairPresent(Boolean isLairPresent) {
+		this.isLairPresent = isLairPresent;
+	}
+
+	public Integer getHiveStrength() {
+		return hiveStrength;
+	}
+
+	public void setHiveStrength(Integer hiveStrength) {
+		this.hiveStrength = hiveStrength;
+	}
+
+	public Integer getFramesWithWaxFoundation() {
+		return framesWithWaxFoundation;
+	}
+
+	public void setFramesWithWaxFoundation(Integer framesWithWaxFoundation) {
+		this.framesWithWaxFoundation = framesWithWaxFoundation;
+	}
+
+	public String getDecription() {
+		return decription;
+	}
+
+	public void setDecription(String decription) {
+		this.decription = decription;
+	}
+
+	public static Builder builder() {
+    	return new Builder();
+    }
+    
     public static class Builder extends Action.Builder<Builder> {
     	
-    	private boolean isMaggotPresent;
-        private boolean isLairPresent;
-        private int hiveStrength;
-        private int framesWithWaxFoundation;
+    	private Boolean isMaggotPresent;
+        private Boolean isLairPresent;
+        private Integer hiveStrength;
+        private Integer framesWithWaxFoundation;
         private String decription;
 
 		@Override
@@ -50,22 +94,22 @@ public class InspectionAction extends Action {
 			return this;
 		}
 		
-		public Builder withIsMaggotPresent(boolean isMaggotPresent) {
+		public Builder withIsMaggotPresent(Boolean isMaggotPresent) {
 			this.isMaggotPresent = isMaggotPresent;
 			return this;
 		}
 		
-		public Builder withIsLairPresent(boolean isLairPresent) {
+		public Builder withIsLairPresent(Boolean isLairPresent) {
 			this.isLairPresent = isLairPresent;
 			return this;
 		}
 		
-		public Builder withHiveStrength(int hiveStrength) {
+		public Builder withHiveStrength(Integer hiveStrength) {
 			this.hiveStrength = hiveStrength;
 			return this;
 		}
 		
-		public Builder withframesWithWaxFoundation(int framesWithWaxFoundation) {
+		public Builder withframesWithWaxFoundation(Integer framesWithWaxFoundation) {
 			this.framesWithWaxFoundation = framesWithWaxFoundation;
 			return this;
 		}
