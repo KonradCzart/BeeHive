@@ -62,7 +62,9 @@ class Apiary extends Component {
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New hive</Button>
-				<h1>Hives in apiary <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span>:</h1>
+				<h1>Apiary name: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span></h1>
+				<h1>Country: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.country}</span></h1>
+				<h1>City: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.city}</span></h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
 					visible={this.state.visible}
@@ -82,6 +84,7 @@ class Apiary extends Component {
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length > 0 ? (
 						<div>
+							<h2>Hives in this apiary:</h2>
 							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaryData.hives} />
 						</div>
 					) : null
