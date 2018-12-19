@@ -65,6 +65,10 @@ public class ApiaryService {
 				.orElseThrow(() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_APIARY, apiaryId)));
 	}
 	
+	public Apiary modifyApiary(Apiary apiary) {
+		return apiaryRepository.save(apiary);
+	}
+	
 	public ApiaryINFO mapToApiaryINFO(Apiary apiary) {		
 		long hiveNumber = apiary.getHives()
 				.stream()
