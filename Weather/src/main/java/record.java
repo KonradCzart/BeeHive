@@ -1,6 +1,4 @@
-package com.beehive.domain.weather;
-
-public class Record {
+public class record {
     public double rainMililitersPer3h;
 
     public double minTemp;
