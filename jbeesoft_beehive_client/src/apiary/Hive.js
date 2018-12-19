@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './ApiaryList.css';
-import { Form, Input, Button, notification, Modal, Table, Select } from 'antd';
+import { Form, Input, Button, notification, Modal, Table, Select, DatePicker, Checkbox } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { addHive, getHiveData, getQueenRaces } from '../util/APIUtils';
+import { getHiveData, getQueenRaces, addQueenToHive, editQueenInHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
+import moment from 'moment';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -14,6 +15,7 @@ class Hive extends Component {
 		super(props);
 		const date = new Date();
 		this.receivedElements = [];
+		this.queenData = [];
 		this.loadHiveData = this.loadHiveData.bind(this);
 
 		this.state = {
@@ -33,27 +35,46 @@ class Hive extends Component {
 			return <LoadingIndicator />;
 		}
 
-		const WrappedAddHiveForm = Form.create()(AddHiveForm);
+		const WrappedAddQueenForm = Form.create()(AddQueenForm);
+		const WrappedEditQueenForm = Form.create()(EditQueenForm);
 		return (
 			<div className="apiary-list">
-				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>Edit</Button>
+				{
+					this.state.hiveData.queenDTO == null ? (
+						<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>Add queen</Button>
+					) : (
+						<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>Edit queen</Button>
+					)
+				}
 				<h1>Hive name: <span className='apiary-name'>{this.state.hiveData.name}</span></h1>
 				<h1>Type: <span className='apiary-name'>{this.state.hiveData.typeName}</span></h1>
 				<h1>Box number: <span className='apiary-name'>{this.state.hiveData.boxNumber}</span></h1>
-				<WrappedAddHiveForm
-					wrappedComponentRef={this.saveFormRef}
-					visible={this.state.visible}
-					onCancel={this.handleCancel}
-					onCreate={this.handleCreate}
-					onTypeChange={this.handleTypeChange}
-					onBoxNumChange={this.handleBoxNumChange}
-					{...this.props}
-				/>
 				{
 					!this.state.isLoading && this.state.hiveData.queenDTO === null ? (
+						<div>
+						<WrappedAddQueenForm wrappedComponentRef={this.saveQueenFormRef} visible={this.state.visible}
+							onCancel={this.handleCancel} onCreate={this.handleCreate} {...this.props} />
 						<div className="no-polls-found">
 							<h2>You haven't got queen in this hive.</h2>
 						</div>	
+						</div>
+					) : null
+				}
+				{
+					!this.state.isLoading && this.state.hiveData.queenDTO !== null ? (
+						<div>
+						<WrappedEditQueenForm wrappedComponentRef={this.saveQueenFormRef} visible={this.state.visible}
+							onCancel={this.handleCancel} onCreate={this.handleEdit} queenData={this.state.hiveData.queenDTO}
+							{...this.props} />
+						<div className="no-polls-found">
+							<h1>Queen:</h1>
+							<h2>Race: <span className='apiary-name'>{this.state.hiveData.queenDTO.raceName}</span></h2>
+							<h2>Age: <span className='apiary-name'>{this.state.hiveData.queenDTO.age}</span></h2>
+							<h2>Color: <span className='apiary-name'>{this.state.hiveData.queenDTO.color}</span></h2>
+							<h2>Is reproducing: <span className='apiary-name'>{this.state.hiveData.queenDTO.isReproducting ? 'Yes' : 'No'}</span></h2>
+							<h2>Description: <span className='apiary-name'>{this.state.hiveData.queenDTO.description}</span></h2>
+						</div>	
+						</div>
 					) : null
 				}
 				{
@@ -76,48 +97,62 @@ class Hive extends Component {
 		this.setState({ visible: false });
 	}
 
-	handleTypeChange = (type) => {
-		this.receivedElements.type = type;
-	}
-
-	handleBoxNumChange = (num) => {
-		this.receivedElements.boxNum = num;
-	}
-
 	handleCreate = () => {
-		const form = this.formRef.props.form;
-		/*form.validateFields((err, values) => {
+		const form = this.queenFormRef.props.form;
+		form.validateFields((err, values) => {
 			if (err) {
 				return;
 			}
 
-			const apiaryRequest = values;
-			apiaryRequest.apiaryId = this.props.match.params.id;
-			apiaryRequest.hiveTypeId = this.receivedElements.type;
-			apiaryRequest.boxNumber = this.receivedElements.boxNum;
+			const queenRequest = values;
+			queenRequest.age = values['age'].format('YYYY-MM-DD');
+			queenRequest.hiveId = this.props.match.params.id;
+
 			form.resetFields();
 			this.setState({ visible: false });
-			addHive(apiaryRequest)
+			addQueenToHive(queenRequest)
 			.then(response => {
-					notification.success({
-						message: 'BeeHive App',
-						description: apiaryRequest.name + " created successfully!"
-					});
-					this.setState({date: new Date()})
-				}).catch(error => {
-					if(error.status === 401) {
-						notification.error({
-							message: 'BeeHive App',
-							description: 'Data is incorrect. Please try again!'
-						});					
-					} else {
-						notification.error({
-							message: 'BeeHive App',
-							description: 'Sorry! Something went wrong. Please try again!'
-					});											
-				}
+				notification.success({
+					message: 'BeeHive App',
+					description: response.message
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				notification.error({
+					message: 'BeeHive App',
+					description: error.message
+				});
 			});
-		});*/
+		});
+	}
+
+	handleEdit = () => {
+		const form = this.queenFormRef.props.form;
+		form.validateFields((err, values) => {
+			if (err) {
+				return;
+			}
+
+			const queenRequest = values;
+			queenRequest.age = values['age'].format('YYYY-MM-DD');
+			queenRequest.id = this.state.hiveData.queenDTO.id;
+
+			form.resetFields();
+			this.setState({ visible: false });
+			editQueenInHive(queenRequest)
+			.then(response => {
+				notification.success({
+					message: 'BeeHive App',
+					description: response.message
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				notification.error({
+					message: 'BeeHive App',
+					description: error.message
+				});
+			});
+		});
 	}
 
 	loadHiveData() {
@@ -170,15 +205,15 @@ class Hive extends Component {
 		this._isMounted = false;
 	}
 
-	saveFormRef = (formRef) => {
-		this.formRef = formRef;
+	saveQueenFormRef = (queenFormRef) => {
+		this.queenFormRef = queenFormRef;
 	}
 }
 
 
 
 
-class AddHiveForm extends Component {
+class AddQueenForm extends Component {
 
 	_isMounted = false;
 
@@ -196,14 +231,8 @@ class AddHiveForm extends Component {
 	render() {
 
 		const {
-			visible, onCancel, onCreate, form, onTypeChange, onBoxNumChange
+			visible, onCancel, onCreate, form
 		} = this.props;
-
-		const boxNumber = [{id: 1, title: 1}, {id: 2, title: 2}, {id: 3, title: 3}];
-
-		const boxNumberDrop = boxNumber.map((type =>
-				<Option key={type.id} value={type.id}>{type.title}</Option>
-		));
 
 		const queenRaceDrop = this.state.queenRaces.map((type =>
 				<Option key={type.id} value={type.id}>{type.value}</Option>
@@ -213,30 +242,20 @@ class AddHiveForm extends Component {
 		return (
 		<Modal
 			visible={visible}
-			title="Create a new hive"
-			okText="Create"
+			title="Add queen to hive"
+			okText="Add"
 			onCancel={onCancel}
 			onOk={onCreate}
 		>
 			<Form layout="vertical">
-				<FormItem label="Hive name:">
-				{getFieldDecorator('name', {
-					rules: [{ required: true, message: 'This field is required.' }],
-				})(
-					<Input
-						name="name"
-						type="text"
-						placeholder="Name" />					
-				)}
-				</FormItem>
 				
 				{
 					!this.state.isLoading && this.state.queenRaces.length > 0 ? (
-					<FormItem label="Hive type:">
-					{getFieldDecorator('hive_type_id', {
+					<FormItem label="Race:">
+					{getFieldDecorator('raceId', {
 						rules: [{ required: true, message: 'This field is required.' }],
 					})(
-						<Select name='hive_type_id' placeholder='Hive type' onChange={onTypeChange}>
+						<Select name='raceId' placeholder='Race'>
 							{queenRaceDrop}
 						</Select>				
 					)}
@@ -247,13 +266,197 @@ class AddHiveForm extends Component {
 					<LoadingIndicator /> : null
 				}
 
-				<FormItem label="Box number:">
-				{getFieldDecorator('boxNumber', {
+				<FormItem label="Color:">
+				{getFieldDecorator('color', {
 					rules: [{ required: true, message: 'This field is required.' }],
 				})(
-					<Select name='boxNumber' onChange={onBoxNumChange} placeholder='Box number' >
-						{boxNumberDrop}
-					</Select>					
+					<Input
+						name="color"
+						type="text"
+						placeholder="Color" />					
+				)}
+				</FormItem>
+
+				<FormItem label="Age:">
+				{getFieldDecorator('age', {
+					rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+				})(
+					<DatePicker
+						format="YYYY-MM-DD"
+						name="age"
+						type="text"
+						placeholder="Select age" />
+				)}
+				</FormItem>
+
+				<FormItem label="Is reproducing:">
+				{getFieldDecorator('isReproducting', {
+					rules: [{ required: false, message: 'This field is required!' }], initialValue: false
+				})(
+					<Checkbox
+						name="isReproducting" />
+				)}
+				</FormItem>
+
+				<FormItem label="Description:">
+				{getFieldDecorator('description', {
+					rules: [{ required: true, message: 'This field is required.' }],
+				})(
+					<Input
+						name="description"
+						type="text"
+						placeholder="Description" />					
+				)}
+				</FormItem>
+			</Form>
+		</Modal>
+		);
+	}
+
+	loadQueenRaces() {
+		let promise = getQueenRaces();
+
+		if(!promise) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		promise
+		.then(response => {
+			if(this._isMounted) {
+				this.setState({
+					queenRaces: response,
+					isLoading: false
+				});
+			}
+		})
+		.catch(error => {
+			this.setState({error, isLoading: false});
+		});
+	}
+
+	componentDidUpdate(nextProps) {
+		if(this.state.date !== this.state.oldDate) {
+			this.loadQueenRaces();
+			const date = this.state.date;
+			this.setState({
+				oldDate: date
+			})
+		}
+	}
+
+	componentDidMount() {
+		this._isMounted = true;
+		this.loadQueenRaces();
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+}
+
+class EditQueenForm extends Component {
+
+	_isMounted = false;
+
+	constructor(props) {
+		super(props);
+		const date = new Date();
+		this.state = {
+			queenRaces: [],
+			date: date,
+			isLoading: false,
+			oldDate: date
+		}
+	}
+
+	render() {
+
+		const {
+			visible, onCancel, onCreate, form, queenData
+		} = this.props;
+
+		const queenRaceDrop = this.state.queenRaces.map((type =>
+				<Option key={type.value} value={type.value}>{type.value}</Option>
+		));
+
+		const { getFieldDecorator } = form;
+		const val = this.props.queenData.isReproducting ? 'checked' : 'null';
+		return (
+		<Modal
+			visible={visible}
+			title="Edit queen in hive"
+			okText="Edit"
+			onCancel={onCancel}
+			onOk={onCreate}
+		>
+			<Form layout="vertical">
+				
+				{
+					!this.state.isLoading && this.state.queenRaces.length > 0 ? (
+					<FormItem label="Race:">
+					{getFieldDecorator('raceName', {
+						rules: [{ required: true, message: 'This field is required.' }],
+						initialValue: this.props.queenData.raceName
+					})(
+						<Select name='raceName' placeholder='Race'>
+							{queenRaceDrop}
+						</Select>				
+					)}
+					</FormItem> ) : null
+				}
+				{
+					this.state.isLoading ? 
+					<LoadingIndicator /> : null
+				}
+
+				<FormItem label="Color:">
+				{getFieldDecorator('color', {
+					rules: [{ required: true, message: 'This field is required.' }],
+					initialValue: this.props.queenData.color
+				})(
+					<Input
+						name="color"
+						type="text"
+						placeholder="Color" />					
+				)}
+				</FormItem>
+
+				<FormItem label="Age:">
+				{getFieldDecorator('age', {
+					rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+					initialValue: moment(this.props.queenData.age, "YYYY-MM-DD")
+				})(
+					<DatePicker
+						format="YYYY-MM-DD"
+						name="age"
+						type="text"
+						placeholder="Select age" />
+				)}
+				</FormItem>
+				<FormItem label="Is reproducing:">
+				{
+					getFieldDecorator('isReproducting', {
+					rules: [{ required: true, message: 'This field is required!' }],
+					initialValue: this.props.queenData.isReproducting,
+					valuePropName: val
+				})(
+					<Checkbox
+						name="isReproducting" />
+				)}
+				</FormItem>
+
+				<FormItem label="Description:">
+				{getFieldDecorator('description', {
+					rules: [{ required: true, message: 'This field is required.' }],
+					initialValue: this.props.queenData.description
+				})(
+					<Input
+						name="description"
+						type="text"
+						placeholder="Description" />					
 				)}
 				</FormItem>
 			</Form>
