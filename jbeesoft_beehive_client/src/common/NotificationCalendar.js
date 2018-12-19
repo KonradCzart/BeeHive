@@ -88,12 +88,12 @@ export class NotificationCalendar extends React.Component {
             isRealize: false,
             usersId: [this.props.userId],
         });
-        console.log("ABOUT TO ADD NOTIFICATION");
-        console.log(dict);
+        let parent = this;
         addNotification(dict).then(json => {
-            this.refreshNotifs();
+            parent.refreshNotifs();
+            parent.props.onAddNotifSuccess();
         }).catch(error => {
-            this.props.onAddNotifError();
+            parent.props.onAddNotifError();
         });
     }
 

@@ -6,11 +6,11 @@ import {
 import './AppHeader.css';
 import { Layout, Menu, Dropdown, Icon } from 'antd';
 const Header = Layout.Header;
-    
+
 class AppHeader extends Component {
     constructor(props) {
-        super(props);   
-        this.handleMenuClick = this.handleMenuClick.bind(this);   
+        super(props);
+        this.handleMenuClick = this.handleMenuClick.bind(this);
     }
 
     handleMenuClick({ key }) {
@@ -28,13 +28,19 @@ class AppHeader extends Component {
                 <Icon type="home" className="nav-icon" />
               </Link>
             </Menu.Item>,
-            
+
+            <Menu.Item key="/notifications">
+                <Link to="/notifications">
+                    <Icon type="notification" className="nav-icon"/>
+                </Link>
+            </Menu.Item>,
+
             <Menu.Item key="/profile" className="profile-menu">
-                <ProfileDropdownMenu 
-                  currentUser={this.props.currentUser} 
+                <ProfileDropdownMenu
+                  currentUser={this.props.currentUser}
                   handleMenuClick={this.handleMenuClick}/>
             </Menu.Item>
-          ]; 
+          ];
         } else {
           menuItems = [
             <Menu.Item key="/login">
@@ -42,7 +48,7 @@ class AppHeader extends Component {
             </Menu.Item>,
             <Menu.Item key="/signup">
               <Link to="/signup">Signup</Link>
-            </Menu.Item>                  
+            </Menu.Item>
           ];
         }
 
@@ -87,8 +93,8 @@ function ProfileDropdownMenu(props) {
   );
 
   return (
-    <Dropdown 
-      overlay={dropdownMenu} 
+    <Dropdown
+      overlay={dropdownMenu}
       trigger={['click']}
       getPopupContainer = { () => document.getElementsByClassName('profile-menu')[0]}>
       <a className="ant-dropdown-link" href="/">

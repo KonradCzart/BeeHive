@@ -19,6 +19,7 @@ import PrivateRoute from '../common/PrivateRoute';
 import Index from '../common/Index';
 import Apiary from '../apiary/Apiary';
 import Hive from '../apiary/Hive';
+import Notifications from "../user/notifications/Notifications";
 
 import { Layout, notification } from 'antd';
 const { Content } = Layout;
@@ -120,6 +121,7 @@ class App extends Component {
 				<Route path="/hive/:id" 
 					render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 				</Route>
+				<Route path="/notifications" render={(props) => <Notifications {...props}/>}/>
 				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}></PrivateRoute>
 				<Route component={NotFound}></Route>
 				</Switch>
