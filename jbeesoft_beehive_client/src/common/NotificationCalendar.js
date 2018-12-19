@@ -31,7 +31,6 @@ export class NotificationCalendar extends React.Component {
     refreshNotifs() {
         let parent = this;
         getNotifications().then(json => {
-            this.state.loading = false;
             parent.setState({
                 loading: false,
                 notifications: json,
