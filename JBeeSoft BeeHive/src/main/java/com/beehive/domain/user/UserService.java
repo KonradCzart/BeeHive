@@ -2,6 +2,7 @@ package com.beehive.domain.user;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.beehive.domain.userrole.Role;
 import com.beehive.infrastructure.payload.SignUpRequest;
 import com.beehive.infrastructure.payload.UserDTO;
+import com.beehive.infrastructure.payload.ValueResponse;
 
 @Service
 public class UserService {
@@ -46,6 +48,10 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER, userId)));
 	}
 	
+	public List<User> getUsersContains(String contains){
+		return userRepository.findByUsernameContaining(contains);
+	}
+	
 	public UserDTO mapToUserDTO(User user) {
 		return UserDTO.builder()
 				.withId(user.getId())
@@ -64,4 +70,7 @@ public class UserService {
 				.build();
 	}
 	
+	public ValueResponse mapUserToValueResponse(User user) {		
+		return new ValueResponse(user.getId(), user.getUsername());
+	}
 }

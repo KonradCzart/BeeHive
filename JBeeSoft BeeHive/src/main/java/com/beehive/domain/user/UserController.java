@@ -1,5 +1,8 @@
 package com.beehive.domain.user;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.beehive.infrastructure.payload.AvailabilityResponse;
 import com.beehive.infrastructure.payload.UserDTO;
+import com.beehive.infrastructure.payload.ValueResponse;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
 
@@ -53,6 +57,14 @@ public class UserController {
         Boolean isAvailable = !userRepository.existsByEmail(email);
         return new AvailabilityResponse(isAvailable);
     }
-
+    
+    @GetMapping("/like/{contains}")
+    @PreAuthorize("hasRole('USER')")
+    public List<ValueResponse> getUsersContains(@PathVariable String contains){
+    	List<User> users = userService.getUsersContains(contains);
+    	return users.stream()
+    			.map( user -> userService.mapUserToValueResponse(user))
+    			.collect(Collectors.toList());
+    }
 
 }

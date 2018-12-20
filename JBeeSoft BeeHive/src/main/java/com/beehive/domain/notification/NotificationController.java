@@ -98,12 +98,33 @@ public class NotificationController {
 	  
 	  @PutMapping("/realize/{noteId}")
 	  @PreAuthorize("hasRole('USER')")
-	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @PathVariable Long noteId) {
+	  public  ResponseEntity<?> realizeNotification(@CurrentUser UserPrincipal currentUser, @PathVariable Long noteId) {
 		 
 		NotificationDTO noteDTO;
 		try {
 			Notification note = notificationService.getNotificationFromDatabase(noteId);
 			note.setIsRealize(true);
+			note = notificationService.modifyNotification(note);
+			noteDTO = notificationService.mapNotificationToNotificationDTO(note);
+			
+  		}
+	    catch (Exception e) {
+	      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
+	      			HttpStatus.BAD_REQUEST);
+	    }
+		      	
+		      			
+		return ResponseEntity.ok(noteDTO);
+	  }
+	  
+	  @PutMapping("/unrealize/{noteId}")
+	  @PreAuthorize("hasRole('USER')")
+	  public  ResponseEntity<?> unrealizeNotification(@CurrentUser UserPrincipal currentUser, @PathVariable Long noteId) {
+		 
+		NotificationDTO noteDTO;
+		try {
+			Notification note = notificationService.getNotificationFromDatabase(noteId);
+			note.setIsRealize(false);
 			note = notificationService.modifyNotification(note);
 			noteDTO = notificationService.mapNotificationToNotificationDTO(note);
 			
