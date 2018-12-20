@@ -10,11 +10,7 @@ import {NotifItem} from "./NotifItem";
 
 const N = 3;
 
-const EMPTY_DATE_JSX = (
-    <div className={"match-parent fl center-child"}>
-        <h2 className="wrap-content text-success">0</h2>
-    </div>
-);
+const EMPTY_DATE_JSX = ("");
 
 /**
  * props = {currentUser}
@@ -73,15 +69,23 @@ export class NotificationCalendar extends React.Component {
     }
 
     cellJSXfor(dateJSON) {
-        let n = 0;
+        let JSXlist = [];
         dateJSON.forEach(notif => {
-            if(!notif.isRealize) n++;
+            if(!notif.isRealize)
+                JSXlist.push((
+                    <h6 className={"text-warning"}>{notif.title}</h6>
+                ));
         });
-        let classes = "wrap-content center-self";
-        classes += n < N? (n > 0? " text-warning" : " text-success") : " text-error";
+        dateJSON.forEach(notif => {
+            if(notif.isRealize)
+                JSXlist.push((
+                    <h6 className={"text-checked"}>{notif.title}</h6>
+                ));
+        });
+
         return (
-            <div className={"match-parent fl center-child"}>
-                <h2 className={classes}>{n}</h2>
+            <div className={"match-parent"}>
+                {JSXlist}
             </div>
         );
     }

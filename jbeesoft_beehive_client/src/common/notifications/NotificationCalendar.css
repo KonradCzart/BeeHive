@@ -20,6 +20,10 @@
     width: 100%;
 }
 
+.h-1-2 {
+    width: 50%;
+}
+
 .v-match-parent {
     height: 100%;
 }

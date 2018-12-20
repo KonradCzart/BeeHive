@@ -1,4 +1,4 @@
-import {Form, Icon, Input} from "antd";
+import {Button, Form, Icon, Input} from "antd";
 import React from "react";
 import {modifyNotification} from "../../util/APIUtils";
 const FormItem = Form.Item;
@@ -15,13 +15,15 @@ class NotifEditItem extends React.Component {
         this.handleDecline = this.handleDecline.bind(this);
     }
 
-    handleApply() {
+    handleApply(event) {
         let parent = this;
+        event.preventDefault();
         this.props.form.validateFields((errors, values) => {
             if(!errors) {
                 let dict = Object.assign({}, parent.props.notif, values);
                 modifyNotification(dict).then(response => {
                     parent.props.onNotifsChange(true, "modify", dict);
+                    parent.handleDecline();
                 }).catch(error => {
                     parent.props.onNotifsChange(false, "modify", parent.props.notif);
                 });
@@ -40,20 +42,33 @@ class NotifEditItem extends React.Component {
         const {getFieldDecorator} = this.props.form;
 
         return (
-            <Form
-                className={"fl v-wrap-content h-match-parent v-center-child b-marg-32"}>
-                <div className={"in-bl to-left wrap-content"}>
+            <Form onSubmit={this.handleApply}
+                className={"bl h-1-2 wrap-content b-marg-32"}>
                     <FormItem label="Title">
-                        {getFieldDecorator("title", {})(<Input/>)}
+                        {getFieldDecorator("title", {
+                            initialValue: this.props.notif.title,
+                            rules: [
+                                {required: true, message: "Please input the title."},
+                            ],
+                        })(<Input/>)}
                     </FormItem>
                     <FormItem label="Description">
-                        {getFieldDecorator("description", {})(<Input/>)}
+                        {getFieldDecorator("description", {
+                            initialValue: this.props.notif.description
+                        })(<Input/>)}
                     </FormItem>
+                <div className={"bl h-match-parent v-wrap-content"}>
+                    <div className={"in-bl h-1-2 v-wrap-content"}>
+                        <Button type="secondary" onClick={this.handleDecline}>
+                            Cancel
+                        </Button>
+                    </div>
+                    <div className={"in-bl h-1-2 v-wrap-content"}>
+                        <Button type="primary" htmlType="submit">
+                            Apply
+                        </Button>
+                    </div>
                 </div>
-                <Icon onClick={this.handleApply} type="check"
-                      className={"in-bl to-right wrap-content"}/>
-                <Icon onClick={this.handleDecline} type="close"
-                      className={"in-bl to-right wrap-content"}/>
             </Form>
         );
     }
