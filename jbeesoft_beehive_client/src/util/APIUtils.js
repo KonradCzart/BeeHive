@@ -117,6 +117,30 @@ export function addNotification(dict) {
     });
 }
 
+export function realizeNotification(notifId) {
+    return request({
+        url: API_BASE_URL + "/notification/realize/" + notifId,
+        method: "PUT",
+    });
+}
+
+/**
+ *  dict = {id, title?, description?, date?, isRealize?, usersId?}
+ */
+export function modifyNotification(dict) {
+    return request({
+        url: API_BASE_URL + "/notification/modify",
+        method: "PUT",
+        body: JSON.stringify(dict),
+    });
+}
+
+export function deleteNotification(notifId) {
+    return request({
+        url: API_BASE_URL + "/notification/delete/" + notifId,
+        method: "DELETE",
+    });
+}
 
 export function getAllHiveTypes() {
     return request({

@@ -1,0 +1,109 @@
+.wrap-content {
+    width: auto;
+    height: auto;
+}
+
+.h-wrap-content {
+    width: auto;
+}
+
+.v-wrap-content {
+    height: auto;
+}
+
+.match-parent {
+    width: 100%;
+    height: 100%;
+}
+
+.h-match-parent {
+    width: 100%;
+}
+
+.v-match-parent {
+    height: 100%;
+}
+
+.center-child {
+    justify-content: center;
+    align-items: center;
+}
+
+.v-center-child {
+    align-items: center;
+}
+
+.fl {
+    display: flex;
+}
+
+.in-fl {
+    display: inline-flex;
+}
+
+.bl {
+    display: block;
+}
+
+.in-bl {
+    display: inline-block;
+}
+
+.v-marg-16 {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.r-marg-16 {
+    margin-right: 16px;
+}
+
+.b-marg-32 {
+    margin-bottom: 32px;
+}
+
+.marg-16 {
+    margin: 16px;
+}
+
+.h-marg-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.r-marg-32 {
+    margin-right: 32px;
+}
+
+.center-children {
+    justify-content: center;
+    align-items: center;
+}
+
+.right-children {
+    justify-content: end;
+}
+
+.to-right {
+    float: right;
+}
+
+.size-24 {
+    font-size: 24px;
+}
+
+.text-success {
+    color: #64dd17;
+}
+
+.text-warning {
+    color: #ff6d00;
+}
+
+.text-error {
+    color: #d50000;
+}
+
+.text-checked {
+    color: #546e7a;
+}

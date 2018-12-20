@@ -108,7 +108,7 @@ class App extends Component {
 						currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
 				</Route>
 				<Route path="/login" 
-					render={(props) => <Login isAuthenticated={this.state.isAuthenticated} onLogin={this.handleLogin} {...props} />}></Route>
+					render={(props) => <Login isAuthenticated={this.state.isAuthenticated} onLogin={this.handleLogin} {...props} />}/>
 				<Route path="/signup" 
 					render={(props) => <Signup isAuthenticated={this.state.isAuthenticated} {...props} />}>
 				</Route>
@@ -121,9 +121,9 @@ class App extends Component {
 				<Route path="/hive/:id" 
 					render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 				</Route>
-				<Route path="/notifications" render={(props) => <Notifications {...props}/>}/>
-				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}></PrivateRoute>
-				<Route component={NotFound}></Route>
+				<Route path="/notifications" render={(props) => <Notifications isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}/>}/>
+				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}/>
+				<Route component={NotFound}/>
 				</Switch>
 			</div>
 			</Content>

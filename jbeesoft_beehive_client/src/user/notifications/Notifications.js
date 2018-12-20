@@ -1,9 +1,10 @@
 import React from "react"
-import {NotificationCalendar} from "../../common/NotificationCalendar";
+import {NotificationCalendar} from "../../common/notifications/NotificationCalendar";
 import {notification} from "antd";
+import Login from "../login/Login";
 
 /**
- * props = {userId}
+ * props = {currentUser, isAuthenticated}
  */
 export default class Notifications extends React.Component {
 
@@ -28,13 +29,17 @@ export default class Notifications extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                {/* TODO pogoda */}
-                <NotificationCalendar userId={this.props.userId}
-                                      onAddNotifError={Notifications.handleError}
-                                      onAddNotifSuccess={Notifications.handleSuccess}/>
-            </div>
-        );
+
+        if(this.props.isAuthenticated) {
+            return (
+                <div>
+                    <NotificationCalendar currentUser={this.props.currentUser}
+                                          onAddNotifError={Notifications.handleError}
+                                          onAddNotifSuccess={Notifications.handleSuccess}{...this.props}/>
+                </div>
+            );
+        }
+        else
+            return (<Login {...this.props}/>);
     }
 }
