@@ -215,3 +215,10 @@ export function editHive(hiveData, hiveId) {
         body: JSON.stringify(hiveData)
     });*/
 }
+
+export function deleteQueenFromHive(hiveId) {
+    return request({
+        url: API_BASE_URL + '/hive/delete/' + hiveId + '/queen',
+        method: 'DELETE'
+    });
+}

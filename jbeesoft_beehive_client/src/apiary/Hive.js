@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './ApiaryList.css';
 import { Form, Button, notification } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getHiveData, addQueenToHive, editQueenInHive } from '../util/APIUtils';
+import { getHiveData, addQueenToHive, editQueenInHive, editHive, deleteQueenFromHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import AddQueenForm from './AddQueenForm';
 import EditQueenForm from './EditQueenForm';
@@ -50,13 +50,18 @@ class Hive extends Component {
 				<h1>Hive name: <span className='apiary-name'>{this.state.hiveData.name}</span></h1>
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>Edit hive</Button>
 				<h1>Type: <span className='apiary-name'>{this.state.hiveData.typeName}</span></h1>
+				{
+					this.state.hiveData.queenDTO !== null ? (
+						<Button style={{float: 'right'}} type="primary" onClick={this.handleDeleteQueen}>Delete queen</Button>
+					) : null
+				}
 				<h1>Box number: <span className='apiary-name'>{this.state.hiveData.boxNumber}</span></h1>
 
 				<WrappedEditHiveForm
 					wrappedComponentRef={this.saveFormRef1}
 					visible={this.state.visible1}
 					onCancel={this.handleCancel1}
-					onCreate={this.handleEdit}
+					onCreate={this.handleEditHive}
 					hiveData={this.state.hiveData}
 					{...this.props}
 				/>
@@ -116,7 +121,7 @@ class Hive extends Component {
 	handleCancel1 = () => {
 		this.setState({ visible1: false });
 	}
-	
+
 	saveFormRef1 = (formRef) => {
 		this.formRef1 = formRef;
 	}
@@ -176,6 +181,62 @@ class Hive extends Component {
 					description: error.message
 				});
 			});
+		});
+	}
+
+	handleEditHive = () => {
+		const form = this.formRef1.props.form;
+		form.validateFields((err, values) => {
+			if (err) {
+				return;
+			}
+
+			const hiveRequest = values;
+			form.resetFields();
+			this.setState({ visible: false });
+			editHive(hiveRequest, this.props.match.params.id)
+			.then(response => {
+				notification.success({
+					message: 'BeeHive App',
+					description: hiveRequest.name + " created successfully!"
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				if(error.status === 401) {
+					notification.error({
+						message: 'BeeHive App',
+						description: 'Data is incorrect. Please try again!'
+					});					
+				} else {
+					notification.error({
+						message: 'BeeHive App',
+						description: 'Sorry! Something went wrong. Please try again!'
+					});											
+				}
+			});
+		});
+	}
+
+	handleDeleteQueen = () => {
+		deleteQueenFromHive(this.props.match.params.id)
+		.then(response => {
+			notification.success({
+				message: 'BeeHive App',
+				description: response.message
+			});
+			this.setState({date: new Date()})
+		}).catch(error => {
+			if(error.status === 401) {
+				notification.error({
+					message: 'BeeHive App',
+					description: 'Data is incorrect. Please try again!'
+				});					
+			} else {
+				notification.error({
+					message: 'BeeHive App',
+					description: 'Sorry! Something went wrong. Please try again!'
+				});											
+			}
 		});
 	}
 
