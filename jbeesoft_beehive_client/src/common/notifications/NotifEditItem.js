@@ -37,8 +37,6 @@ class NotifEditItem extends React.Component {
         this.props.onDecline();
     }
 
-    // TODO pole formularza usersId
-
     render() {
         const {getFieldDecorator} = this.props.form;
 

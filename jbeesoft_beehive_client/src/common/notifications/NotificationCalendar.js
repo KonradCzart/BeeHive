@@ -68,16 +68,21 @@ export class NotificationCalendar extends React.Component {
 
     cellJSXfor(dateJSON) {
         let JSXlist = [];
+        let idx = 0;
         dateJSON.forEach(notif => {
             if(!notif.isRealize)
                 JSXlist.push((
-                    <h6 className={"text-warning"}>{notif.title}</h6>
+                    <h6 key={idx++} className={"text-warning"}>
+                        {notif.title}
+                    </h6>
                 ));
         });
         dateJSON.forEach(notif => {
             if(notif.isRealize)
                 JSXlist.push((
-                    <h6 className={"text-checked"}>{notif.title}</h6>
+                    <h6 key={idx++} className={"text-checked"}>
+                        {notif.title}
+                    </h6>
                 ));
         });
 
@@ -98,7 +103,8 @@ export class NotificationCalendar extends React.Component {
                 <WrappedNotifCreateForm
                     onNotifsChange={this.handleNotifsChange}
                     date={this.state.selectedDate}
-                    usersId={[this.props.currentUser.id]}/>
+                    username={this.props.currentUser.username}
+                    userId={this.props.currentUser.id}/>
             </Modal>
         );
     }
@@ -125,10 +131,6 @@ export class NotificationCalendar extends React.Component {
             return (<LoadingIndicator/>);
         if(this.state.error)
             return (<ErrorIndicator/>);
-        if(this.state.notifsJSON[date])
-            console.log("THIS IS WHERE THE FUN BEGINS");
-        else
-            console.log("HOW COULD THIS HAPPEND WE'RE SMARTER THAN THIS");
         return this.state.notifsJSON[date]?
             this.cellJSXfor(this.state.notifsJSON[date]) : EMPTY_JSX;
     }
