@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './ApiaryList.css';
 import { Form, Input, Button, notification, Modal, Table, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { addHive, getAllHiveTypes, getAllHives, editApiary } from '../util/APIUtils';
+import { addHive, getAllHiveTypes, getAllHives, editApiary, deleteHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
 const FormItem = Form.Item;
@@ -50,6 +50,13 @@ class Apiary extends Component {
 				<div>
 				{record.queenDTO !== null ? (<span>Yes</span>) : (<span>No</span>)}
 				</div>
+			)
+		}, {
+			title: 'Delete',
+			dataIndex: 'deleteHive',
+			key: 'id',
+			render : (text, record) => (
+				<Button type="default" onClick={(e) => this.deleteHive(record.id, e)}>Delete</Button>
 			)
 		}];
 
@@ -138,6 +145,30 @@ class Apiary extends Component {
 
 	handleBoxNumChange = (num) => {
 		this.receivedElements.boxNum = num;
+	}
+
+	deleteHive = (id, e) => {
+		console.log(id);
+		deleteHive(id)
+		.then(response => {
+			notification.success({
+				message: 'BeeHive App',
+				description: response.message
+			});
+			this.setState({date: new Date()})
+		}).catch(error => {
+			if(error.status === 401) {
+				notification.error({
+					message: 'BeeHive App',
+					description: 'Data is incorrect. Please try again!'
+				});					
+			} else {
+				notification.error({
+					message: 'BeeHive App',
+					description: 'Sorry! Something went wrong. Please try again!'
+				});											
+			}
+		});
 	}
 
 	handleCreate = () => {

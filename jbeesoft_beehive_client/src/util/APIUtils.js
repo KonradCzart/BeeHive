@@ -222,3 +222,10 @@ export function deleteQueenFromHive(hiveId) {
         method: 'DELETE'
     });
 }
+
+export function deleteHive(hiveId) {
+    return request({
+        url: API_BASE_URL + '/hive/delete/' + hiveId + '/all',
+        method: 'DELETE'
+    });
+}
