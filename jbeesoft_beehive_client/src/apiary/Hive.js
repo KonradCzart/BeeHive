@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './ApiaryList.css';
-import { Form, Input, Button, notification, Modal, Table, Select, DatePicker, Checkbox } from 'antd';
+import { Form, Button, notification } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getHiveData, getQueenRaces, addQueenToHive, editQueenInHive } from '../util/APIUtils';
+import { getHiveData, addQueenToHive, editQueenInHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
-import moment from 'moment';
-const FormItem = Form.Item;
-const Option = Select.Option;
+import AddQueenForm from './AddQueenForm';
+import EditQueenForm from './EditQueenForm';
+import EditHiveForm from './EditHiveForm';
 
 class Hive extends Component {
 	_isMounted = false;
@@ -37,6 +37,7 @@ class Hive extends Component {
 
 		const WrappedAddQueenForm = Form.create()(AddQueenForm);
 		const WrappedEditQueenForm = Form.create()(EditQueenForm);
+		const WrappedEditHiveForm = Form.create()(EditHiveForm);
 		return (
 			<div className="apiary-list">
 				{
@@ -47,8 +48,18 @@ class Hive extends Component {
 					)
 				}
 				<h1>Hive name: <span className='apiary-name'>{this.state.hiveData.name}</span></h1>
+				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>Edit hive</Button>
 				<h1>Type: <span className='apiary-name'>{this.state.hiveData.typeName}</span></h1>
 				<h1>Box number: <span className='apiary-name'>{this.state.hiveData.boxNumber}</span></h1>
+
+				<WrappedEditHiveForm
+					wrappedComponentRef={this.saveFormRef1}
+					visible={this.state.visible1}
+					onCancel={this.handleCancel1}
+					onCreate={this.handleEdit}
+					hiveData={this.state.hiveData}
+					{...this.props}
+				/>
 				{
 					!this.state.isLoading && this.state.hiveData.queenDTO === null ? (
 						<div>
@@ -86,7 +97,8 @@ class Hive extends Component {
 	}
 
 	state = {
-		visible: false
+		visible: false,
+		visible1: false
 	};
 
 	showModal = () => {
@@ -95,6 +107,18 @@ class Hive extends Component {
 
 	handleCancel = () => {
 		this.setState({ visible: false });
+	}
+
+	showModal1 = () => {
+		this.setState({ visible1: true });
+	}
+
+	handleCancel1 = () => {
+		this.setState({ visible1: false });
+	}
+	
+	saveFormRef1 = (formRef) => {
+		this.formRef1 = formRef;
 	}
 
 	handleCreate = () => {
@@ -208,304 +232,6 @@ class Hive extends Component {
 	saveQueenFormRef = (queenFormRef) => {
 		this.queenFormRef = queenFormRef;
 	}
-}
-
-
-
-
-class AddQueenForm extends Component {
-
-	_isMounted = false;
-
-	constructor(props) {
-		super(props);
-		const date = new Date();
-		this.state = {
-			queenRaces: [],
-			date: date,
-			isLoading: false,
-			oldDate: date
-		}
-	}
-
-	render() {
-
-		const {
-			visible, onCancel, onCreate, form
-		} = this.props;
-
-		const queenRaceDrop = this.state.queenRaces.map((type =>
-				<Option key={type.id} value={type.id}>{type.value}</Option>
-		));
-
-		const { getFieldDecorator } = form;
-		return (
-		<Modal
-			visible={visible}
-			title="Add queen to hive"
-			okText="Add"
-			onCancel={onCancel}
-			onOk={onCreate}
-		>
-			<Form layout="vertical">
-				
-				{
-					!this.state.isLoading && this.state.queenRaces.length > 0 ? (
-					<FormItem label="Race:">
-					{getFieldDecorator('raceId', {
-						rules: [{ required: true, message: 'This field is required.' }],
-					})(
-						<Select name='raceId' placeholder='Race'>
-							{queenRaceDrop}
-						</Select>				
-					)}
-					</FormItem> ) : null
-				}
-				{
-					this.state.isLoading ? 
-					<LoadingIndicator /> : null
-				}
-
-				<FormItem label="Color:">
-				{getFieldDecorator('color', {
-					rules: [{ required: true, message: 'This field is required.' }],
-				})(
-					<Input
-						name="color"
-						type="text"
-						placeholder="Color" />					
-				)}
-				</FormItem>
-
-				<FormItem label="Age:">
-				{getFieldDecorator('age', {
-					rules: [{ type: 'object', required: true, message: 'Please select time!' }],
-				})(
-					<DatePicker
-						format="YYYY-MM-DD"
-						name="age"
-						type="text"
-						placeholder="Select age" />
-				)}
-				</FormItem>
-
-				<FormItem label="Is reproducing:">
-				{getFieldDecorator('isReproducting', {
-					rules: [{ required: false, message: 'This field is required!' }], initialValue: false
-				})(
-					<Checkbox
-						name="isReproducting" />
-				)}
-				</FormItem>
-
-				<FormItem label="Description:">
-				{getFieldDecorator('description', {
-					rules: [{ required: true, message: 'This field is required.' }],
-				})(
-					<Input
-						name="description"
-						type="text"
-						placeholder="Description" />					
-				)}
-				</FormItem>
-			</Form>
-		</Modal>
-		);
-	}
-
-	loadQueenRaces() {
-		let promise = getQueenRaces();
-
-		if(!promise) {
-			return;
-		}
-
-		this.setState({isLoading: true});
-
-		promise
-		.then(response => {
-			if(this._isMounted) {
-				this.setState({
-					queenRaces: response,
-					isLoading: false
-				});
-			}
-		})
-		.catch(error => {
-			this.setState({error, isLoading: false});
-		});
-	}
-
-	componentDidUpdate(nextProps) {
-		if(this.state.date !== this.state.oldDate) {
-			this.loadQueenRaces();
-			const date = this.state.date;
-			this.setState({
-				oldDate: date
-			})
-		}
-	}
-
-	componentDidMount() {
-		this._isMounted = true;
-		this.loadQueenRaces();
-	}
-
-	componentWillUnmount() {
-		this._isMounted = false;
-	}
-
-}
-
-class EditQueenForm extends Component {
-
-	_isMounted = false;
-
-	constructor(props) {
-		super(props);
-		const date = new Date();
-		this.state = {
-			queenRaces: [],
-			date: date,
-			isLoading: false,
-			oldDate: date
-		}
-	}
-
-	render() {
-
-		const {
-			visible, onCancel, onCreate, form, queenData
-		} = this.props;
-
-		const queenRaceDrop = this.state.queenRaces.map((type =>
-				<Option key={type.value} value={type.value}>{type.value}</Option>
-		));
-
-		const { getFieldDecorator } = form;
-		const val = this.props.queenData.isReproducting ? 'checked' : 'null';
-		return (
-		<Modal
-			visible={visible}
-			title="Edit queen in hive"
-			okText="Edit"
-			onCancel={onCancel}
-			onOk={onCreate}
-		>
-			<Form layout="vertical">
-				
-				{
-					!this.state.isLoading && this.state.queenRaces.length > 0 ? (
-					<FormItem label="Race:">
-					{getFieldDecorator('raceName', {
-						rules: [{ required: true, message: 'This field is required.' }],
-						initialValue: this.props.queenData.raceName
-					})(
-						<Select name='raceName' placeholder='Race'>
-							{queenRaceDrop}
-						</Select>				
-					)}
-					</FormItem> ) : null
-				}
-				{
-					this.state.isLoading ? 
-					<LoadingIndicator /> : null
-				}
-
-				<FormItem label="Color:">
-				{getFieldDecorator('color', {
-					rules: [{ required: true, message: 'This field is required.' }],
-					initialValue: this.props.queenData.color
-				})(
-					<Input
-						name="color"
-						type="text"
-						placeholder="Color" />					
-				)}
-				</FormItem>
-
-				<FormItem label="Age:">
-				{getFieldDecorator('age', {
-					rules: [{ type: 'object', required: true, message: 'Please select time!' }],
-					initialValue: moment(this.props.queenData.age, "YYYY-MM-DD")
-				})(
-					<DatePicker
-						format="YYYY-MM-DD"
-						name="age"
-						type="text"
-						placeholder="Select age" />
-				)}
-				</FormItem>
-				<FormItem label="Is reproducing:">
-				{
-					getFieldDecorator('isReproducting', {
-					rules: [{ required: true, message: 'This field is required!' }],
-					initialValue: this.props.queenData.isReproducting,
-					valuePropName: val
-				})(
-					<Checkbox
-						name="isReproducting" />
-				)}
-				</FormItem>
-
-				<FormItem label="Description:">
-				{getFieldDecorator('description', {
-					rules: [{ required: true, message: 'This field is required.' }],
-					initialValue: this.props.queenData.description
-				})(
-					<Input
-						name="description"
-						type="text"
-						placeholder="Description" />					
-				)}
-				</FormItem>
-			</Form>
-		</Modal>
-		);
-	}
-
-	loadQueenRaces() {
-		let promise = getQueenRaces();
-
-		if(!promise) {
-			return;
-		}
-
-		this.setState({isLoading: true});
-
-		promise
-		.then(response => {
-			if(this._isMounted) {
-				this.setState({
-					queenRaces: response,
-					isLoading: false
-				});
-			}
-		})
-		.catch(error => {
-			this.setState({error, isLoading: false});
-		});
-	}
-
-	componentDidUpdate(nextProps) {
-		if(this.state.date !== this.state.oldDate) {
-			this.loadQueenRaces();
-			const date = this.state.date;
-			this.setState({
-				oldDate: date
-			})
-		}
-	}
-
-	componentDidMount() {
-		this._isMounted = true;
-		this.loadQueenRaces();
-	}
-
-	componentWillUnmount() {
-		this._isMounted = false;
-	}
-
 }
 
 export default withRouter(Hive);

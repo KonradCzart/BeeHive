@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import './ApiaryList.css';
 import { Form, Input, Button, notification, Modal, Table, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { addHive, getAllHiveTypes, getAllHives } from '../util/APIUtils';
+import { addHive, getAllHiveTypes, getAllHives, editApiary } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
+import EditApiaryForm from './EditApiaryForm';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -59,10 +60,13 @@ class Apiary extends Component {
 		}
 
 		const WrappedAddHiveForm = Form.create()(AddHiveForm);
+		const WrappedEditApiaryForm = Form.create()(EditApiaryForm);
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New hive</Button>
+
 				<h1>Apiary name: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span></h1>
+				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>EditApiary</Button>
 				<h1>Country: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.country}</span></h1>
 				<h1>City: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.city}</span></h1>
 				<WrappedAddHiveForm
@@ -73,6 +77,16 @@ class Apiary extends Component {
 					onTypeChange={this.handleTypeChange}
 					onBoxNumChange={this.handleBoxNumChange}
 					{...this.props}
+				/>
+
+
+				<WrappedEditApiaryForm
+					wrappedComponentRef={this.saveFormRef1}
+					visible={this.state.visible1}
+					onCancel={this.handleCancel1}
+					onCreate={this.handleEdit}
+					userID={this.props.currentUser.id}
+					apiaryData={this.state.apiaryData.apiaryINFO}
 				/>
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
@@ -98,15 +112,24 @@ class Apiary extends Component {
 	}
 
 	state = {
-		visible: false
+		visible: false,
+		visible1: false
 	};
 
 	showModal = () => {
 		this.setState({ visible: true });
 	}
 
+	showModal1 = () => {
+		this.setState({ visible1: true });
+	}
+
 	handleCancel = () => {
 		this.setState({ visible: false });
+	}
+
+	handleCancel1 = () => {
+		this.setState({ visible1: false });
 	}
 
 	handleTypeChange = (type) => {
@@ -149,6 +172,32 @@ class Apiary extends Component {
 							description: 'Sorry! Something went wrong. Please try again!'
 					});											
 				}
+			});
+		});
+	}
+
+	handleEdit = () => {
+		const form = this.formRef1.props.form;
+		form.validateFields((err, values) => {
+			if(err) {
+				return;
+			}
+
+			const apiaryRequest = values;
+			form.resetFields();
+			this.setState({visible1: false});
+			editApiary(apiaryRequest, this.props.match.params.id)
+			.then(response => {
+				notification.success({
+					message: 'BeeHive App',
+					description: apiaryRequest.name + " created successfully!"
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				notification.error({
+					message: error.message,
+					description: 'Sorry! Something went wrong. Please try again!'
+				});
 			});
 		});
 	}
@@ -205,6 +254,10 @@ class Apiary extends Component {
 
 	saveFormRef = (formRef) => {
 		this.formRef = formRef;
+	}
+
+	saveFormRef1 = (formRef) => {
+		this.formRef1 = formRef;
 	}
 }
 

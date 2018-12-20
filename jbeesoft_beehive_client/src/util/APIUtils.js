@@ -199,3 +199,19 @@ export function editQueenInHive(queenData) {
         body: JSON.stringify(queenData)         
     });
 }
+
+export function editApiary(apiaryData, apiaryId) {
+    return request({
+        url: API_BASE_URL + '/apiary/modify/' + apiaryId,
+        method: 'PUT',
+        body: JSON.stringify(apiaryData)
+    });
+}
+
+export function editHive(hiveData, hiveId) {
+    /*return request({
+        url: API_BASE_URL + '/hive/modify/' + hiveId,
+        method: 'PUT',
+        body: JSON.stringify(hiveData)
+    });*/
+}
