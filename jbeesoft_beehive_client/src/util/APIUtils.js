@@ -169,3 +169,19 @@ export function getQueenRaces() {
         method: 'GET'
     });
 }
+
+export function addQueenToHive(queenData) {
+    return request({
+        url: API_BASE_URL + "/queen/new",
+        method: 'POST',
+        body: JSON.stringify(queenData)         
+    });
+}
+
+export function editQueenInHive(queenData) {
+    return request({
+        url: API_BASE_URL + "/queen/modify",
+        method: 'PUT',
+        body: JSON.stringify(queenData)         
+    });
+}

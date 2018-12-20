@@ -10,11 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.beehive.domain.location.Location;
+import com.beehive.domain.location.LocationService;
 import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
@@ -39,6 +42,9 @@ public class ApiaryController {
     
     @Autowired
     PrivilegeService privilegeService;
+    
+    @Autowired
+    LocationService locationService;
     
 
     @GetMapping("/me")
@@ -75,5 +81,17 @@ public class ApiaryController {
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Apiary Created Successfully"));
     }
+    
+    @PutMapping("/modify/{apiaryId}")
+	@PreAuthorize("hasRole('USER')")
+	public ApiaryDTO modifyApiary(@Valid @RequestBody ApiaryRequest apiaryRequest, @CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		Location apiaryLocation = locationService.getOrCreateLocationIfNotExist(apiaryRequest.getCountry(), apiaryRequest.getCity());
+		apiary.setName(apiaryRequest.getName());
+		apiary.setLocation(apiaryLocation);
+		apiary = apiaryService.modifyApiary(apiary);
+		
+		return apiaryService.mapToApiaryDTO(apiary);
+	}
 
 }
