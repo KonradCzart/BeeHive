@@ -8,9 +8,7 @@ import "./NotificationCalendar.css";
 import {WrappedNotifCreateForm} from "./NotifCreateForm";
 import {NotifItem} from "./NotifItem";
 
-const N = 3;
-
-const EMPTY_DATE_JSX = ("");
+const EMPTY_JSX = ("");
 
 /**
  * props = {currentUser}
@@ -132,7 +130,7 @@ export class NotificationCalendar extends React.Component {
         else
             console.log("HOW COULD THIS HAPPEND WE'RE SMARTER THAN THIS");
         return this.state.notifsJSON[date]?
-            this.cellJSXfor(this.state.notifsJSON[date]) : EMPTY_DATE_JSX;
+            this.cellJSXfor(this.state.notifsJSON[date]) : EMPTY_JSX;
     }
 
     onSelect(date) {

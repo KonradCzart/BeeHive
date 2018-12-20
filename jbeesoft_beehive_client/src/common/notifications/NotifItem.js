@@ -1,5 +1,9 @@
 import React from "react";
-import {deleteNotification, realizeNotification} from "../../util/APIUtils";
+import {
+    deleteNotification,
+    realizeNotification,
+    unrealizeNotification
+} from "../../util/APIUtils";
 import {Checkbox, Icon} from "antd";
 import {WrappedNotifEditItem} from "./NotifEditItem";
 
@@ -12,7 +16,6 @@ export class NotifItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            checked: this.props.notif.isRealize,
             edited: false,
         };
         this.handleChange = this.handleChange.bind(this);
@@ -22,13 +25,22 @@ export class NotifItem extends React.Component {
     }
 
     handleChange(event) {
+        let targetValue = event.target.checked;
         let parent = this;
-        realizeNotification(this.props.notif.id).then(response => {
-            parent.setState({checked: event.checked});
-            parent.props.onNotifsChange(true, "realize", parent.props.notif);
-        }).catch(error => {
-            parent.props.onNotifsChange(false, "realize", parent.props.notif);
-        });
+        if(targetValue) {
+            realizeNotification(this.props.notif.id).then(response => {
+                parent.props.onNotifsChange(true, "realize", parent.props.notif);
+            }).catch(error => {
+                parent.props.onNotifsChange(false, "realize", parent.props.notif);
+            });
+        }
+        else {
+            unrealizeNotification(this.props.notif.id).then(response => {
+                parent.props.onNotifsChange(true, "unrealize", parent.props.notif);
+            }).catch(error => {
+                parent.props.onNotifsChange(false, "unrealize", parent.props.notif);
+            });
+        }
     }
 
     handleEdit() {
@@ -65,10 +77,10 @@ export class NotifItem extends React.Component {
                           checked={this.props.notif.isRealize}
                           onChange={this.handleChange}/>
                 <div className={"match-parent in-bl"}>
-                    <h3 className={this.state.checked? "text-checked" : ""}>
+                    <h3 className={this.props.notif.isRealize? "text-checked" : ""}>
                         {this.props.notif.title}
                     </h3>
-                    <h4 className={this.state.checked? "text-checked" : ""}>
+                    <h4 className={this.props.notif.isRealize? "text-checked" : ""}>
                         {this.props.notif.description}
                     </h4>
                 </div>

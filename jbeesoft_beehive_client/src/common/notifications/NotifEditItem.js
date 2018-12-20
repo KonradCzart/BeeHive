@@ -1,6 +1,7 @@
-import {Button, Form, Icon, Input} from "antd";
+import {Button, Form, Input} from "antd";
 import React from "react";
 import {modifyNotification} from "../../util/APIUtils";
+
 const FormItem = Form.Item;
 
 /**
@@ -43,20 +44,23 @@ class NotifEditItem extends React.Component {
 
         return (
             <Form onSubmit={this.handleApply}
-                className={"bl h-1-2 wrap-content b-marg-32"}>
-                    <FormItem label="Title">
-                        {getFieldDecorator("title", {
-                            initialValue: this.props.notif.title,
-                            rules: [
-                                {required: true, message: "Please input the title."},
-                            ],
-                        })(<Input/>)}
-                    </FormItem>
-                    <FormItem label="Description">
-                        {getFieldDecorator("description", {
-                            initialValue: this.props.notif.description
-                        })(<Input/>)}
-                    </FormItem>
+                  className={"bl h-1-2 wrap-content b-marg-32"}>
+                <FormItem label="Title">
+                    {getFieldDecorator("title", {
+                        initialValue: this.props.notif.title,
+                        rules: [
+                            {
+                                required: true,
+                                message: "Please input the title."
+                            },
+                        ],
+                    })(<Input/>)}
+                </FormItem>
+                <FormItem label="Description">
+                    {getFieldDecorator("description", {
+                        initialValue: this.props.notif.description
+                    })(<Input/>)}
+                </FormItem>
                 <div className={"bl h-match-parent v-wrap-content"}>
                     <div className={"in-bl h-1-2 v-wrap-content"}>
                         <Button type="secondary" onClick={this.handleDecline}>
@@ -73,6 +77,7 @@ class NotifEditItem extends React.Component {
         );
     }
 }
+
 /**
  * props = {notif:Notification, onNotifsChange:Function, onDecline:Function}
  * onNotifsChange = Function(success:Boolean, action:String, notif:Notification)

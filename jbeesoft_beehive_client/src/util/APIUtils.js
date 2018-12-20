@@ -124,6 +124,20 @@ export function realizeNotification(notifId) {
     });
 }
 
+export function unrealizeNotification(notifId) {
+    return request({
+        url: API_BASE_URL + "/notification/unrealize/" + notifId,
+        method: "PUT",
+    });
+}
+
+export function getUsersLike(string) {
+    return request({
+        url: API_BASE_URL + "/users/like/" + string,
+        method: "GET",
+    });
+}
+
 /**
  *  dict = {id, title?, description?, date?, isRealize?, usersId?}
  */
