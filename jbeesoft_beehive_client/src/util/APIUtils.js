@@ -131,9 +131,12 @@ export function unrealizeNotification(notifId) {
     });
 }
 
+/**
+ * output = [{id, value(=username)}, ...]
+ */
 export function getUsersLike(string) {
     return request({
-        url: API_BASE_URL + "/users/like/" + string,
+        url: API_BASE_URL + "/user/like/" + string,
         method: "GET",
     });
 }

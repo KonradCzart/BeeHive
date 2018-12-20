@@ -53,17 +53,38 @@
     display: inline-block;
 }
 
+.v-marg-8 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 .v-marg-16 {
     margin-top: 16px;
     margin-bottom: 16px;
+}
+
+.r-marg-8 {
+    margin-left: 8px;
+}
+
+.r-marg-8 {
+    margin-right: 8px;
 }
 
 .r-marg-16 {
     margin-right: 16px;
 }
 
+.b-marg-16 {
+    margin-bottom: 16px;
+}
+
 .b-marg-32 {
     margin-bottom: 32px;
+}
+
+.marg-8 {
+    margin: 8px;
 }
 
 .marg-16 {
@@ -96,6 +117,15 @@
     font-size: 24px;
 }
 
+.border-8 {
+    border: 2px solid #263238;
+    border-radius: 8px;
+}
+
+.text-primary {
+    color: #ffab00;
+}
+
 .text-success {
     color: #64dd17;
 }
@@ -110,4 +140,8 @@
 
 .text-checked {
     color: #546e7a;
+}
+
+.text-solid {
+    color: #263238;
 }

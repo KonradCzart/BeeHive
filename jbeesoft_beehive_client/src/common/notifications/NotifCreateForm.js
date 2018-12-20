@@ -1,12 +1,13 @@
 import React from "react";
 import {addNotification} from "../../util/APIUtils";
 import {Button, Form, Input} from "antd";
+import {NotifUsersForm} from "./NotifUsersForm";
 
 const FormItem = Form.Item;
 
 /**
  * props = {
- *   date:String, usersId:List<Number>,
+ *   date:String, username:String, userId:Number,
  *   onNotifsChange:Function(success:Boolean, action:String, notif:Notification)
  * }
  */
@@ -14,7 +15,11 @@ class NotifCreateForm extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            usersId: [this.props.userId],
+        };
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUsersChange = this.handleUsersChange.bind(this);
     }
 
     handleSubmit(event) {
@@ -25,7 +30,7 @@ class NotifCreateForm extends React.Component {
                 let dict = Object.assign({}, values, {
                     date: parent.props.date,
                     isRealize: false,
-                    usersId: parent.props.usersId,
+                    usersId: parent.state.usersId,
                 });
                 addNotification(dict).then(response => {
                     parent.props.onNotifsChange(true, "create", dict);
@@ -36,10 +41,17 @@ class NotifCreateForm extends React.Component {
         });
     }
 
-    // TODO pole usersId w formularzu
+    handleUsersChange(usersId) {
+        console.log("USERS CHANGE", usersId);
+        this.setState({
+            usersId: usersId,
+        });
+    }
 
     render() {
         const {getFieldDecorator} = this.props.form;
+        const initialUsers = {};
+        initialUsers[this.props.username] = this.props.userId;
 
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -56,6 +68,8 @@ class NotifCreateForm extends React.Component {
                 <FormItem label="Description">
                     {getFieldDecorator("description", {})(<Input/>)}
                 </FormItem>
+                <NotifUsersForm initialUsers={initialUsers}
+                                onUsersChange={this.handleUsersChange}/>
                 <Button htmlType="submit" type="primary">Submit</Button>
             </Form>
         );
@@ -64,7 +78,7 @@ class NotifCreateForm extends React.Component {
 
 /**
  * props = {
- *   date:String, usersId:List<Number>,
+ *   date:String, username:String, userId:Number,
  *   onNotifsChange:Function(success:Boolean, action:String, notif:Notification)
  * }
  */
