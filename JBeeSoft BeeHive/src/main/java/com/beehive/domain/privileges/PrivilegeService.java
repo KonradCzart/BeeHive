@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.user.User;
+import com.beehive.infrastructure.payload.ContributorDTO;
 
 @Service
 public class PrivilegeService {
@@ -85,6 +86,19 @@ public class PrivilegeService {
 				.map(Privilege::getName)
 				.collect(Collectors.toList());
 		return new HashSet<Privilege>(privilegeRepository.findAllByNameIn(privilegeNames));
-	}	
+	}
+	
+	public List<PrivilegeProfile> getProfilesForApiary(Apiary apiary) {
+		return privilegeProfileRepository.findAllByAffectedApiary(apiary);
+	}
+	
+	public ContributorDTO mapToContributorDTO(PrivilegeProfile profile) {
+		return ContributorDTO.builder()
+				.withUserId(profile.getTargetUser().getId())
+				.withUsername(profile.getTargetUser().getUsername())
+				.withEmail(profile.getTargetUser().getEmail())
+				.withPrivileges(profile.getPrivileges())
+				.build();
+	}
 	
 }
