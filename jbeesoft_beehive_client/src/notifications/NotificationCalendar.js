@@ -1,8 +1,8 @@
 import React from "react"
-import {getNotifications} from "../../util/APIUtils"
+import {getNotifications} from "../util/APIUtils"
 import {Calendar, Modal, notification} from "antd"
-import LoadingIndicator from "../LoadingIndicator";
-import ErrorIndicator from "../ErrorIndicator";
+import LoadingIndicator from "../common/LoadingIndicator";
+import ErrorIndicator from "../common/ErrorIndicator";
 import moment from "moment";
 import "./NotificationCalendar.css";
 import {WrappedNotifCreateForm} from "./NotifCreateForm";

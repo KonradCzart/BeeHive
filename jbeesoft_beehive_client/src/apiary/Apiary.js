@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { addHive, getAllHiveTypes, getAllHives, editApiary, deleteHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
+import {Contributors} from "../contributors/Contributors";
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -73,7 +74,7 @@ class Apiary extends Component {
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New hive</Button>
 
 				<h1>Apiary name: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span></h1>
-				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>EditApiary</Button>
+				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>Edit Apiary</Button>
 				<h1>Country: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.country}</span></h1>
 				<h1>City: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.city}</span></h1>
 				<WrappedAddHiveForm
@@ -95,6 +96,10 @@ class Apiary extends Component {
 					userID={this.props.currentUser.id}
 					apiaryData={this.state.apiaryData.apiaryINFO}
 				/>
+				{/*PAWEMIX INJECT START*/}
+				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
+							  userId={this.props.currentUser.id}/>
+				{/*PAWEMIX INJECT END*/}
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
 						<div className="no-polls-found">

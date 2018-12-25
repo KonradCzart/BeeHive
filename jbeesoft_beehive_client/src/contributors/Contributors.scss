@@ -1,0 +1,42 @@
+@import "../util/Structure";
+
+.contributors {
+  @include b-margin(32);
+}
+
+.contrItems {
+  @include fl;
+  @include fl-row-wrap;
+  align-items: start;
+  .contrItem {
+    @include r-margin(32);
+  }
+}
+
+.contrItem {
+  @include fl;
+  @include ver-center-child;
+  @include wrapContent;
+  @include b-margin(16);
+}
+
+.contrItem-userInfo {
+  @include inBl;
+  @include wrapContent;
+}
+
+.contrItem-solutionIcon {
+  @include inBl;
+  @include l-margin(32);
+  @include r-margin(16);
+  * {
+    @include size-abs(24);
+  }
+}
+
+.contrItem-deleteIcon {
+  @include inBl;
+  * {
+    @include size-abs(24);
+  }
+}

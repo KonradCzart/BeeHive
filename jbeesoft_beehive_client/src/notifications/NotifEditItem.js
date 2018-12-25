@@ -1,6 +1,6 @@
 import {Button, Form, Input} from "antd";
 import React from "react";
-import {modifyNotification} from "../../util/APIUtils";
+import {modifyNotification} from "../util/APIUtils";
 
 const FormItem = Form.Item;
 

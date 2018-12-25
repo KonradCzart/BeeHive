@@ -3,7 +3,7 @@ import {
     deleteNotification,
     realizeNotification,
     unrealizeNotification
-} from "../../util/APIUtils";
+} from "../util/APIUtils";
 import {Checkbox, Icon} from "antd";
 import {WrappedNotifEditItem} from "./NotifEditItem";
 

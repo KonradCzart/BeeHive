@@ -159,6 +159,45 @@ export function deleteNotification(notifId) {
     });
 }
 
+/**
+ * output = {[
+ *   userId: <userId>,
+ *   username: <username>,
+ *   email: <email>,
+ *   privileges: [<Privilege>, ...],
+ * ], ...}
+ *
+ * Privilege = {
+ *   id: 2,
+ *   name: "HIVE_EDITING",
+ *   readableName: "Hive actions",
+ *   description: "Right to perform actions like honey collecting or feeding",
+ * }
+ */
+export function getContributors(apiaryId) {
+    return request({
+        url: API_BASE_URL + "/privileges/contributors/" + apiaryId,
+        method: "GET",
+    });
+}
+/**
+ * dict = {
+ *   targetUser: <userId>,
+ *   privileges: [<ACTION_STRING>, ...],
+ *   affectedApiaryId: <apiaryId>,
+ * }
+ * add user to apiary - grant him some privileges to it
+ * remove user from apiary - clear his privileges to it
+ * OWNER_PRIVILEGE - privilege to modify privileges of others
+ */
+export function grantPrivileges(dict) {
+    return request({
+        url: API_BASE_URL + "/privileges/grant",
+        method: "POST",
+        body: JSON.stringify(dict),
+    });
+}
+
 export function getAllHiveTypes() {
     return request({
         url: API_BASE_URL + "/hive/type",

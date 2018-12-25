@@ -1,5 +1,5 @@
 import React from "react";
-import {addNotification} from "../../util/APIUtils";
+import {addNotification} from "../util/APIUtils";
 import {Button, Form, Input} from "antd";
 import {NotifUsersForm} from "./NotifUsersForm";
 

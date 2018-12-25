@@ -1,5 +1,5 @@
 import React from "react"
-import {NotificationCalendar} from "../../common/notifications/NotificationCalendar";
+import {NotificationCalendar} from "../../notifications/NotificationCalendar";
 import {notification} from "antd";
 import Login from "../login/Login";
 

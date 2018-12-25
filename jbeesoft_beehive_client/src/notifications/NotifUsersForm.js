@@ -1,7 +1,7 @@
 import React from "react";
-import {AutoComplete, Icon} from "antd";
+import {Icon} from "antd";
 import "./NotificationCalendar.css";
-import {getUsersLike} from "../../util/APIUtils";
+import {UserAutoComplete} from "../common/UserAutoComplete";
 
 /**
  * props = {initialUsers: {username1: userId1} onUsersChange: function(usersId)}
@@ -19,11 +19,11 @@ export class NotifUsersForm extends React.Component {
             usernames: usernames,
             map: map,
         };
-        this.handleUserAdd = this.handleUserAdd.bind(this);
+        this.handleUserSelect = this.handleUserSelect.bind(this);
         this.handleUserDelete = this.handleUserDelete.bind(this);
     }
 
-    handleUserAdd(id, username) {
+    handleUserSelect(id, username) {
 
         if(!this.state.map[username]) {
             const map = Object.assign({}, this.state.map);
@@ -71,7 +71,7 @@ export class NotifUsersForm extends React.Component {
                 <h4>Users involved:</h4>
                 <NotifUsersList usernames={this.state.usernames}
                                 onUserDelete={this.handleUserDelete}/>
-                <NotifUserAdder onUserAdd={this.handleUserAdd}/>
+                <UserAutoComplete onUserSelect={this.handleUserSelect}/>
             </div>
         );
     }
@@ -112,52 +112,6 @@ class NotifUsersList extends React.Component {
             <div className={"fl v-wrap-content h-match-parent b-marg-16"}>
                 {usersJSX}
             </div>
-        );
-    }
-}
-
-/**
- * props = {onUserAdd:Function(id, username)}
- */
-class NotifUserAdder extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            dataSource: [],
-            map: {},
-        };
-        this.handleSelect = this.handleSelect.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-    }
-
-    handleSelect(username) {
-        this.props.onUserAdd(this.state.map[username], username);
-    }
-
-    handleSearch(string) {
-        const parent = this;
-        getUsersLike(string).then(users => {
-
-            const usernames = [];
-            const map = {};
-            users.forEach(user => {
-                usernames.push(user.value);
-                map[user.value] = user.id;
-            });
-
-            parent.setState({
-                dataSource: usernames,
-                map: map,
-            });
-        });
-    }
-
-    render() {
-        return (
-            <AutoComplete dataSource={this.state.dataSource}
-                          placeholder={"username"} onSelect={this.handleSelect}
-                          onSearch={this.handleSearch}/>
         );
     }
 }

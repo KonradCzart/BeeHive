@@ -1,0 +1,151 @@
+$primary: #ffab00;
+
+$success: #64dd17;
+$warning: #ff6d00;
+$error: #d50000;
+
+$checked: #546e7a;
+$solid: #263238;
+
+@mixin hor-wrapContent {
+  width: auto;
+}
+
+@mixin ver-wrap-content {
+  height: auto;
+}
+
+@mixin wrapContent {
+  @include hor-wrapContent;
+  @include ver-wrap-content;
+}
+
+@mixin hor-match-parent {
+  width: 100%;
+}
+
+@mixin ver-matchParent {
+  height: 100%;
+}
+
+@mixin matchParent {
+  @include hor-match-parent;
+  @include ver-matchParent;
+}
+
+@mixin fl {
+  display: flex;
+}
+
+@mixin inFl {
+  display: inline-flex;
+}
+
+@mixin fl-row-wrap {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+@mixin bl {
+  display: block;
+}
+
+@mixin inBl {
+  display: inline-block;
+}
+
+@mixin hor($numer, $denom) {
+  width: $numer / $denom * 100%;
+}
+
+@mixin hor-abs($pixels) {
+  width: $pixels * 1px;
+}
+
+@mixin ver($numer, $denom) {
+  height: $numer / $denom * 100%;
+}
+
+@mixin ver-abs($pixels) {
+  height: $pixels * 1px;
+}
+
+@mixin size-abs($pixels) {
+  @include hor-abs($pixels);
+  @include ver-abs($pixels);
+}
+
+@mixin size($numer, $denom) {
+  @include hor($numer, $denom);
+  @include ver($numer, $denom);
+}
+
+@mixin l-margin($pixels) {
+  margin-left: $pixels * 1px;
+}
+
+@mixin r-margin($pixels) {
+  margin-right: $pixels * 1px;
+}
+
+@mixin hor-margin($pixels) {
+  @include l-margin($pixels);
+  @include r-margin($pixels);
+}
+
+@mixin t-margin($pixels) {
+  margin-top: $pixels * 1px;
+}
+
+@mixin b-margin($pixels) {
+  margin-bottom: $pixels * 1px;
+}
+
+@mixin ver-margin($pixels) {
+  @include t-margin($pixels);
+  @include b-margin($pixels);
+}
+
+@mixin margin($pixels) {
+  margin: $pixels;
+}
+
+@mixin hor-center-self {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin ver-center-self {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+@mixin hor-center-child {
+  justify-content: center;
+}
+
+@mixin ver-center-child {
+  align-items: center;
+}
+
+@mixin center-child {
+  @include hor-center-child;
+  @include ver-center-child;
+}
+
+@mixin toright-child {
+  justify-content: end;
+}
+
+@mixin toright-self {
+  float: right;
+}
+
+@mixin border($thickness, $color, $radius) {
+  border: ($thickness * 1px) solid ($color * 1px);
+  border-radius: $radius * 1px;
+}
+
+@mixin text($color) {
+  color: $color;
+}
