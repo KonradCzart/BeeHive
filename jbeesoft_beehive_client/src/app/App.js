@@ -19,6 +19,7 @@ import PrivateRoute from '../common/PrivateRoute';
 import Index from '../common/Index';
 import Apiary from '../apiary/Apiary';
 import Hive from '../apiary/Hive';
+import Weather form '../weather/Weather'
 import Notifications from "../user/notifications/Notifications";
 
 import { Layout, notification } from 'antd';
@@ -120,6 +121,9 @@ class App extends Component {
 				</Route>
 				<Route path="/hive/:id" 
 					render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+				</Route>
+				<Route path="/weather/:id" 
+					render={(props) => <Weather isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 				</Route>
 				<Route path="/notifications" render={(props) => <Notifications isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}/>}/>
 				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}/>

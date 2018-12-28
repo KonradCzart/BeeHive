@@ -1,4 +1,7 @@
 export const API_BASE_URL = 'http://localhost:5000/api';
+
+export const WEATHER_BASE_URL = 'http://api.openweathermap.org/data/2.5/';
+export const WEATHER_APPID = "appid=e68fc9cac657fcc8ebc1711aa6c8957d";
 //export const API_BASE_URL = '/api';
 export const ACCESS_TOKEN = 'accessToken';
 
