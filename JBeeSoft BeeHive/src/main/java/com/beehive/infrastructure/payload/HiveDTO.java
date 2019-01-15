@@ -7,6 +7,7 @@ public class HiveDTO {
 	private String typeName;
 	private int boxNumber;
 	private BeeQueenDTO queenDTO;
+	private Long hiveTypeId;
 	
 	public HiveDTO() {
 		
@@ -18,6 +19,7 @@ public class HiveDTO {
 		this.typeName = builder.typeName;
 		this.boxNumber = builder.boxNumber;
 		this.queenDTO = builder.queenDTO;
+		this.hiveTypeId = builder.hiveTypeId;
 	}
 
 	public Long getId() {
@@ -60,6 +62,14 @@ public class HiveDTO {
 		this.queenDTO = queenDTO;
 	}
 	
+	public Long getHiveTypeId() {
+		return hiveTypeId;
+	}
+	
+	public void setHiveTypeId(Long hiveTypeId) {
+		this.hiveTypeId = hiveTypeId;
+	}
+	
 	public static HiveDTOBuilder builder() {
 		return new HiveDTOBuilder();
 	}
@@ -71,6 +81,7 @@ public class HiveDTO {
 		private String typeName;
 		private int boxNumber;
 		private BeeQueenDTO queenDTO;
+		private Long hiveTypeId;
 		
 		public HiveDTOBuilder withId(Long id) {
 			this.id = id;
@@ -94,6 +105,11 @@ public class HiveDTO {
 		
 		public HiveDTOBuilder withQueenDTO(BeeQueenDTO queenDTO) {
 			this.queenDTO = queenDTO;
+			return this;
+		}
+		
+		public HiveDTOBuilder withHiveTypeId(Long hiveTypeId) {
+			this.hiveTypeId = hiveTypeId;
 			return this;
 		}
 		
