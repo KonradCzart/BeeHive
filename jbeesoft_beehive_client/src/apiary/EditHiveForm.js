@@ -65,6 +65,7 @@ class EditHiveForm extends Component {
 					<FormItem label="Hive type:">
 					{getFieldDecorator('hive_type_id', {
 						rules: [{ required: true, message: 'This field is required.' }],
+						initialValue: this.props.hiveData.typeName
 					})(
 						<Select name='hive_type_id' placeholder='Hive type' onChange={onTypeChange}>
 							{hiveTypeDrop}

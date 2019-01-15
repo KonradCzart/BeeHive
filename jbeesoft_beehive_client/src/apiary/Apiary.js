@@ -103,7 +103,7 @@ class Apiary extends Component {
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
 						<div className="no-polls-found">
-							<h2>You haven't got any hives in this apiary yet.</h2>
+							<h2>There are no hives in this apiary.</h2>
 						</div>	
 					) : null
 				}
