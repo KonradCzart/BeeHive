@@ -8,6 +8,7 @@ public class HiveDTO {
 	private int boxNumber;
 	private BeeQueenDTO queenDTO;
 	private Long hiveTypeId;
+	private Long apiaryId;
 	
 	public HiveDTO() {
 		
@@ -20,6 +21,7 @@ public class HiveDTO {
 		this.boxNumber = builder.boxNumber;
 		this.queenDTO = builder.queenDTO;
 		this.hiveTypeId = builder.hiveTypeId;
+		this.apiaryId = builder.apiaryId;
 	}
 
 	public Long getId() {
@@ -70,6 +72,14 @@ public class HiveDTO {
 		this.hiveTypeId = hiveTypeId;
 	}
 	
+	public Long getApiaryId() {
+		return apiaryId;
+	}
+
+	public void setApiaryId(Long apiaryId) {
+		this.apiaryId = apiaryId;
+	}
+
 	public static HiveDTOBuilder builder() {
 		return new HiveDTOBuilder();
 	}
@@ -82,6 +92,7 @@ public class HiveDTO {
 		private int boxNumber;
 		private BeeQueenDTO queenDTO;
 		private Long hiveTypeId;
+		private Long apiaryId;
 		
 		public HiveDTOBuilder withId(Long id) {
 			this.id = id;
@@ -110,6 +121,11 @@ public class HiveDTO {
 		
 		public HiveDTOBuilder withHiveTypeId(Long hiveTypeId) {
 			this.hiveTypeId = hiveTypeId;
+			return this;
+		}
+		
+		public HiveDTOBuilder withApiaryId(Long apiaryId) {
+			this.apiaryId = apiaryId;
 			return this;
 		}
 		
