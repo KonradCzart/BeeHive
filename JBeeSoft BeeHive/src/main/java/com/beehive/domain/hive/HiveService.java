@@ -126,6 +126,7 @@ public class HiveService {
 				.withId(hive.getId())
 				.withName(hive.getName())
 				.withQueenDTO(queenDTO)
+				.withHiveTypeId(hive.getHiveType().getId())
 				.withTypeName(hive.getType().getName())
 				.withBoxNumber(hive.getBoxNumber())
 				.build();
