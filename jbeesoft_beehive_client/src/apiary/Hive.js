@@ -193,12 +193,14 @@ class Hive extends Component {
 
 			const hiveRequest = values;
 			form.resetFields();
-			this.setState({ visible: false });
+			this.setState({ visible1: false });
+			hiveRequest.apiaryId = this.state.hiveData.apiaryId;
+
 			editHive(hiveRequest, this.props.match.params.id)
 			.then(response => {
 				notification.success({
 					message: 'BeeHive App',
-					description: hiveRequest.name + " created successfully!"
+					description: response.message
 				});
 				this.setState({date: new Date()})
 			}).catch(error => {
