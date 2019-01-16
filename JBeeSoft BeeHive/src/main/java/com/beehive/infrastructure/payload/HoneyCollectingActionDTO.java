@@ -1,27 +1,13 @@
-package com.beehive.domain.action.honeycollecting;
+package com.beehive.infrastructure.payload;
 
-import com.beehive.domain.action.Action;
 import com.beehive.domain.honey.HoneyType;
-import com.beehive.infrastructure.payload.HoneyCollectingActionDTO;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-@Entity
-@Table(name = "honey_collecting_actions")
-public class HoneyCollectingAction extends Action {
+public class HoneyCollectingActionDTO extends ActionDTO{
 	
-    @ManyToOne
-    @JoinColumn(name = "honey_type_id")
     private HoneyType honeyType;
-    
-    @NotNull
     private Double honeyAmount;
     
-    public HoneyCollectingAction() {
-	}
-    
-    public HoneyCollectingAction(Builder builder) {
+    public HoneyCollectingActionDTO(Builder builder) {
     	super(builder);
 		this.honeyType = builder.honeyType;
 		this.honeyAmount = builder.honeyAmount;
@@ -35,7 +21,6 @@ public class HoneyCollectingAction extends Action {
 		this.honeyType = honeyType;
 	}
 
-
 	public Double getHoneyAmount() {
 		return honeyAmount;
 	}
@@ -48,16 +33,8 @@ public class HoneyCollectingAction extends Action {
 	public static Builder builder() {
 		return new Builder();
 	}
-	
-	@Override
-	public HoneyCollectingActionDTO.Builder builderDTO() {
-		return new HoneyCollectingActionDTO.Builder()
-				.withHoneyAmount(honeyAmount)
-				.withHoneyType(honeyType)
-				.withActionName("Honey Collecting");
-	}
 
-	public static class Builder extends Action.Builder<Builder> {
+	public static class Builder extends ActionDTO.Builder<Builder> {
 		
 	    private HoneyType honeyType;
 	    private Double honeyAmount;
@@ -78,10 +55,9 @@ public class HoneyCollectingAction extends Action {
 		}
 
 		@Override
-		public HoneyCollectingAction build() {
-			return new HoneyCollectingAction(this);
+		public HoneyCollectingActionDTO build() {
+			return new HoneyCollectingActionDTO(this);
 		}	    
 	    
 	}
-	
 }

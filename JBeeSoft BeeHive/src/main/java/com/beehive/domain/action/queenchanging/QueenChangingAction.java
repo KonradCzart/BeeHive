@@ -2,6 +2,7 @@ package com.beehive.domain.action.queenchanging;
 
 import com.beehive.domain.action.Action;
 import com.beehive.domain.bee.queen.BeeQueen;
+import com.beehive.infrastructure.payload.QueenChangingActionDTO;
 
 import java.util.Set;
 
@@ -15,6 +16,10 @@ public class QueenChangingAction extends Action {
     @NotNull
     private Double price;
     
+    public QueenChangingAction() {
+
+	}
+    
     public QueenChangingAction(Builder builder) {
 		super(builder);
 		this.price = builder.price;
@@ -23,6 +28,13 @@ public class QueenChangingAction extends Action {
     public static Builder builder() {
 		return new Builder();
 	}
+    
+    @Override
+    public QueenChangingActionDTO.Builder builderDTO() {
+    	return new QueenChangingActionDTO.Builder()
+    			.withPrice(price)
+    			.withActionName("Queen Changing");
+    }
     
     public static class Builder extends Action.Builder<Builder> {
 

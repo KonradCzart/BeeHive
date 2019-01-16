@@ -1,6 +1,10 @@
 package com.beehive.domain.apiary;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.beehive.domain.action.ActionService;
 import com.beehive.domain.location.Location;
 import com.beehive.domain.location.LocationService;
 import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
+import com.beehive.infrastructure.payload.ActionDTO;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.ApiaryDTO;
 import com.beehive.infrastructure.payload.ApiaryRequest;
@@ -45,6 +51,9 @@ public class ApiaryController {
     
     @Autowired
     LocationService locationService;
+    
+    @Autowired
+    ActionService actionService;
     
 
     @GetMapping("/me")
@@ -93,5 +102,15 @@ public class ApiaryController {
 		
 		return apiaryService.mapToApiaryDTO(apiary);
 	}
+    
+    @GetMapping("/actions-history/{apiaryId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<ActionDTO> getActionsHistory(@CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
+    	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+    	return actionService.getActionsPerformedOnHives(apiary.getHives())
+    			.stream()
+    			.map(actionService::mapToActionDTO)
+    			.collect(Collectors.toList());
+    }
 
 }

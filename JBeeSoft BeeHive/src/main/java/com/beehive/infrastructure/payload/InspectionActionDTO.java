@@ -1,39 +1,14 @@
-package com.beehive.domain.action.inspection;
+package com.beehive.infrastructure.payload;
 
-import com.beehive.domain.action.Action;
-import com.beehive.infrastructure.payload.InspectionActionDTO;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-@Entity
-@Table(name = "inspection_actions")
-
-public class InspectionAction extends Action {
+public class InspectionActionDTO extends ActionDTO {
 	
-    @NotNull
     private Boolean isMaggotPresent;
-    
-    @NotNull
     private Boolean isLairPresent;
-    
-    @NotNull
     private Integer hiveStrength;
-    
-    @NotNull
     private Integer framesWithWaxFoundation;
-    
-    @NotBlank
-    @Size(max = 250)
     private String decription;
     
-    public InspectionAction() {
-		
-	}
-    
-    public InspectionAction(Builder builder) {
+    public InspectionActionDTO(Builder builder) {
     	super(builder);
     	this.isMaggotPresent = builder.isMaggotPresent;
 		this.isLairPresent = builder.isLairPresent;
@@ -85,19 +60,8 @@ public class InspectionAction extends Action {
 	public static Builder builder() {
     	return new Builder();
     }
-	
-	@Override
-	public InspectionActionDTO.Builder builderDTO() {
-		return new InspectionActionDTO.Builder()
-				.withIsMaggotPresent(isMaggotPresent)
-				.withIsLairPresent(isLairPresent)
-				.withHiveStrength(hiveStrength)
-				.withframesWithWaxFoundation(framesWithWaxFoundation)
-				.withDescription(decription)
-				.withActionName("Inspection");
-	}
     
-    public static class Builder extends Action.Builder<Builder> {
+    public static class Builder extends ActionDTO.Builder<Builder> {
     	
     	private Boolean isMaggotPresent;
         private Boolean isLairPresent;
@@ -136,8 +100,8 @@ public class InspectionAction extends Action {
 		}
 
 		@Override
-		public InspectionAction build() {
-			return new InspectionAction(this);
+		public InspectionActionDTO build() {
+			return new InspectionActionDTO(this);
 		}
     	
     }

@@ -1,37 +1,13 @@
-package com.beehive.domain.action.treatment;
+package com.beehive.infrastructure.payload;
 
-import com.beehive.domain.action.Action;
-import com.beehive.infrastructure.payload.TreatmentActionDTO;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-@Entity
-@Table(name = "treatment_actions")
-
-public class TreatmentAction extends Action {
+public class TreatmentActionDTO extends ActionDTO {
 	
-    @NotBlank
-    @Size(max = 40)
     private String deseaseType;
-
-    @NotBlank
-    @Size(max = 40)
     private String appliedMedicine;
-
-    @NotNull
     private Double dose;
-
-    @NotNull
     private Double price;
-    
-    public TreatmentAction() {
-    	
-	}
 
-    public TreatmentAction(Builder builder) {
+    public TreatmentActionDTO(Builder builder) {
     	super(builder);
         this.deseaseType = builder.deseaseType;
         this.appliedMedicine = builder.appliedMedicine;
@@ -75,17 +51,7 @@ public class TreatmentAction extends Action {
 		return new Builder();
 	}
     
-    @Override
-    public TreatmentActionDTO.Builder builderDTO() {
-    	return new TreatmentActionDTO.Builder()
-    			.withDeseaseType(deseaseType)
-    			.withAppliedMedicine(appliedMedicine)
-    			.withDose(dose)
-    			.withPrice(price)
-    			.withActionName("Treatment");
-    }
-    
-    public static class Builder extends Action.Builder<Builder> {
+    public static class Builder extends ActionDTO.Builder<Builder> {
 
     	private String deseaseType;
         private String appliedMedicine;
@@ -118,8 +84,8 @@ public class TreatmentAction extends Action {
 		}
 
 		@Override
-		public TreatmentAction build() {
-			return new TreatmentAction(this);
+		public TreatmentActionDTO build() {
+			return new TreatmentActionDTO(this);
 		}
     	
     }

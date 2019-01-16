@@ -1,6 +1,7 @@
 package com.beehive.domain.action.feeding;
 
 import com.beehive.domain.action.Action;
+import com.beehive.infrastructure.payload.FeedingActionDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,6 +21,10 @@ public class FeedingAction extends Action {
 
     @NotNull
     private Double price;
+    
+    public FeedingAction() {
+    	
+	}
 
     public FeedingAction(Builder builder) {
     	super(builder);
@@ -55,6 +60,15 @@ public class FeedingAction extends Action {
     
     public static Builder builder() {
     	return new Builder();
+    }
+    
+    @Override
+    public FeedingActionDTO.Builder builderDTO() {
+    	return new FeedingActionDTO.Builder()
+    			.withFeedAmount(feedAmount)
+    			.withFeedType(feedType)
+    			.withPrice(price)
+    			.withActionName("Feeding");
     }
     
     public static class Builder extends Action.Builder<Builder> {

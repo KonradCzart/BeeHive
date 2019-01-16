@@ -2,6 +2,7 @@ package com.beehive.domain.action;
 
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.user.User;
+import com.beehive.infrastructure.payload.ActionDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,13 +31,34 @@ public abstract class Action {
     @JoinColumn (name = "user_id")
     private User performer;
     
+    public Action() {
+    	
+	}
 
-    public Action(Builder<?> builder) {
+	public Action(Builder<?> builder) {
         this.id = builder.id;
         this.affectedHives = builder.affectedHives;
         this.date = builder.date;
         this.performer = builder.performer;
     }
+	
+	public Long getId() {
+		return id;
+	}
+
+	public Set<Hive> getAffectedHives() {
+		return affectedHives;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public User getPerformer() {
+		return performer;
+	}
+	
+	public abstract ActionDTO.Builder<?> builderDTO();
     
     public static abstract class Builder<T extends Builder<T>> {
     	
