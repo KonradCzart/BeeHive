@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { addHive, getAllHiveTypes, getAllHives, editApiary, deleteHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
+import ActionForms from '../actions/ActionForms';
 import {Contributors} from "../contributors/Contributors";
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -20,6 +21,7 @@ class Apiary extends Component {
 
 		this.state = {
 			apiaryData: [],
+			selectedHivesKeys: [],
 			isLoading: false,
 			date: date,
 			oldDate: date,
@@ -61,7 +63,13 @@ class Apiary extends Component {
 			)
 		}];
 
-		const {isLoading} = this.state;
+		const {isLoading, selectedHivesKeys} = this.state;
+
+		const rowSelection = {
+			selectedHivesKeys,
+			onChange: this.onSelectChange,
+		};
+
 
 		if(isLoading || this.state.apiaryData.apiaryINFO === undefined) {
 			return <LoadingIndicator />;
@@ -111,7 +119,7 @@ class Apiary extends Component {
 					!this.state.isLoading && this.state.apiaryData.hives.length > 0 ? (
 						<div>
 							<h2>Hives in this apiary:</h2>
-							<Table rowKey={record => record.id} columns={columns} dataSource={this.state.apiaryData.hives} />
+							<Table rowSelection={rowSelection} rowKey={record => record.id} columns={columns} dataSource={this.state.apiaryData.hives} />
 						</div>
 					) : null
 				}
@@ -119,6 +127,7 @@ class Apiary extends Component {
 					this.state.isLoading ? 
 					<LoadingIndicator /> : null
 				}
+				<ActionForms affectedHives={this.state.selectedHivesKeys} apiaryId={this.state.apiaryData.apiaryINFO.id} />
 			</div>
 		)
 	}
@@ -127,6 +136,12 @@ class Apiary extends Component {
 		visible: false,
 		visible1: false
 	};
+
+	onSelectChange = (selectedRowKeys) => {
+		//console.log('selectedRowKeys changed: ', selectedRowKeys);
+		this.setState({ selectedHivesKeys: selectedRowKeys });
+		//console.log('selectedRowKeys changed: ', this.state.selectedHivesKeys);
+	}
 
 	showModal = () => {
 		this.setState({ visible: true });

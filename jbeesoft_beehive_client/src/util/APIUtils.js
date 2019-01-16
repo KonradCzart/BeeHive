@@ -271,3 +271,34 @@ export function deleteHive(hiveId) {
         method: 'DELETE'
     });
 }
+
+export function getAllHoneyTypes() {
+    return request({
+        url: API_BASE_URL + "/honey/type",
+        method: 'GET'
+    });
+}
+
+export function collectHoney(honeyData, apiaryId) {
+    return request({
+        url: API_BASE_URL + '/action/honeycollecting/' + apiaryId,
+        method: 'POST',
+        body: JSON.stringify(honeyData)
+    });
+}
+
+export function feedBees(feedingData, apiaryId) {
+    return request({
+        url: API_BASE_URL + '/action/feeding/' + apiaryId,
+        method: 'POST',
+        body: JSON.stringify(feedingData)
+    });
+}
+
+export function treatment(treatmentData, apiaryId) {
+    return request({
+        url: API_BASE_URL + '/action/treatment/' + apiaryId,
+        method: 'POST',
+        body: JSON.stringify(treatmentData)
+    });
+}
