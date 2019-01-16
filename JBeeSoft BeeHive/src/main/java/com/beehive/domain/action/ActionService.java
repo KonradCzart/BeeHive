@@ -1,5 +1,6 @@
 package com.beehive.domain.action;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -7,6 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.beehive.domain.action.feeding.FeedingAction;
+import com.beehive.domain.action.feeding.FeedingActionRepository;
+import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
+import com.beehive.domain.action.honeycollecting.HoneyCollectingActionRepository;
+import com.beehive.domain.action.treatment.TreatmentAction;
+import com.beehive.domain.action.treatment.TreatmentActionRepository;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveService;
 import com.beehive.domain.user.UserService;
@@ -20,6 +27,15 @@ public class ActionService {
 	private ActionRepository actionRepository;
 	
 	@Autowired
+	private FeedingActionRepository feedingRepository;
+	
+	@Autowired 
+	TreatmentActionRepository treatmentActionRepository;
+	
+	@Autowired
+	HoneyCollectingActionRepository honeyCollectingActionRepository;
+	
+	@Autowired
 	private HiveService hiveService;
 	
 	@Autowired
@@ -31,6 +47,18 @@ public class ActionService {
 	
 	public List<Action> getActionsPerformedOnHives(Set<Hive> affectedHives) {
 		return actionRepository.findDistinctByAffectedHivesIn(affectedHives);
+	}
+	
+	public List<TreatmentAction> getTreatmentActionPerformedOnHives(Set<Hive> affectedHives, Date start, Date end){
+		return treatmentActionRepository.findByAffectedHivesInAndDateBetween(affectedHives, start, end);
+	}
+	
+	public List<HoneyCollectingAction> getHoneyCollectingActionPerformedOnHives(Set<Hive> affectedHives, Date start, Date end){
+		return honeyCollectingActionRepository.findByAffectedHivesInAndDateBetween(affectedHives, start, end);
+	}
+	
+	public List<FeedingAction> getFeedingActionsPerformedOnHives(Set<Hive> affectedHives, Date start, Date end){
+		return feedingRepository.findByAffectedHivesInAndDateBetween(affectedHives, start, end);
 	}
 	
 	public ActionDTO mapToActionDTO(Action action) {

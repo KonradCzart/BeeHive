@@ -44,6 +44,10 @@ public class HoneyCollectingAction extends Action {
 	public void setHoneyAmount(Double honeyAmount) {
 		this.honeyAmount = honeyAmount;
 	}
+	
+	public String getHoneyTypeName() {
+		return honeyType.getName();
+	}
 
 	public static Builder builder() {
 		return new Builder();
