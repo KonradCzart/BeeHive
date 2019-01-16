@@ -251,11 +251,11 @@ export function editApiary(apiaryData, apiaryId) {
 }
 
 export function editHive(hiveData, hiveId) {
-    /*return request({
+    return request({
         url: API_BASE_URL + '/hive/modify/' + hiveId,
         method: 'PUT',
         body: JSON.stringify(hiveData)
-    });*/
+    });
 }
 
 export function deleteQueenFromHive(hiveId) {

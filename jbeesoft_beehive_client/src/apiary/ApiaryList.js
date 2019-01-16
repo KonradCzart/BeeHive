@@ -13,12 +13,6 @@ class ApiaryList extends Component {
 		const date = new Date();
 		this.state = {
 			apiaries: [],
-			page: 0,
-			size: 10,
-			totalElements: 0,
-			totalPages: 0,
-			last: true,
-			currentVotes: [],
 			isLoading: false,
 			date: date,
 			oldDate: date
@@ -57,7 +51,7 @@ class ApiaryList extends Component {
 				/>
 
 				{
-					!this.state.isLoading && this.state.apiaries.length === 0? (
+					!this.state.isLoading && this.state.apiaries.ownedApiaries === null? (
 						<div className="no-polls-found">
 							<h1>You haven't got any apiaries yet.</h1>
 						</div>
@@ -67,6 +61,20 @@ class ApiaryList extends Component {
 							<Table rowKey={record => record.id}
 								   columns={columns}
 								   dataSource={this.state.apiaries.ownedApiaries}/>
+						</div>
+					)
+				}
+				{
+					!this.state.isLoading && this.state.apiaries.otherApiaries === null? (
+						<div className="no-polls-found">
+							<h1>You are not a contributor in the apiaries of others.</h1>
+						</div>
+					) : (
+						<div>
+							<h1>Apiaries you are contributor in:</h1>
+							<Table rowKey={record => record.id}
+								   columns={columns}
+								   dataSource={this.state.apiaries.otherApiaries}/>
 						</div>
 					)
 				}
