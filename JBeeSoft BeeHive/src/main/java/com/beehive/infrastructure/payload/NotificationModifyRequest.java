@@ -1,13 +1,15 @@
 package com.beehive.infrastructure.payload;
 
+
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+public class NotificationModifyRequest {
 
-public class NotificationRequest {
+	@NotNull
+	private Long id;
 	
 	@NotBlank
     private String title;
@@ -16,13 +18,18 @@ public class NotificationRequest {
     private String description;
 	
 	@NotNull
-    private Date date;
-	
-	@NotNull
 	private Boolean isRealize;
 	
 	@NotNull
-    private List<Long> usersId;
+    private Date date;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -40,6 +47,14 @@ public class NotificationRequest {
 		this.description = description;
 	}
 
+	public Boolean getIsRealize() {
+		return isRealize;
+	}
+
+	public void setIsRealize(Boolean isRealize) {
+		this.isRealize = isRealize;
+	}
+
 	public Date getDate() {
 		return date;
 	}
@@ -47,20 +62,4 @@ public class NotificationRequest {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
-	public List<Long> getUsersId() {
-		return usersId;
-	}
-
-	public void setUsers(List<Long> usersId) {
-		this.usersId = usersId;
-	}
-
-	public Boolean getIsRealize() {
-		return isRealize;
-	}
-
-	public void setIsRealize(Boolean isRealize) {
-		this.isRealize = isRealize;
-	}	
 }

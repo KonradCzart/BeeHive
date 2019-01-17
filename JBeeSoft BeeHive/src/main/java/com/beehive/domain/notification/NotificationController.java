@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.NotificationDTO;
+import com.beehive.infrastructure.payload.NotificationModifyRequest;
 import com.beehive.infrastructure.payload.NotificationRequest;
 import com.beehive.infrastructure.security.CurrentUser;
 import com.beehive.infrastructure.security.UserPrincipal;
@@ -35,11 +36,11 @@ public class NotificationController {
 	
 	  @PostMapping("/new")
 	  @PreAuthorize("hasRole('USER')")
-	  public ResponseEntity<?> createNotification(@Valid @RequestBody NotificationRequest notificationRequest){
+	  public ResponseEntity<?> createNotification(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody NotificationRequest notificationRequest){
 		
 		
 		try {
-			notificationService.createNotification(notificationRequest);
+			notificationService.createNotification(notificationRequest, currentUser);
   		}
 	    catch (Exception e) {
 	      	return new ResponseEntity<ApiResponse>(new ApiResponse(false, "User id is not correct!"),
@@ -74,16 +75,16 @@ public class NotificationController {
 	  
 	  @PutMapping("/modify")
 	  @PreAuthorize("hasRole('USER')")
-	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody NotificationDTO noteDTO) {
-			
+	  public  ResponseEntity<?> modifyNotification(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody NotificationModifyRequest noteModify) {
+			NotificationDTO noteDTO;
 			try {
-				Notification note = notificationService.getNotificationFromDatabase(noteDTO.getId());
+				Notification note = notificationService.getNotificationFromDatabase(noteModify.getId());
 				
 				
-				note.setDate(noteDTO.getDate());
-				note.setDescription(noteDTO.getDescription());
-				note.setTitle(noteDTO.getTitle());
-				note.setIsRealize(noteDTO.getIsRealize());		
+				note.setDate(noteModify.getDate());
+				note.setDescription(noteModify.getDescription());
+				note.setTitle(noteModify.getTitle());
+				note.setIsRealize(noteModify.getIsRealize());		
 				
 				note = notificationService.modifyNotification(note);
 				noteDTO = notificationService.mapNotificationToNotificationDTO(note);
