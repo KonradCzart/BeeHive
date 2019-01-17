@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import './ApiaryList.css';
 import { Form, Button, notification } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getHiveData, addQueenToHive, editQueenInHive, editHive, deleteQueenFromHive } from '../util/APIUtils';
+import { getHiveData, addQueenToHive, editQueenInHive, editHive, deleteQueenFromHive, changeQueen } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import AddQueenForm from './AddQueenForm';
 import EditQueenForm from './EditQueenForm';
 import EditHiveForm from './EditHiveForm';
+import InspectionFormModule from '../actions/InspectionFormModule';
 
 class Hive extends Component {
 	_isMounted = false;
@@ -93,6 +94,9 @@ class Hive extends Component {
 						</div>
 					) : null
 				}
+
+				<InspectionFormModule hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
+
 				{
 					this.state.isLoading ? 
 					<LoadingIndicator /> : null
@@ -139,7 +143,30 @@ class Hive extends Component {
 
 			form.resetFields();
 			this.setState({ visible: false });
+
 			addQueenToHive(queenRequest)
+			.then(response => {
+				notification.success({
+					message: 'BeeHive App',
+					description: response.message
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				notification.error({
+					message: 'BeeHive App',
+					description: error.message
+				});
+			});
+
+
+			const affectedHives = [];
+			affectedHives.push(parseInt(this.props.match.params.id));
+			const changeQueenRequest = {
+				affectedHives: affectedHives,
+				price: values.price
+			}
+
+			changeQueen(changeQueenRequest, this.state.hiveData.apiaryId)
 			.then(response => {
 				notification.success({
 					message: 'BeeHive App',

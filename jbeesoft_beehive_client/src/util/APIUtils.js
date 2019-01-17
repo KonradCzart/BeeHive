@@ -302,3 +302,19 @@ export function treatment(treatmentData, apiaryId) {
         body: JSON.stringify(treatmentData)
     });
 }
+
+export function inspection(inspectionData, apiaryId) {
+    return request({
+        url: API_BASE_URL + '/action/inspection/' + apiaryId,
+        method: 'POST',
+        body: JSON.stringify(inspectionData)
+    });
+}
+
+export function changeQueen(queenData, apiaryId) {
+    return request({
+        url: API_BASE_URL + '/action/queenchanging/' + apiaryId,
+        method: 'POST',
+        body: JSON.stringify(queenData)
+    });
+}
