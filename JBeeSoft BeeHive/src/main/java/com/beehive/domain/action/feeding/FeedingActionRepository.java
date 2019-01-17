@@ -9,9 +9,12 @@ import org.springframework.stereotype.Repository;
 
 
 import com.beehive.domain.hive.Hive;
+import com.beehive.domain.user.User;
 
 @Repository
 public interface FeedingActionRepository extends JpaRepository<FeedingAction, Long>{
 	
 	List<FeedingAction> findByAffectedHivesInAndDateBetween(Set<Hive> affectedHives, Date start, Date end);
+	
+	Long countByAffectedHivesInAndDateBetweenAndPerformer(Set<Hive> affectedHives, Date start, Date end, User performer);
 }

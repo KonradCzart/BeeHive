@@ -12,10 +12,12 @@ import com.beehive.domain.action.feeding.FeedingAction;
 import com.beehive.domain.action.feeding.FeedingActionRepository;
 import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
 import com.beehive.domain.action.honeycollecting.HoneyCollectingActionRepository;
+import com.beehive.domain.action.inspection.InspectionRepository;
 import com.beehive.domain.action.treatment.TreatmentAction;
 import com.beehive.domain.action.treatment.TreatmentActionRepository;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveService;
+import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ActionDTO;
 import com.beehive.infrastructure.payload.HiveDTO;
@@ -34,6 +36,9 @@ public class ActionService {
 	
 	@Autowired
 	HoneyCollectingActionRepository honeyCollectingActionRepository;
+	
+	@Autowired
+	InspectionRepository inspectionRepository;
 	
 	@Autowired
 	private HiveService hiveService;
@@ -60,6 +65,24 @@ public class ActionService {
 	public List<FeedingAction> getFeedingActionsPerformedOnHives(Set<Hive> affectedHives, Date start, Date end){
 		return feedingRepository.findByAffectedHivesInAndDateBetween(affectedHives, start, end);
 	}
+	
+	public Long getNumberTreatmentActionPerformedOnHivesAndPerformer(Set<Hive> affectedHives, Date start, Date end, User performer){
+		return treatmentActionRepository.countByAffectedHivesInAndDateBetweenAndPerformer(affectedHives, start, end, performer);
+	}
+	
+	public Long getNumberHoneyCollectingActionPerformedOnHivesAndPerformer(Set<Hive> affectedHives, Date start, Date end, User performer){
+		return honeyCollectingActionRepository.countByAffectedHivesInAndDateBetweenAndPerformer(affectedHives, start, end, performer);
+	}
+	
+	public Long getNumberFeedingActionsPerformedOnHivesAndPerformer(Set<Hive> affectedHives, Date start, Date end, User performer){
+		return feedingRepository.countByAffectedHivesInAndDateBetweenAndPerformer(affectedHives, start, end, performer);
+	}
+	
+	public Long getNumberInspectionActionsPerformedOnHivesAndPerformer(Set<Hive> affectedHives, Date start, Date end, User performer){
+		return inspectionRepository.countByAffectedHivesInAndDateBetweenAndPerformer(affectedHives, start, end, performer);
+	}
+	
+	
 	
 	public ActionDTO mapToActionDTO(Action action) {
 		Set<HiveDTO> affectedHives = action.getAffectedHives()
