@@ -1,9 +1,9 @@
-import { API_BASE_URL, ACCESS_TOKEN } from '../constants';
+import { API_BASE_URL, ACCESS_TOKEN, WEATHER_BASE_URL, WEATHER_APPID } from '../constants';
 
 const request = (options) => {
     const headers = new Headers({
         'Content-Type': 'application/json',
-    })
+    });
     
     if(localStorage.getItem(ACCESS_TOKEN)) {
         headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
@@ -22,6 +22,14 @@ const request = (options) => {
         })
     );
 };
+
+export function getCurrentWeather(location) {
+    return request({
+	url: WEATHER_BASE_URL + "forecast?q=" + location + "&units=imperial&type=accurate&" + 		WEATHER_APPID,
+	method: 'POST',
+	body: JSON.stringify(weatherRequest)
+    });
+}
 
 export function login(loginRequest) {
     return request({
