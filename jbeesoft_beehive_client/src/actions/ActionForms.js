@@ -126,7 +126,7 @@ class ActionForms extends Component {
 
 	//Feeding
 
-	showModalTreatment = () => {
+	showModalFeeding = () => {
 		if(this.props.affectedHives.length === 0) {
 			notification.warning({
 				message: 'BeeHive App',

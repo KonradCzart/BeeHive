@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './ApiaryList.css';
-import { Form, Input, Modal, Select, DatePicker, Checkbox } from 'antd';
+import { Form, Input, Modal, Select, DatePicker, Checkbox, InputNumber } from 'antd';
 import { getQueenRaces } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 const FormItem = Form.Item;
@@ -71,7 +71,7 @@ class AddQueenForm extends Component {
 				)}
 				</FormItem>
 
-				<FormItem label="Age:">
+				<FormItem label="Date of birth:">
 				{getFieldDecorator('age', {
 					rules: [{ type: 'object', required: true, message: 'Please select time!' }],
 				})(
@@ -79,13 +79,16 @@ class AddQueenForm extends Component {
 						format="YYYY-MM-DD"
 						name="age"
 						type="text"
-						placeholder="Select age" />
+						placeholder="Select date of birth"
+						style={{ width: '100%' }}
+					/>
 				)}
 				</FormItem>
 
 				<FormItem label="Is reproducing:">
 				{getFieldDecorator('isReproducting', {
-					rules: [{ required: false, message: 'This field is required!' }], initialValue: false
+					rules: [{ required: false, message: 'This field is required!' }],
+					initialValue: false
 				})(
 					<Checkbox
 						name="isReproducting" />
@@ -100,6 +103,20 @@ class AddQueenForm extends Component {
 						name="description"
 						type="text"
 						placeholder="Description" />					
+				)}
+				</FormItem>
+
+				<FormItem label="Price:">
+				{getFieldDecorator('price', {
+					rules: [{ required: true, message: 'This field is required.' }]
+				})(
+					<InputNumber
+						name="price"
+						min={0}
+						step={0.01}
+						placeholder="Price" 
+						style={{ width: '100%' }}
+					/>					
 				)}
 				</FormItem>
 			</Form>
