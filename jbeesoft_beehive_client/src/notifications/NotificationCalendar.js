@@ -11,7 +11,14 @@ import {NotifItem} from "./NotifItem";
 const EMPTY_JSX = ("");
 
 /**
- * props = {currentUser}
+ * ## props:
+ * * currentUser : ___user___;
+ *
+ * ## user:
+ * * id : _Integer_;
+ * * username : _String_;
+ * * name : _String_;
+ * * email : _String_;
  */
 export class NotificationCalendar extends React.Component {
 
@@ -97,7 +104,7 @@ export class NotificationCalendar extends React.Component {
         let notifItemsJSX = this.notifItemsJSXfor(dateJSON);
         return (
             <Modal visible={this.state.visible}
-                   onCancel={this.dismiss} onOk={this.dismiss}>
+                onCancel={this.dismiss} onOk={this.dismiss}>
                 <h1>{this.state.selectedDate}</h1>
                 {notifItemsJSX}
                 <WrappedNotifCreateForm
@@ -116,7 +123,8 @@ export class NotificationCalendar extends React.Component {
         for(let date in dateJSON) {
             notifItemsJSX.push((
                 <NotifItem key={i} notif={dateJSON[date]}
-                           onNotifsChange={parent.handleNotifsChange}/>
+                    userId={this.props.currentUser.id}
+                    onNotifsChange={parent.handleNotifsChange}/>
             ));
             i++;
         }
@@ -158,7 +166,7 @@ export class NotificationCalendar extends React.Component {
         return (
             <div>
                 <Calendar dateCellRender={this.dateCellRender}
-                          onSelect={this.onSelect}/>
+                    onSelect={this.onSelect}/>
                 {modalJSX}
             </div>
         );

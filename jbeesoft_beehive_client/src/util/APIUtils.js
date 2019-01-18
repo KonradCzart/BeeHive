@@ -24,10 +24,10 @@ const request = (options) => {
 };
 
 export function getCurrentWeather(location) {
+    // TODO do poprawy
     return request({
-	url: WEATHER_BASE_URL + "forecast?q=" + location + "&units=imperial&type=accurate&" + 		WEATHER_APPID,
-	method: 'POST',
-	body: JSON.stringify(weatherRequest)
+	url: WEATHER_BASE_URL + "forecast?q=" + location + "&units=imperial&type=accurate&" + WEATHER_APPID,
+	method: "GET",
     });
 }
 
@@ -104,9 +104,23 @@ export function addHive(apiaryData) {
 }
 
 /**
- * output = {date-x: [{id, title, description, isRealize, usersId}, ...], ...}
- * date-x = YYYY-MM-DD
- * usersId = [...]
+ * ## output:
+ * * _date_ : _Array(___notification___)_;
+ *
+ * ## notification:
+ * * id : _String_;
+ * * title : _String_;
+ * * description : _String_;
+ * * date : _String_;
+ * * isRealize : _Boolean_;
+ * * author: __user__;
+ * * users: _Array(___user___)_;
+ *
+ * ## user:
+ * * id : _String_;
+ * * username : _String_;
+ * * name : _String_;
+ * * email : _String_;
  */
 export function getNotifications() {
     return request({
@@ -115,13 +129,18 @@ export function getNotifications() {
     });
 }
 /**
- * dict = {title, description, date, isRealize, usersId}
+ * ## input:
+ * * title : _String_;
+ * * description : _String_;
+ * * date : _String_;
+ * * isRealize : _Boolean_;
+ * * usersId : _Array(Integer)_;
  */
-export function addNotification(dict) {
+export function addNotification(input) {
     return request({
         url: API_BASE_URL + "/notification/new",
         method: "POST",
-        body: JSON.stringify(dict),
+        body: JSON.stringify(input),
     });
 }
 
