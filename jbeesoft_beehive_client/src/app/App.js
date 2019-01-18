@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import {
-  Route,
+	Route,
 	withRouter,
 	Switch
 } from 'react-router-dom';
@@ -20,6 +20,7 @@ import Index from '../common/Index';
 import Apiary from '../apiary/Apiary';
 import Hive from '../apiary/Hive';
 import Notifications from "../user/notifications/Notifications";
+import ActionsDetails from "../actions/ActionsDetails";
 
 import { Layout, notification } from 'antd';
 const { Content } = Layout;
@@ -103,27 +104,39 @@ class App extends Component {
 			<Content className="app-content">
 			<div className="container">
 				<Switch>
-				<Route exact path="/" 
-					render={(props) => <Index isAuthenticated={this.state.isAuthenticated} 
-						currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
-				</Route>
-				<Route path="/login" 
-					render={(props) => <Login isAuthenticated={this.state.isAuthenticated} onLogin={this.handleLogin} {...props} />}/>
-				<Route path="/signup" 
-					render={(props) => <Signup isAuthenticated={this.state.isAuthenticated} {...props} />}>
-				</Route>
-				<Route path="/user/me" 
-					render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
-				</Route>
-				<Route path="/apiary/:id" 
-					render={(props) => <Apiary isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
-				</Route>
-				<Route path="/hive/:id" 
-					render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
-				</Route>
-				<Route path="/notifications" render={(props) => <Notifications isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}/>}/>
-				<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}/>
-				<Route component={NotFound}/>
+					<Route exact path="/" 
+						render={(props) => <Index isAuthenticated={this.state.isAuthenticated} 
+							currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
+					</Route>
+
+					<Route path="/login" 
+						render={(props) => <Login isAuthenticated={this.state.isAuthenticated} onLogin={this.handleLogin} {...props} />}/>
+					
+					<Route path="/signup" 
+						render={(props) => <Signup isAuthenticated={this.state.isAuthenticated} {...props} />}>
+					</Route>
+
+					<Route path="/user/me" 
+						render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+					</Route>
+					
+					<Route path="/apiary/:id" 
+						render={(props) => <Apiary isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+					</Route>
+					
+					<Route path="/hive/:id" 
+						render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+					</Route>
+					
+					<Route path="/actions/:apiaryId" 
+						render={(props) => <ActionsDetails isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+					</Route>
+					
+					<Route path="/notifications" render={(props) => <Notifications isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}/>}/>
+					
+					<PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" handleLogout={this.handleLogout}/>
+					
+					<Route component={NotFound}/>
 				</Switch>
 			</div>
 			</Content>

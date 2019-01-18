@@ -6,6 +6,7 @@ import LoadingIndicator  from '../common/LoadingIndicator';
 import HoneyCollectionForm from './forms/HoneyCollectionForm';
 import FeedingForm from './forms/FeedingForm';
 import TreatmentForm from './forms/TreatmentForm';
+import { withRouter } from 'react-router-dom';
 
 class ActionForms extends Component {
 	_isMounted = false;
@@ -56,6 +57,8 @@ class ActionForms extends Component {
 					onCreate={this.handleTreatment}
 					{...this.props}
 				/>
+
+				<Button className="formButton" type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 				
 				{
 					this.state.isLoading ? 
@@ -227,6 +230,19 @@ class ActionForms extends Component {
 		});
 	}
 
+	//Show actions detials
+
+	handleActionsDetails = (e) => {
+		/*if(this.props.affectedHives.length === 0) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: "You haven't selected any hives."
+			});
+		} else {*/
+			this.props.history.push("/actions/" + this.props.apiaryId);
+		//}
+	}
+
 
 
 	componentDidUpdate(nextProps) {
@@ -254,4 +270,4 @@ class ActionForms extends Component {
 	}
 }
 
-export default ActionForms;
+export default withRouter(ActionForms);

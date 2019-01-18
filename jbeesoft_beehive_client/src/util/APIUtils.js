@@ -318,3 +318,10 @@ export function changeQueen(queenData, apiaryId) {
         body: JSON.stringify(queenData)
     });
 }
+
+export function getActionsHistory(apiaryId) {
+    return request({
+        url: API_BASE_URL + '/apiary/actions-history/' + apiaryId,
+        method: 'GET'
+    });
+}
