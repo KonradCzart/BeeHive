@@ -17,13 +17,21 @@ import com.beehive.domain.action.feeding.FeedingAction;
 import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
 import com.beehive.domain.action.treatment.TreatmentAction;
 import com.beehive.domain.hive.Hive;
+import com.beehive.domain.user.User;
+import com.beehive.domain.user.UserService;
+import com.beehive.infrastructure.payload.StatisticsContributorDTO;
 import com.beehive.infrastructure.payload.StatisticsDTO;
+import com.beehive.infrastructure.payload.UserDTO;
 
 @Service
 public class StatisticsService {
 	
 	@Autowired
 	ActionService actionService;
+	
+	@Autowired 
+	UserService userService;
+	
 
 	public List<StatisticsDTO> getFeedingStatisticsForHives(Set<Hive> hives, Date start, Date end) {
 		
@@ -58,6 +66,34 @@ public class StatisticsService {
 		return generateStatisticsDTOsForMap(quantityMap);
 	}
 	
+	public List<StatisticsContributorDTO> getStatisticsForContributor(List<User> contributor, Set<Hive> hives, Date start, Date end){
+		List<StatisticsContributorDTO> statisticsContributorDTOs = new ArrayList<>();
+		UserDTO userDTO;
+		Long incpectionActionNamber;
+		Long feedingActionNumber;
+		Long treatmentActionNumber;
+		Long honeyActionNumber;
+		StatisticsContributorDTO stats;
+		
+		for(var user : contributor) {
+			incpectionActionNamber = actionService.getNumberInspectionActionsPerformedOnHivesAndPerformer(hives, start, end, user);
+			feedingActionNumber = actionService.getNumberFeedingActionsPerformedOnHivesAndPerformer(hives, start, end, user);
+			treatmentActionNumber = actionService.getNumberTreatmentActionPerformedOnHivesAndPerformer(hives, start, end, user);
+			honeyActionNumber = actionService.getNumberHoneyCollectingActionPerformedOnHivesAndPerformer(hives, start, end, user);
+			userDTO = userService.mapToUserDTO(user);
+			
+			stats = StatisticsContributorDTO.builder()
+					.withContributor(userDTO)
+					.withFeedingActionNumber(feedingActionNumber)
+					.withHoneyActionNumber(honeyActionNumber)
+					.withIncpectionActionNamber(incpectionActionNamber)
+					.withTreatmentActionNumber(treatmentActionNumber)
+					.build();
+			
+			statisticsContributorDTOs.add(stats);
+		}
+		return statisticsContributorDTOs;
+	}
 	
 	public QuantityStatistic mapFeedingActionToQuantityStatistic(FeedingAction action) {
 		int numberHives = action.getAffectedHives().size();

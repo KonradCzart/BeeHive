@@ -1,6 +1,7 @@
 package com.beehive.infrastructure.payload;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class NotificationDTO {
@@ -10,6 +11,8 @@ public class NotificationDTO {
     private String description;
     private Date date;
     private Boolean isRealize;
+    private UserDTO author;
+    private List<UserDTO> users;
     
     public NotificationDTO() {
     	
@@ -21,6 +24,8 @@ public class NotificationDTO {
     	this.date = builder.date;
     	this.isRealize = builder.isRealize;
     	this.id = builder.id;
+    	this.author = builder.author;
+    	this.users = builder.users;
     }
     
 	public Long getId() {
@@ -63,6 +68,22 @@ public class NotificationDTO {
 		this.isRealize = isRealize;
 	}
 
+	public UserDTO getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(UserDTO author) {
+		this.author = author;
+	}
+
+	public List<UserDTO> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<UserDTO> users) {
+		this.users = users;
+	}
+
 	public static NotificationDTOBuilder builder() {
 		return new NotificationDTOBuilder();
 	}
@@ -73,6 +94,8 @@ public class NotificationDTO {
 	    private String description;
 	    private Date date;
 	    private Boolean isRealize;
+	    private UserDTO author;
+	    private List<UserDTO> users;
 	    
 	    public NotificationDTOBuilder withId(Long id) {
 	    	this.id = id;
@@ -99,6 +122,15 @@ public class NotificationDTO {
 	    	return this;
 	    }
 	    
+	    public NotificationDTOBuilder withAuthor(UserDTO author) {
+	    	this.author = author;
+	    	return this;
+	    }
+	    
+	    public NotificationDTOBuilder withUsers(List<UserDTO> users) {
+	    	this.users = users;
+	    	return this;
+	    }
 	    public NotificationDTO build() {
 	    	return new NotificationDTO(this);
 	    }

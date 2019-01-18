@@ -48,6 +48,10 @@ public class UserService {
 				.orElseThrow(() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_USER, userId)));
 	}
 	
+	public List<User> getUsersFromDatabase(List<Long> usersId){
+		return userRepository.findAllById(usersId);
+	}
+	
 	public List<User> getUsersContains(String contains){
 		return userRepository.findByUsernameContaining(contains);
 	}

@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.beehive.domain.user.User;
-import com.beehive.domain.user.UserRepository;
+import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.NotificationDTO;
 import com.beehive.infrastructure.payload.NotificationRequest;
+import com.beehive.infrastructure.payload.UserDTO;
 import com.beehive.infrastructure.security.UserPrincipal;
 
 @Service
@@ -26,17 +27,19 @@ public class NotificationService {
 	private NotificationRepository notificationRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
-	public Notification createNotification(NotificationRequest notifyRequest) {
+	public Notification createNotification(NotificationRequest notifyRequest, UserPrincipal currentUser) {
 		
-		List<User> usersList = userRepository.findAllById(notifyRequest.getUsersId());
+		List<User> usersList = userService.getUsersFromDatabase(notifyRequest.getUsersId());
+		User author = userService.getUserFormDatabase(currentUser.getId());
 
 		Set<User> users = new HashSet<>(usersList);
 		
 		Notification notification = Notification.builder()
 				.withTitle(notifyRequest.getTitle())
 				.withDescription(notifyRequest.getDescription())
+				.withAuthor(author)
 				.withDate(notifyRequest.getDate())
 				.withUsers(users)
 				.withIsRealize(notifyRequest.getIsRealize())
@@ -57,7 +60,7 @@ public class NotificationService {
 	
 	public Map<String, List<NotificationDTO>> getUserAllNotification(UserPrincipal currentUser){
 
-		User user = userRepository.findById(currentUser.getId()).orElseThrow();
+		User user = userService.getUserFormDatabase(currentUser.getId());
 
 		Map<String, List<NotificationDTO>> mapNote = notificationRepository.findAllByUsers(user)
 				.stream()
@@ -78,12 +81,20 @@ public class NotificationService {
 	
 	public NotificationDTO mapNotificationToNotificationDTO(Notification note) {
 		
+		UserDTO author = userService.mapToUserDTO(note.getAuthor());
+		List<UserDTO> users = note.getUsers()
+				.stream()
+				.map(userService::mapToUserDTO)
+				.collect(Collectors.toList());
+		
 		return NotificationDTO.builder()
 				.withId(note.getId())
 				.withTitle(note.getTitle())
 				.withDescription(note.getDescription())
 				.withIsRealize(note.getIsRealize())
 				.withDate(note.getDate())
+				.withAuthor(author)
+				.withUsers(users)
 				.build();
 	}
 }

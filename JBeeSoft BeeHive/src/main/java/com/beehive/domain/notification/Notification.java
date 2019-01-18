@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,11 +46,18 @@ public class Notification {
     @NotNull
     private Boolean isRealize;
     
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "notification_user",
             joinColumns = @JoinColumn(name = "notification_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
+    
+    
     
     public Notification() {
     	
@@ -61,6 +69,7 @@ public class Notification {
     	this.date = builder.date;
     	this.users = builder.users;
     	this.isRealize = builder.isRealize;
+    	this.author = builder.author;
     	
     }
     
@@ -119,6 +128,14 @@ public class Notification {
 		this.isRealize = isRealize;
 	}
 	
+	public User getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(User author) {
+		this.author = author;
+	}
+
 	public static NotificationBuilder builder() {
 		return new NotificationBuilder();
 	}
@@ -137,6 +154,7 @@ public class Notification {
 	    private String description;
 	    private Date date;
 	    private Boolean isRealize;
+	    private User author;
 	    private Set<User> users;
 	    
 	    public NotificationBuilder() {
@@ -170,6 +188,11 @@ public class Notification {
 	    
 	    public NotificationBuilder withIsRealize(Boolean isRealize) {
 	    	this.isRealize = isRealize;
+	    	return this;
+	    }
+	    
+	    public NotificationBuilder withAuthor(User author) {
+	    	this.author = author;
 	    	return this;
 	    }
 	    
