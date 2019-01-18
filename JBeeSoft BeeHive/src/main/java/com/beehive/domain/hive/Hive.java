@@ -41,6 +41,9 @@ public class Hive {
     @OneToOne
     @JoinColumn(name = "queen_id")
     private BeeQueen beeQueen;
+    
+    @NotNull
+    private Boolean isExist;
 
     
     public Hive() {
@@ -53,6 +56,7 @@ public class Hive {
     	this.hiveType = hiveType;
     	this.boxNumber = boxNumber;
     	this.beeQueen = null;
+    	this.isExist = true;
     }
     
     public Long getId() {
@@ -106,5 +110,12 @@ public class Hive {
 	public void setHiveType(HiveType hiveType) {
 		this.hiveType = hiveType;
 	}
-  
+
+	public Boolean getIsExist() {
+		return isExist;
+	}
+
+	public void setIsExist(Boolean isExist) {
+		this.isExist = isExist;
+	}
 }

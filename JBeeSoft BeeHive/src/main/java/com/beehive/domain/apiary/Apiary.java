@@ -2,6 +2,7 @@ package com.beehive.domain.apiary;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,6 +67,12 @@ public class Apiary {
 	}
 
 	public Set<Hive> getHives() {
+		return hives.stream()
+				.filter(Hive::getIsExist)
+				.collect(Collectors.toSet());
+	}
+	
+	public Set<Hive> getHivesWithDeleted(){
 		return hives;
 	}
 

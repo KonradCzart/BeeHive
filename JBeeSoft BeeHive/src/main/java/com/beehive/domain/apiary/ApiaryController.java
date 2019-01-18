@@ -107,7 +107,7 @@ public class ApiaryController {
     @PreAuthorize("hasRole('USER')")
     public List<ActionDTO> getActionsHistory(@CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
     	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
-    	return actionService.getActionsPerformedOnHives(apiary.getHives())
+    	return actionService.getActionsPerformedOnHives(apiary.getHivesWithDeleted())
     			.stream()
     			.map(actionService::mapToActionDTO)
     			.collect(Collectors.toList());

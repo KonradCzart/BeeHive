@@ -84,7 +84,7 @@ public class StatisticsController {
 				.map(PrivilegeProfile::getTargetUser)
 				.collect(Collectors.toList());
 		
-		return statisticsService.getStatisticsForContributor(contributor, apiary.getHives(), statisticsRequest.getBeginningDate(), statisticsRequest.getEndDate());	
+		return statisticsService.getStatisticsForContributor(contributor, apiary.getHivesWithDeleted(), statisticsRequest.getBeginningDate(), statisticsRequest.getEndDate());	
 		
 	}
 	  

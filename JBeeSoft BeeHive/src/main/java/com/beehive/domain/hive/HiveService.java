@@ -66,13 +66,10 @@ public class HiveService {
 	}
 	
 	public void deleteHive(Long hiveId) {
-		Hive hive = getHiveFromDatabase(hiveId);
-		Apiary apiary = hive.getApiary();
-		apiary.removeHive(hive);
-		
+		Hive hive = getHiveFromDatabase(hiveId);	
 		this.deleteQueenWithHive(hiveId);
-		
-		hiveRepository.delete(hive);		
+		hive.setIsExist(false);
+		hiveRepository.save(hive);		
 	}
 	
 	public Hive modifyHive(Hive hive) {
@@ -84,7 +81,10 @@ public class HiveService {
 	}
 	
 	public Set<Hive> getHivesFromDatabase(Set<Long> ids) {
-		Set<Hive> hives = hiveRepository.findAllByIdIn(ids);
+		Set<Hive> hives = hiveRepository.findAllByIdIn(ids)
+				.stream()
+				.filter(Hive::getIsExist)
+				.collect(Collectors.toSet());
 		
 		if(ids.size() != hives.size()) {
 			throw new IllegalArgumentException(NO_SUCH_HIVES);
@@ -105,6 +105,7 @@ public class HiveService {
 	
 	public Hive getHiveFromDatabase(Long id) {
 		return hiveRepository.findById(id)
+				.filter(Hive::getIsExist)
 				.orElseThrow( () -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_HIVE, id)));
 	}
 	
