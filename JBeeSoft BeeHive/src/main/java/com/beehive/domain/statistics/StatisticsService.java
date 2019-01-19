@@ -16,7 +16,10 @@ import com.beehive.domain.action.ActionService;
 import com.beehive.domain.action.feeding.FeedingAction;
 import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
 import com.beehive.domain.action.treatment.TreatmentAction;
+import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.hive.Hive;
+import com.beehive.domain.privileges.Privilege;
+import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.StatisticsContributorDTO;
@@ -31,6 +34,9 @@ public class StatisticsService {
 	
 	@Autowired 
 	UserService userService;
+	
+	@Autowired
+	PrivilegeService privilegeService;
 	
 
 	public List<StatisticsDTO> getFeedingStatisticsForHives(Set<Hive> hives, Date start, Date end) {
@@ -165,6 +171,14 @@ public class StatisticsService {
 		}
 		
 		return statisticsDTOs;
+	}
+	
+	public void validateHasUserPermissionToReadStats(User user, Apiary apiary, Set<Hive> hives) {
+		if(hives.size() > 1) {
+			privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.APIARY_STATS_READING));
+		} else {
+			privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.HIVE_STATS_READING));
+		}
 	}
 	
 }

@@ -16,6 +16,7 @@ import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveService;
+import com.beehive.domain.privileges.Privilege;
 import com.beehive.domain.privileges.PrivilegeProfile;
 import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
@@ -50,8 +51,11 @@ public class StatisticsController {
 	@PostMapping("/feeding/{apiaryId}")
 	@PreAuthorize("hasRole('USER')")
 	public List<StatisticsDTO> feedingStatistics(@CurrentUser UserPrincipal currentUser, @RequestBody StatisticsRequest statisticsRequest, @PathVariable Long apiaryId){
-		
+		User user = userService.getUserFormDatabase(currentUser.getId());
 		Set<Hive> hives = hiveService.getHivesInApiaryFromDatabase(statisticsRequest.getHiveId(), apiaryId);
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		
+		statisticsService.validateHasUserPermissionToReadStats(user, apiary, hives);
 		
 		return statisticsService.getFeedingStatisticsForHives(hives, statisticsRequest.getBeginningDate(), statisticsRequest.getEndDate());
 	}
@@ -59,8 +63,11 @@ public class StatisticsController {
 	@PostMapping("/treatment/{apiaryId}")
 	@PreAuthorize("hasRole('USER')")
 	public List<StatisticsDTO> treatmentStatistics(@CurrentUser UserPrincipal currentUser, @RequestBody StatisticsRequest statisticsRequest, @PathVariable Long apiaryId){
-		
+		User user = userService.getUserFormDatabase(currentUser.getId());
 		Set<Hive> hives = hiveService.getHivesInApiaryFromDatabase(statisticsRequest.getHiveId(), apiaryId);
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		
+		statisticsService.validateHasUserPermissionToReadStats(user, apiary, hives);
 		
 		return statisticsService.getTreatmentStatisticsForHives(hives, statisticsRequest.getBeginningDate(), statisticsRequest.getEndDate());
 	}
@@ -68,8 +75,11 @@ public class StatisticsController {
 	@PostMapping("/honey/{apiaryId}")
 	@PreAuthorize("hasRole('USER')")
 	public List<StatisticsDTO> honeyStatistics(@CurrentUser UserPrincipal currentUser, @RequestBody StatisticsRequest statisticsRequest, @PathVariable Long apiaryId){
-		
+		User user = userService.getUserFormDatabase(currentUser.getId());
 		Set<Hive> hives = hiveService.getHivesInApiaryFromDatabase(statisticsRequest.getHiveId(), apiaryId);
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		
+		statisticsService.validateHasUserPermissionToReadStats(user, apiary, hives);
 		
 		return statisticsService.getHoneyStatisticsForHives(hives, statisticsRequest.getBeginningDate(), statisticsRequest.getEndDate());
 	}
@@ -77,8 +87,11 @@ public class StatisticsController {
 	@PostMapping("/contributor/{apiaryId}")
 	@PreAuthorize("hasRole('USER')")
 	public List<StatisticsContributorDTO> contributorStatistics(@CurrentUser UserPrincipal currentUser, @RequestBody StatisticsApiaryRequest statisticsRequest, @PathVariable Long apiaryId){
-		
+		User user = userService.getUserFormDatabase(currentUser.getId());
 		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		
+		privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.APIARY_STATS_READING));
+		
 		List<User> contributor = privilegeService.getProfilesForApiary(apiary)
 				.stream()
 				.map(PrivilegeProfile::getTargetUser)
