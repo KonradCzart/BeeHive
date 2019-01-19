@@ -81,9 +81,7 @@ public class ActionService {
 	public Long getNumberInspectionActionsPerformedOnHivesAndPerformer(Set<Hive> affectedHives, Date start, Date end, User performer){
 		return inspectionRepository.countByAffectedHivesInAndDateBetweenAndPerformer(affectedHives, start, end, performer);
 	}
-	
-	
-	
+		
 	public ActionDTO mapToActionDTO(Action action) {
 		Set<HiveDTO> affectedHives = action.getAffectedHives()
 				.stream()

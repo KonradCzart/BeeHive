@@ -17,4 +17,6 @@ public interface HiveRepository extends JpaRepository<Hive, Long>{
 	
 	Set<Hive> findAllByIdIn(Set<Long> ids);
 	
+	Optional<Hive> findByBeeQueenId(Long id);
+	
 }

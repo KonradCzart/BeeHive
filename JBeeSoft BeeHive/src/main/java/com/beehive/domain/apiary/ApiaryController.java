@@ -23,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.beehive.domain.action.ActionService;
 import com.beehive.domain.location.Location;
 import com.beehive.domain.location.LocationService;
+import com.beehive.domain.privileges.Privilege;
 import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
@@ -66,7 +67,11 @@ public class ApiaryController {
     @GetMapping("/{apiaryId}")
     @PreAuthorize("hasRole('USER')")
     public ApiaryDTO getApiaryById(@CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
     	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+    	
+    	privilegeService.validateHasUserAnyOfListedPermissions(user, apiary, Privilege.getAllAvailablePrivileges());
+    	
     	return apiaryService.mapToApiaryDTO(apiary);
     }
     
@@ -94,7 +99,11 @@ public class ApiaryController {
     @PutMapping("/modify/{apiaryId}")
 	@PreAuthorize("hasRole('USER')")
 	public ApiaryDTO modifyApiary(@Valid @RequestBody ApiaryRequest apiaryRequest, @CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
-		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		User user = userService.getUserFormDatabase(currentUser.getId());
+    	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+		
+		privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.OWNER_PRIVILEGE));
+		
 		Location apiaryLocation = locationService.getOrCreateLocationIfNotExist(apiaryRequest.getCountry(), apiaryRequest.getCity());
 		apiary.setName(apiaryRequest.getName());
 		apiary.setLocation(apiaryLocation);
@@ -106,7 +115,11 @@ public class ApiaryController {
     @GetMapping("/actions-history/{apiaryId}")
     @PreAuthorize("hasRole('USER')")
     public List<ActionDTO> getActionsHistory(@CurrentUser UserPrincipal currentUser, @PathVariable Long apiaryId) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
     	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+    	
+    	privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.APIARY_STATS_READING));
+    	
     	return actionService.getActionsPerformedOnHives(apiary.getHivesWithDeleted())
     			.stream()
     			.map(actionService::mapToActionDTO)

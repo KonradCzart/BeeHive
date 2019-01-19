@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -130,8 +131,8 @@ public class User extends DateAudit {
 		this.privilegeProfileForApiaryMap = privilegeProfileForApiaryMap;
 	}
 
-	public PrivilegeProfile getPrivilegeProfileForApiary(Apiary apiary) {
-		return privilegeProfileForApiaryMap.get(apiary);
+	public Optional<PrivilegeProfile> getPrivilegeProfileForApiary(Apiary apiary) {
+		return Optional.ofNullable(privilegeProfileForApiaryMap.get(apiary));
 	}
 
 	public void updatePrivilegeProfileForApiary(PrivilegeProfile profile, Apiary apiary) {

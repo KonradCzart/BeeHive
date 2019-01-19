@@ -1,16 +1,19 @@
 package com.beehive.domain.privileges;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.user.User;
+import com.beehive.infrastructure.exceptions.AuthorizationException;
 import com.beehive.infrastructure.payload.ContributorDTO;
 
 @Service
@@ -45,7 +48,8 @@ public class PrivilegeService {
 	
 	private boolean isApiaryOwner(User privilegeGiver, Apiary apiary) {
 		return privilegeGiver.getPrivilegeProfileForApiary(apiary)
-				.isApiaryOwner();
+				.map(PrivilegeProfile::isApiaryOwner)
+				.orElse(false);
 	}
 	
 	public void grantPrivileges(User targetUser, Apiary targetApiary, Set<Privilege> privileges) {
@@ -75,10 +79,31 @@ public class PrivilegeService {
 			privilegeProfileRepository.delete(privilegeProfile);
 		}
 	}
+	
+	public void validateHasUserAllRequiredPermissions(User user, Apiary targetApiary, Set<Privilege> requiredPrivileges) {
+		if(!hasRequiredPrivileges(user, targetApiary, requiredPrivileges)) {
+			throw new AuthorizationException();
+		}
+	}
+	
+	public void validateHasUserAnyOfListedPermissions(User user, Apiary targetApiary, Set<Privilege> requiredPrivileges) {
+		if(!hasAnyOfListedPrivileges(user, targetApiary, requiredPrivileges)) {
+			throw new AuthorizationException();
+		}
+	}
 
-	public boolean hasRequiredPrivileges(User user, Apiary apiary, Set<Privilege> requiredPrivileges) {
-		PrivilegeProfile userProfile = user.getPrivilegeProfileForApiary(apiary);
-		return userProfile.getPrivileges().containsAll(requiredPrivileges);
+	private boolean hasRequiredPrivileges(User user, Apiary apiary, Set<Privilege> requiredPrivileges) {
+		return user.getPrivilegeProfileForApiary(apiary)
+				.map(PrivilegeProfile::getPrivileges)
+				.map((ownedPrivileges) -> ownedPrivileges.containsAll(requiredPrivileges))
+				.orElse(false);
+	}
+	
+	private boolean hasAnyOfListedPrivileges(User user, Apiary apiary, Set<Privilege> requiredPrivileges) {
+		return user.getPrivilegeProfileForApiary(apiary)
+				.map(PrivilegeProfile::getPrivileges)
+				.map((ownedPrivileges) -> !Collections.disjoint(ownedPrivileges, requiredPrivileges))
+				.orElse(false);
 	}
 	
 	private Set<Privilege> getPrivilegesFromDatabase(Set<Privilege> privileges) {

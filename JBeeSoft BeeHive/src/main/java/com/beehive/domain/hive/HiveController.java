@@ -1,11 +1,11 @@
 package com.beehive.domain.hive;
 
 import java.util.List;
+import java.util.Set;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beehive.domain.apiary.Apiary;
+import com.beehive.domain.apiary.ApiaryService;
+import com.beehive.domain.privileges.Privilege;
+import com.beehive.domain.privileges.PrivilegeService;
+import com.beehive.domain.user.User;
+import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.HiveDTO;
 import com.beehive.infrastructure.payload.HiveRequest;
@@ -33,20 +39,28 @@ public class HiveController {
 	@Autowired
 	HiveTypeService hiveTypeService;
 	
+	@Autowired
+	PrivilegeService privilegeService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired 
+	ApiaryService apiaryService;
+	
+	private static final String HIVE_CREATED_SUCCESFULLY_MSG = "Hive created successfully";
+	private static final String HIVE_DELETED_SUCCESFULLY_MSG = "Hive deleted successfully";
+	
     @PostMapping("/new")
-    public ResponseEntity<?> createHive(@Valid @RequestBody HiveRequest hiveRequest) {
-
-    	    	
-    	try {
-    		hiveService.createHive(hiveRequest);
-    	}
-        catch (Exception e) {
-        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
-        			HttpStatus.BAD_REQUEST);
-		}
+    public ApiResponse createHive(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody HiveRequest hiveRequest) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+    	Apiary apiary = apiaryService.getApiaryFromDatabase(hiveRequest.getApiaryId());
     	
-        return ResponseEntity.ok(new ApiResponse(true, "Hive created Successfully"));
-    }
+    	privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.APIARY_EDITING));
+   	
+		hiveService.createHive(hiveRequest);
+		return new ApiResponse(true, HIVE_CREATED_SUCCESFULLY_MSG);
+	}
     
     
     @GetMapping("/type")
@@ -58,61 +72,52 @@ public class HiveController {
     @GetMapping("/{hiveId}")
     @PreAuthorize("hasRole('USER')")
     public HiveDTO getHiveById(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
     	Hive hive = hiveService.getHiveFromDatabase(hiveId);
+  
+    	privilegeService.validateHasUserAnyOfListedPermissions(user, hive.getApiary(), Privilege.getAllAvailablePrivileges());
+    	
     	return hiveService.mapHiveToHiveDTO(hive);
     }
     
     @DeleteMapping("/delete/{hiveId}/queen")
     @PreAuthorize("hasRole('USER')")
-    public  ResponseEntity<?> deleteQueenWithHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
+    public ApiResponse deleteQueenWithHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+    	Hive hive = hiveService.getHiveFromDatabase(hiveId);
     	
-    	try {
-    		hiveService.deleteQueenWithHive(hiveId);
-    	}
-        catch (Exception e) {
-        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
-        			HttpStatus.BAD_REQUEST);
-		}
+    	privilegeService.validateHasUserAllRequiredPermissions(user, hive.getApiary(), Set.of(Privilege.HIVE_EDITING));
     	
-    	return ResponseEntity.ok(new ApiResponse(true, "Queen delete successfully"));
+		hiveService.deleteQueenWithHive(hiveId);
+		return new ApiResponse(true, HIVE_DELETED_SUCCESFULLY_MSG);
     }
     
     @DeleteMapping("/delete/{hiveId}/all")
     @PreAuthorize("hasRole('USER')")
-    public  ResponseEntity<?> deleteHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
+    public  ApiResponse deleteHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId){
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+    	Hive hive = hiveService.getHiveFromDatabase(hiveId);
     	
-    	try {
-    		hiveService.deleteHive(hiveId);
-    	}
-        catch (Exception e) {
-        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
-        			HttpStatus.BAD_REQUEST);
-		}
+    	privilegeService.validateHasUserAllRequiredPermissions(user, hive.getApiary(), Set.of(Privilege.APIARY_EDITING));
     	
-    	return ResponseEntity.ok(new ApiResponse(true, "Hive delete successfully"));
+		hiveService.deleteHive(hiveId);
+		return new ApiResponse(true, HIVE_DELETED_SUCCESFULLY_MSG);
     }
     
     @PutMapping("/modify/{hiveId}")
     @PreAuthorize("hasRole('USER')")
-    public  ResponseEntity<?> modifyHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId, @Valid @RequestBody HiveRequest hiveRequest) {
-    	
-    	HiveDTO hiveDTO;
-    	try {
-    		Hive hive = hiveService.getHiveFromDatabase(hiveId);		
-    		HiveType type = hiveTypeService.getHiveTypeFromDatabase(hiveRequest.getHiveTypeId());
-    		
-    		hive.setBoxNumber(hiveRequest.getBoxNumber());
-    		hive.setName(hiveRequest.getName());
-    		hive.setHiveType(type);
-    		
-    		hive = hiveService.modifyHive(hive);
-    		hiveDTO = hiveService.mapHiveToHiveDTO(hive);
-    	}
-        catch (Exception e) {
-        	return new ResponseEntity<ApiResponse>(new ApiResponse(false, e.getMessage()),
-        			HttpStatus.BAD_REQUEST);
-		}
-    	
-    	return ResponseEntity.ok(hiveDTO);
-    }
+    public  HiveDTO modifyHive(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId, @Valid @RequestBody HiveRequest hiveRequest) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+		Hive hive = hiveService.getHiveFromDatabase(hiveId);
+		HiveType type = hiveTypeService.getHiveTypeFromDatabase(hiveRequest.getHiveTypeId());
+		
+		privilegeService.validateHasUserAllRequiredPermissions(user, hive.getApiary(), Set.of(Privilege.HIVE_EDITING));
+
+		hive.setBoxNumber(hiveRequest.getBoxNumber());
+		hive.setName(hiveRequest.getName());
+		hive.setHiveType(type);
+
+		hive = hiveService.modifyHive(hive);
+		return hiveService.mapHiveToHiveDTO(hive);
+	}
 }

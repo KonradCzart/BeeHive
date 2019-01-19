@@ -2,6 +2,7 @@ package com.beehive.domain.hive;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class HiveService {
 	private static final String NOT_ALL_HIVES_BELONG_TO_APIARY = "There are hives that don't belong to specified apiary!";
 	private static final String NO_SUCH_HIVE = "Hive with id {0} doesn't exist";
 
-	public Hive createHive(HiveRequest hiveRequest){		
+	public Hive createHive(HiveRequest hiveRequest) {		
 		Apiary apiaryForHive = apiaryService.getApiaryFromDatabase(hiveRequest.getApiaryId());	
 		HiveType hiveType = hiveTypeService.getHiveTypeFromDatabase(hiveRequest.getHiveTypeId());
 		
@@ -106,13 +107,17 @@ public class HiveService {
 	public Hive getHiveFromDatabase(Long id) {
 		return hiveRepository.findById(id)
 				.filter(Hive::getIsExist)
-				.orElseThrow( () -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_HIVE, id)));
+				.orElseThrow(() -> new IllegalArgumentException(MessageFormat.format(NO_SUCH_HIVE, id)));
 	}
 	
 	private boolean allHivesBelongsToApiary(Set<Hive> hives, Long apiaryId) {
 		return hives.stream()
 				.allMatch(hive -> hive.getApiary().getId().equals(apiaryId));
 	}	
+	
+	public Optional<Hive> getHiveFromDatabaseForBeeQueen(Long beeQueenId) {
+		return hiveRepository.findByBeeQueenId(beeQueenId);
+	}
 	
 	public HiveDTO mapHiveToHiveDTO(Hive hive) {
 		
@@ -133,4 +138,5 @@ public class HiveService {
 				.withApiaryId(hive.getApiary().getId())
 				.build();
 	}
+	
 }

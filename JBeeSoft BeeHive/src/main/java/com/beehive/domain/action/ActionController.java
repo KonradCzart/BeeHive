@@ -17,11 +17,14 @@ import com.beehive.domain.action.honeycollecting.HoneyCollectingAction;
 import com.beehive.domain.action.inspection.InspectionAction;
 import com.beehive.domain.action.queenchanging.QueenChangingAction;
 import com.beehive.domain.action.treatment.TreatmentAction;
+import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.hive.Hive;
 import com.beehive.domain.hive.HiveService;
 import com.beehive.domain.honey.HoneyType;
 import com.beehive.domain.honey.HoneyTypeService;
+import com.beehive.domain.privileges.Privilege;
+import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
 import com.beehive.infrastructure.payload.ApiResponse;
@@ -52,6 +55,9 @@ public class ActionController {
 	@Autowired
 	private HoneyTypeService honeyTypeService;
 	
+	@Autowired
+	private PrivilegeService privilegeService;
+	
 	public static final String MAIN_PATH = "/action";
 	private static final String APIARY_ID = "apiary_id";
 	public static final String FEEDING_PATH = "/feeding/{" + APIARY_ID + "}";
@@ -64,7 +70,10 @@ public class ActionController {
 	@PostMapping(FEEDING_PATH)
 	public ApiResponse performFeedingAction(@Valid @RequestBody FeedingActionRequest feedingActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
 		User performer = userService.getUserFormDatabase(currentUser.getId());			
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
 		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(feedingActionRequest.getAffectedHives(), apiaryId);
+		
+		privilegeService.validateHasUserAllRequiredPermissions(performer, apiary, Set.of(Privilege.HIVE_EDITING));
 		
 		FeedingAction feedingAction = FeedingAction.builder()
 				.withAffectedHives(affectedHives)
@@ -82,8 +91,11 @@ public class ActionController {
 	@PostMapping(HONEY_COLLECTIONG_PATH)
 	public ApiResponse performHoneyCollectiongAction(@Valid @RequestBody HoneyCollectiongActionRequest honeyCollectiongActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
 		User performer = userService.getUserFormDatabase(currentUser.getId());
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
 		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(honeyCollectiongActionRequest.getAffectedHives(), apiaryId);
 		HoneyType honeyType = honeyTypeService.geHoneyTypeFromDatabase(honeyCollectiongActionRequest.getHoneyTypeId());
+		
+		privilegeService.validateHasUserAllRequiredPermissions(performer, apiary, Set.of(Privilege.HIVE_EDITING));
 		
 		HoneyCollectingAction honeyCollectiongAction = HoneyCollectingAction.builder()
 				.withAffectedHives(affectedHives)
@@ -100,7 +112,10 @@ public class ActionController {
 	@PostMapping(TREATMENT_PATH)
 	public ApiResponse performTreatmentAction(@Valid @RequestBody TreatmentActionRequest treatmentActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
 		User performer = userService.getUserFormDatabase(currentUser.getId());
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
 		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(treatmentActionRequest.getAffectedHives(), apiaryId);
+		
+		privilegeService.validateHasUserAllRequiredPermissions(performer, apiary, Set.of(Privilege.HIVE_EDITING));
 		
 		TreatmentAction treatmentAction = TreatmentAction.builder()
 				.withAffectedHives(affectedHives)
@@ -119,7 +134,10 @@ public class ActionController {
 	@PostMapping(INSPECTION_PATH)
 	public ApiResponse performInspectionAction(@Valid @RequestBody InspectionActionRequest inspectionActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
 		User performer = userService.getUserFormDatabase(currentUser.getId());
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
 		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(inspectionActionRequest.getAffectedHives(), apiaryId);
+		
+		privilegeService.validateHasUserAllRequiredPermissions(performer, apiary, Set.of(Privilege.HIVE_EDITING));
 		
 		InspectionAction inspectionAction= InspectionAction.builder()
 				.withAffectedHives(affectedHives)
@@ -139,7 +157,10 @@ public class ActionController {
 	@PostMapping(QUEEN_CHANGING_PATH)
 	public ApiResponse performQueenChangingAction(@Valid @RequestBody QueenChangingActionRequest queenChangingActionRequest, @PathVariable(name = APIARY_ID) Long apiaryId, @CurrentUser UserPrincipal currentUser) {
 		User performer = userService.getUserFormDatabase(currentUser.getId());
+		Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
 		Set<Hive> affectedHives = hiveService.getHivesInApiaryFromDatabase(queenChangingActionRequest.getAffectedHives(), apiaryId);
+		
+		privilegeService.validateHasUserAllRequiredPermissions(performer, apiary, Set.of(Privilege.HIVE_EDITING));
 		
 		QueenChangingAction queenChangingAction = QueenChangingAction.builder()
 				.withAffectedHives(affectedHives)
