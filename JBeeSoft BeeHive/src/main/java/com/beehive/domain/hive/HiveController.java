@@ -2,6 +2,7 @@ package com.beehive.domain.hive;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beehive.domain.action.ActionService;
 import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.apiary.ApiaryService;
 import com.beehive.domain.privileges.Privilege;
 import com.beehive.domain.privileges.PrivilegeService;
 import com.beehive.domain.user.User;
 import com.beehive.domain.user.UserService;
+import com.beehive.infrastructure.payload.ActionDTO;
 import com.beehive.infrastructure.payload.ApiResponse;
 import com.beehive.infrastructure.payload.HiveDTO;
 import com.beehive.infrastructure.payload.HiveRequest;
@@ -34,19 +37,22 @@ import com.beehive.infrastructure.security.UserPrincipal;
 public class HiveController {
 	
 	@Autowired
-	HiveService hiveService;
+	private HiveService hiveService;
 	
 	@Autowired
-	HiveTypeService hiveTypeService;
+	private HiveTypeService hiveTypeService;
 	
 	@Autowired
-	PrivilegeService privilegeService;
+	private PrivilegeService privilegeService;
 	
 	@Autowired
-	UserService userService;
+	private UserService userService;
 	
 	@Autowired 
-	ApiaryService apiaryService;
+	private ApiaryService apiaryService;
+	
+	@Autowired
+	private ActionService actionService;
 	
 	private static final String HIVE_CREATED_SUCCESFULLY_MSG = "Hive created successfully";
 	private static final String HIVE_DELETED_SUCCESFULLY_MSG = "Hive deleted successfully";
@@ -120,4 +126,18 @@ public class HiveController {
 		hive = hiveService.modifyHive(hive);
 		return hiveService.mapHiveToHiveDTO(hive);
 	}
+    
+    @GetMapping("/actions-history/{hiveId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<ActionDTO> getActionsHistory(@CurrentUser UserPrincipal currentUser, @PathVariable Long hiveId) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+    	Hive hive = hiveService.getHiveFromDatabase(hiveId);
+    	
+    	privilegeService.validateHasUserAllRequiredPermissions(user, hive.getApiary(), Set.of(Privilege.HIVE_STATS_READING));
+    	
+    	return actionService.getActionsPerformedOnHives(Set.of(hive))
+    			.stream()
+    			.map(actionService::mapToActionDTO)
+    			.collect(Collectors.toList());
+    }
 }
