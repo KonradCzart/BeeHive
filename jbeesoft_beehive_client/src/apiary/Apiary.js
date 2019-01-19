@@ -80,10 +80,12 @@ class Apiary extends Component {
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New hive</Button>
-
 				<h1>Apiary name: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span></h1>
+				
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>Edit Apiary</Button>
 				<h1>Country: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.country}</span></h1>
+				
+				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 				<h1>City: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.city}</span></h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
@@ -119,6 +121,7 @@ class Apiary extends Component {
 					!this.state.isLoading && this.state.apiaryData.hives.length > 0 ? (
 						<div>
 							<h2>Hives in this apiary:</h2>
+							<ActionForms affectedHives={this.state.selectedHivesKeys} apiaryId={this.state.apiaryData.apiaryINFO.id} />
 							<Table rowSelection={rowSelection} rowKey={record => record.id} columns={columns} dataSource={this.state.apiaryData.hives} />
 						</div>
 					) : null
@@ -127,7 +130,7 @@ class Apiary extends Component {
 					this.state.isLoading ? 
 					<LoadingIndicator /> : null
 				}
-				<ActionForms affectedHives={this.state.selectedHivesKeys} apiaryId={this.state.apiaryData.apiaryINFO.id} />
+				
 			</div>
 		)
 	}
@@ -292,6 +295,10 @@ class Apiary extends Component {
 				oldDate: date
 			})
 		}
+	}
+
+	handleActionsDetails = (e) => {
+		this.props.history.push("/actions/" + this.state.apiaryData.apiaryINFO.id);
 	}
 
 	componentDidMount() {

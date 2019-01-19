@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './forms/ApiaryList.css';
-import { Table, notification } from 'antd';
+import { Table } from 'antd';
 import { getActionsHistory } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 
@@ -29,7 +29,7 @@ class ActionsDetails extends Component {
 			dataIndex: 'date',
 			key: 'date',
 			render: (text, record) => (
-				record.date.substring(0, 10)
+				record.date.substring(0, 10) + "  " + record.date.substring(11, 16)
 			)
 		}, {
 			title: 'Affected hives',
