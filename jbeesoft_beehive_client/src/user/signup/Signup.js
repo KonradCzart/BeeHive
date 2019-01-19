@@ -62,13 +62,13 @@ class Signup extends Component {
         .then(response => {
             notification.success({
                 message: 'BeeHive App',
-                description: "Thank you! You're successfully registered. Please Login to continue!",
-            });          
+                description: response.message
+            });
             this.props.history.push("/login");
         }).catch(error => {
             notification.error({
                 message: 'BeeHive App',
-                description: error.message || 'Sorry! Something went wrong. Please try again!'
+                description: error.message
             });
         });
     }

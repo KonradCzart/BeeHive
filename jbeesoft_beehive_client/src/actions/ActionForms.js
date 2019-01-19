@@ -57,8 +57,6 @@ class ActionForms extends Component {
 					onCreate={this.handleTreatment}
 					{...this.props}
 				/>
-
-				<Button className="formButton" type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 				
 				{
 					this.state.isLoading ? 
@@ -78,7 +76,6 @@ class ActionForms extends Component {
 
 	showModalHoneyCollection = () => {
 		if(this.props.affectedHives.length === 0) {
-			//this.setState({ honeyCollectVisible: true });
 			notification.warning({
 				message: 'BeeHive App',
 				description: "You haven't selected any hives."
@@ -108,8 +105,6 @@ class ActionForms extends Component {
 
 			form.resetFields();
 			this.setState({ honeyCollectVisible: false });
-			console.log(this.props.apiaryId);
-			console.log(honeyCollectionRequest);
 
 			collectHoney(honeyCollectionRequest, this.props.apiaryId)
 			.then(response => {
@@ -160,8 +155,6 @@ class ActionForms extends Component {
 
 			form.resetFields();
 			this.setState({ feedingVisible: false });
-			console.log(this.props.apiaryId);
-			console.log(feedingRequest);
 
 			feedBees(feedingRequest, this.props.apiaryId)
 			.then(response => {
@@ -230,18 +223,6 @@ class ActionForms extends Component {
 		});
 	}
 
-	//Show actions detials
-
-	handleActionsDetails = (e) => {
-		/*if(this.props.affectedHives.length === 0) {
-			notification.warning({
-				message: 'BeeHive App',
-				description: "You haven't selected any hives."
-			});
-		} else {*/
-			this.props.history.push("/actions/" + this.props.apiaryId);
-		//}
-	}
 
 
 

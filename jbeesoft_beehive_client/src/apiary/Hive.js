@@ -231,17 +231,10 @@ class Hive extends Component {
 				});
 				this.setState({date: new Date()})
 			}).catch(error => {
-				if(error.status === 401) {
-					notification.error({
-						message: 'BeeHive App',
-						description: 'Data is incorrect. Please try again!'
-					});					
-				} else {
-					notification.error({
-						message: 'BeeHive App',
-						description: 'Sorry! Something went wrong. Please try again!'
-					});											
-				}
+				notification.error({
+					message: 'BeeHive App',
+					description: error.message
+				});
 			});
 		});
 	}
@@ -255,17 +248,10 @@ class Hive extends Component {
 			});
 			this.setState({date: new Date()})
 		}).catch(error => {
-			if(error.status === 401) {
-				notification.error({
-					message: 'BeeHive App',
-					description: 'Data is incorrect. Please try again!'
-				});					
-			} else {
-				notification.error({
-					message: 'BeeHive App',
-					description: 'Sorry! Something went wrong. Please try again!'
-				});											
-			}
+			notification.error({
+				message: 'BeeHive App',
+				description: error.message
+			});
 		});
 	}
 
