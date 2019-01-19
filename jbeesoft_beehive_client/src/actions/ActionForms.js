@@ -223,18 +223,6 @@ class ActionForms extends Component {
 		});
 	}
 
-	//Show actions detials
-
-	handleActionsDetails = (e) => {
-		/*if(this.props.affectedHives.length === 0) {
-			notification.warning({
-				message: 'BeeHive App',
-				description: "You haven't selected any hives."
-			});
-		} else {*/
-			this.props.history.push("/actions/" + this.props.apiaryId);
-		//}
-	}
 
 
 

@@ -22,14 +22,12 @@ class ActionsDetails extends Component {
 	}
 
 	render() {
-		console.log(this.state.actionsHistory);
-
 		const columns = [{
 			title: 'Date',
 			dataIndex: 'date',
 			key: 'date',
 			render: (text, record) => (
-				record.date.substring(0, 10) + "  " + record.date.substring(11, 16)
+				record.date.substring(0, 10) + '\u00A0\u00A0' + record.date.substring(11, 16)
 			)
 		}, {
 			title: 'Affected hives',

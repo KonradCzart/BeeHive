@@ -160,24 +160,17 @@ class ApiaryList extends Component {
 			form.resetFields();
 			this.setState({visible: false});
 			addApiary(apiaryRequest)
-				.then(response => {
-					notification.success({
-						message: 'BeeHive App',
-						description: apiaryRequest.name + " created successfully!"
-					});
-					this.setState({date: new Date()})
-				}).catch(error => {
-				if(error.status === 401) {
-					notification.error({
-						message: 'BeeHive App',
-						description: 'Data is incorrect. Please try again!'
-					});
-				} else {
-					notification.error({
-						message: 'BeeHive App',
-						description: 'Sorry! Something went wrong. Please try again!'
-					});
-				}
+			.then(response => {
+				notification.success({
+					message: 'BeeHive App',
+					description: response.message
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				notification.error({
+					message: 'BeeHive App',
+					description: error.message
+				});
 			});
 		});
 	}

@@ -141,9 +141,7 @@ class Apiary extends Component {
 	};
 
 	onSelectChange = (selectedRowKeys) => {
-		//console.log('selectedRowKeys changed: ', selectedRowKeys);
 		this.setState({ selectedHivesKeys: selectedRowKeys });
-		//console.log('selectedRowKeys changed: ', this.state.selectedHivesKeys);
 	}
 
 	showModal = () => {
@@ -171,7 +169,6 @@ class Apiary extends Component {
 	}
 
 	deleteHive = (id, e) => {
-		console.log(id);
 		deleteHive(id)
 		.then(response => {
 			notification.success({
@@ -180,17 +177,10 @@ class Apiary extends Component {
 			});
 			this.setState({date: new Date()})
 		}).catch(error => {
-			if(error.status === 401) {
-				notification.error({
-					message: 'BeeHive App',
-					description: 'Data is incorrect. Please try again!'
-				});					
-			} else {
-				notification.error({
-					message: 'BeeHive App',
-					description: 'Sorry! Something went wrong. Please try again!'
-				});											
-			}
+			notification.error({
+				message: 'BeeHive App',
+				description: error.message
+			});
 		});
 	}
 
@@ -207,25 +197,20 @@ class Apiary extends Component {
 			apiaryRequest.boxNumber = this.receivedElements.boxNum;
 			form.resetFields();
 			this.setState({ visible: false });
+
+
 			addHive(apiaryRequest)
 			.then(response => {
-					notification.success({
-						message: 'BeeHive App',
-						description: apiaryRequest.name + " created successfully!"
-					});
-					this.setState({date: new Date()})
-				}).catch(error => {
-					if(error.status === 401) {
-						notification.error({
-							message: 'BeeHive App',
-							description: 'Data is incorrect. Please try again!'
-						});					
-					} else {
-						notification.error({
-							message: 'BeeHive App',
-							description: 'Sorry! Something went wrong. Please try again!'
-					});											
-				}
+				notification.success({
+					message: 'BeeHive App',
+					description: response.message
+				});
+				this.setState({date: new Date()})
+			}).catch(error => {
+				notification.error({
+					message: 'BeeHive App',
+					description: error.message
+				});
 			});
 		});
 	}
@@ -240,17 +225,18 @@ class Apiary extends Component {
 			const apiaryRequest = values;
 			form.resetFields();
 			this.setState({visible1: false});
+			
 			editApiary(apiaryRequest, this.props.match.params.id)
 			.then(response => {
 				notification.success({
 					message: 'BeeHive App',
-					description: apiaryRequest.name + " created successfully!"
+					description: response.message
 				});
 				this.setState({date: new Date()})
 			}).catch(error => {
 				notification.error({
-					message: error.message,
-					description: 'Sorry! Something went wrong. Please try again!'
+					message: 'BeeHive App',
+					description: error.message
 				});
 			});
 		});
