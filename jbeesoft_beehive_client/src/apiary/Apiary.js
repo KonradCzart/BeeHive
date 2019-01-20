@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './ApiaryList.css';
 import { Form, Input, Button, notification, Modal, Table, Select } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { addHive, getAllHiveTypes, getAllHives, editApiary, deleteHive } from '../util/APIUtils';
+import { addHive, getAllHiveTypes, getAllHives, editApiary, deleteHive, getMyPrivileges } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
@@ -18,10 +18,12 @@ class Apiary extends Component {
 		const date = new Date();
 		this.receivedElements = [];
 		this.loadApiaryData = this.loadApiaryData.bind(this);
+		this.loadPrivileges = this.loadPrivileges.bind(this);
 
 		this.state = {
 			apiaryData: [],
 			selectedHivesKeys: [],
+			privileges: [],
 			isLoading: false,
 			date: date,
 			oldDate: date,
@@ -121,7 +123,7 @@ class Apiary extends Component {
 					!this.state.isLoading && this.state.apiaryData.hives.length > 0 ? (
 						<div>
 							<h2>Hives in this apiary:</h2>
-							<ActionForms affectedHives={this.state.selectedHivesKeys} apiaryId={this.state.apiaryData.apiaryINFO.id} />
+							<ActionForms privileges={this.state.privileges} affectedHives={this.state.selectedHivesKeys} apiaryId={this.state.apiaryData.apiaryINFO.id} />
 							<Table rowSelection={rowSelection} rowKey={record => record.id} columns={columns} dataSource={this.state.apiaryData.hives} />
 						</div>
 					) : null
@@ -145,10 +147,42 @@ class Apiary extends Component {
 	}
 
 	showModal = () => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "APIARY_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		this.setState({ visible: true });
 	}
 
 	showModal1 = () => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "APIARY_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+		
 		this.setState({ visible1: true });
 	}
 
@@ -169,6 +203,22 @@ class Apiary extends Component {
 	}
 
 	deleteHive = (id, e) => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "APIARY_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		deleteHive(id)
 		.then(response => {
 			notification.success({
@@ -272,10 +322,12 @@ class Apiary extends Component {
 				isLoading: false
 			});
 			this.loadApiaryData();
+			this.loadPrivileges();
 		}
 
 		if(this.state.date !== this.state.oldDate) {
 			this.loadApiaryData();
+			this.loadPrivileges();
 			const date = this.state.date;
 			this.setState({
 				oldDate: date
@@ -283,13 +335,51 @@ class Apiary extends Component {
 		}
 	}
 
+	loadPrivileges() {
+		let promise = getMyPrivileges(this.props.match.params.id);
+
+		if(!promise) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		promise
+		.then(response => {
+			if(this._isMounted) {
+				this.setState({
+					privileges: response,
+					isLoading: false
+				});
+			}
+		})
+		.catch(error => {
+			this.setState({error, isLoading: false});
+		});
+	}
+
 	handleActionsDetails = (e) => {
-		this.props.history.push("/actions/" + this.state.apiaryData.apiaryINFO.id);
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "APIARY_STATS_READING") {
+				this.props.history.push("/actions/" + this.state.apiaryData.apiaryINFO.id);
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+		}
 	}
 
 	componentDidMount() {
 		this._isMounted = true;
 		this.loadApiaryData();
+		this.loadPrivileges();
 	}
 
 	componentWillUnmount() {

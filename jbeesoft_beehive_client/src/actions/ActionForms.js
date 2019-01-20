@@ -75,7 +75,20 @@ class ActionForms extends Component {
 	//Honey collection
 
 	showModalHoneyCollection = () => {
-		if(this.props.affectedHives.length === 0) {
+		var notPrivileged = true;
+		
+		this.props.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+		} else if(this.props.affectedHives.length === 0) {
 			notification.warning({
 				message: 'BeeHive App',
 				description: "You haven't selected any hives."
@@ -125,7 +138,20 @@ class ActionForms extends Component {
 	//Feeding
 
 	showModalFeeding = () => {
-		if(this.props.affectedHives.length === 0) {
+		var notPrivileged = true;
+		
+		this.props.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+		} else if(this.props.affectedHives.length === 0) {
 			notification.warning({
 				message: 'BeeHive App',
 				description: "You haven't selected any hives."
@@ -176,7 +202,20 @@ class ActionForms extends Component {
 	//Treatment
 
 	showModalTreatment = () => {
-		if(this.props.affectedHives.length === 0) {
+		var notPrivileged = true;
+		
+		this.props.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+		} else if(this.props.affectedHives.length === 0) {
 			notification.warning({
 				message: 'BeeHive App',
 				description: "You haven't selected any hives."

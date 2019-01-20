@@ -352,3 +352,10 @@ export function getActionsHistory(apiaryId) {
         method: 'GET'
     });
 }
+
+export function getMyPrivileges(apiaryId) {
+    return request({
+        url: API_BASE_URL + '/privileges/my_privileges/' + apiaryId,
+        method: 'GET'
+    });
+}
