@@ -102,7 +102,7 @@ public class ApiaryController {
 		User user = userService.getUserFormDatabase(currentUser.getId());
     	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
 		
-		privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.OWNER_PRIVILEGE));
+		privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.APIARY_EDITING));
 		
 		Location apiaryLocation = locationService.getOrCreateLocationIfNotExist(apiaryRequest.getCountry(), apiaryRequest.getCity());
 		apiary.setName(apiaryRequest.getName());
