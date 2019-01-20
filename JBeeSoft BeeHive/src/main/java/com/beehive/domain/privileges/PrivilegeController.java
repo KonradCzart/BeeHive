@@ -46,6 +46,7 @@ public class PrivilegeController {
 	private static final String GRANT_PRIVILEGES_PATH = "/grant";
 	private static final String APIARY_ID = "apiary_id";
 	private static final String GET_APIARY_CONTRIBUTORS_PATH = "/contributors/{" + APIARY_ID + "}";
+	private static final String MY_PRIVILEGES_PATH = "/my_privileges/{" + APIARY_ID + "}";
 	private static final String GRANTED_SUCCESFULLY = "New privileges for user with id {0} granted succesfully";
 	
     private static final Logger logger = LoggerFactory.getLogger(PrivilegeController.class);
@@ -70,6 +71,16 @@ public class PrivilegeController {
 			return new ApiResponse(false, e.getMessage());
 		}
     	return new ApiResponse(true, MessageFormat.format(GRANTED_SUCCESFULLY, grantPrivilegesRequest.getTargetUser()));
+    }
+    
+    @GetMapping(MY_PRIVILEGES_PATH)
+    public Set<Privilege> getMyPrivilegesForApiary(@CurrentUser UserPrincipal currentUser, @PathVariable(name = APIARY_ID) Long apiaryId) {
+    	User user = userService.getUserFormDatabase(currentUser.getId());
+    	Apiary apiary = apiaryService.getApiaryFromDatabase(apiaryId);
+    	
+    	return user.getPrivilegeProfileForApiary(apiary)
+    			.map(PrivilegeProfile::getPrivileges)
+    			.orElse(Set.of());
     }
     
     @GetMapping(GET_APIARY_CONTRIBUTORS_PATH)
