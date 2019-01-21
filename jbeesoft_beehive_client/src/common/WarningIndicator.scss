@@ -1,0 +1,13 @@
+@import "../util/Model";
+
+.warnInd-parent {
+  @extend %cell-centeringContainerMd;
+}
+
+.warnInd-icon {
+  @extend %cell-centeredIconMd;
+}
+
+.warnInd-msg {
+  @extend %cell-centeredParagraph;
+}

@@ -7,6 +7,8 @@ import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
 import {Contributors} from "../contributors/Contributors";
+import {ContributorStats, HiveStats} from "../stats/Stats";
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -111,6 +113,11 @@ class Apiary extends Component {
 				{/*PAWEMIX INJECT START*/}
 				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
 							  userId={this.props.currentUser.id}/>
+				<HiveStats hiveIds={this.state.apiaryData.hives.map(hive => hive.id)}
+                    headerText="Hives stats"
+					apiId={this.state.apiaryData.apiaryINFO.id}/>
+				<ContributorStats headerText="Contributors stats"
+					apiId={this.state.apiaryData.apiaryINFO.id}/>
 				{/*PAWEMIX INJECT END*/}
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (

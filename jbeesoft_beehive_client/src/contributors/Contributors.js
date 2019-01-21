@@ -6,7 +6,9 @@ import {ContributorItem} from "./ContributorItem";
 import {AddContributorModal} from "./AddContributorModal";
 
 /**
- * props = {apiaryId: <apiaryId:Number>, userId: <currentUserId:Number>}
+ * ## props:
+ * * apiaryId : _Number_;
+ * * userId: _Number_;
  */
 export class Contributors extends React.Component {
 

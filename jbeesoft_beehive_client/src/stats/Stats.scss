@@ -1,0 +1,42 @@
+@import "../util/Model";
+
+.statBlock {
+  @extend %inlineBlock;
+  @extend %borderBox;
+  @extend %wrapContent;
+}
+
+.headerRow {
+  @extend %flex;
+  @extend %borderBox;
+  @extend %wrapContent;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.headerText {
+  @extend %inlineBlock;
+  @extend %hor-wrapContent;
+  @extend %ver-matchParent;
+  margin-right: 32px;
+  @extend %div-headline2;
+  align-items: end;
+}
+
+.rangePickerWrapper {
+  @extend %inlineBlock;
+  @extend %matchParent;
+}
+
+.rangePicker {
+  @extend %inlineBlock;
+  @extend %wrapContent;
+  min-width: 280px;
+  max-width: 320px;
+}
+
+.statTable {
+  @extend %block;
+  @extend %borderBox;
+  @extend %wrapContent;
+}

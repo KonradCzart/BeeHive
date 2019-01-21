@@ -8,6 +8,7 @@ import AddQueenForm from './AddQueenForm';
 import EditQueenForm from './EditQueenForm';
 import EditHiveForm from './EditHiveForm';
 import InspectionFormModule from '../actions/InspectionFormModule';
+import {HiveStats} from "../stats/Stats";
 
 class Hive extends Component {
 	_isMounted = false;
@@ -94,6 +95,10 @@ class Hive extends Component {
 						</div>
 					) : null
 				}
+
+				{/*PAWEMIX INJECT*/}
+				<HiveStats headerText="Hive stats" apiId={this.state.hiveData.apiaryId} hiveIds={[this.state.hiveData.id]}/>
+				{/*PAWEMIX INJECT*/}
 
 				<InspectionFormModule hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
 
