@@ -50,6 +50,22 @@ class InspectionFormModule extends Component {
 	//Inspection
 
 	showModalInspection = () => {
+		var notPrivileged = true;
+		
+		this.props.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		this.setState({ inspectionVisible: true });
 	}
 

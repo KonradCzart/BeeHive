@@ -124,7 +124,7 @@ class App extends Component {
 						render={(props) => <Apiary isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 					</Route>
 					
-					<Route path="/hive/:id" 
+					<Route path="/hive/:apiaryId/:id" 
 						render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 					</Route>
 					
