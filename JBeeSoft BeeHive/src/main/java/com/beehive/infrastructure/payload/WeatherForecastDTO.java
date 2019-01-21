@@ -16,6 +16,8 @@ public class WeatherForecastDTO {
 
     private String weatherType;
 
+    public WeatherForecastDTO(){}
+
     public WeatherForecastDTO(double rainMililitersPer3h, double minTemp, double maxTemp, double temp,
                               double pressure, int  humidity, int cloudsPercentage, double windSpeed, double windDeg, String weatherType) {
         this.rainMililitersPer3h = rainMililitersPer3h;
