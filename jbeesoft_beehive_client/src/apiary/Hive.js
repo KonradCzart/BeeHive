@@ -9,6 +9,7 @@ import AddQueenForm from './AddQueenForm';
 import EditQueenForm from './EditQueenForm';
 import EditHiveForm from './EditHiveForm';
 import InspectionFormModule from '../actions/InspectionFormModule';
+import ActionForms from '../actions/ActionForms';
 
 class Hive extends Component {
 	_isMounted = false;
@@ -38,6 +39,9 @@ class Hive extends Component {
 			return <LoadingIndicator />;
 		}
 
+		var hiveIdForAction = [];
+		hiveIdForAction.push(this.props.match.params.id);
+
 		const WrappedAddQueenForm = Form.create()(AddQueenForm);
 		const WrappedEditQueenForm = Form.create()(EditQueenForm);
 		const WrappedEditHiveForm = Form.create()(EditHiveForm);
@@ -61,6 +65,7 @@ class Hive extends Component {
 					) : null
 				}
 				<h1><span className='apiary-name'>Box number: </span>{this.state.hiveData.boxNumber}</h1>
+				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 
 				<WrappedEditHiveForm
 					wrappedComponentRef={this.saveFormRef1}
@@ -99,7 +104,8 @@ class Hive extends Component {
 					) : null
 				}
 
-				<InspectionFormModule privileges={this.state.privileges} hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
+				<InspectionFormModule style={{float: 'left'}} privileges={this.state.privileges} hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
+				<ActionForms style={{float: 'right'}} privileges={this.state.privileges} affectedHives={hiveIdForAction} apiaryId={this.state.hiveData.apiaryId} />
 
 				{
 					this.state.isLoading ? 
@@ -351,6 +357,24 @@ class Hive extends Component {
 		.catch(error => {
 			this.setState({error, isLoading: false});
 		});
+	}
+
+	handleActionsDetails = (e) => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "HIVE_STATS_READING") {
+				this.props.history.push("/actions_hive/" + this.props.match.params.id);
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+		}
 	}
 
 	componentDidUpdate(nextProps) {

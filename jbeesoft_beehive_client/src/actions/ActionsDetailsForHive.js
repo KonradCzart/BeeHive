@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './forms/ApiaryList.css';
 import { Table, Button } from 'antd';
-import { getActionsHistory } from '../util/APIUtils';
-import { withRouter } from 'react-router-dom';
+import { getActionsHistoryForHive } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import ActionDetailsModal  from './ActionDetailsModal';
+import { withRouter } from 'react-router-dom';
 
-class ActionsDetails extends Component {
+class ActionsDetailsForHive extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -75,9 +75,6 @@ class ActionsDetails extends Component {
 			render : (text, record) => (
 				<Button type="default" onClick={(e) => this.showModal(record, e)}>Details</Button>
 			)
-			/*render : (text, record) => (
-				<Button type="default" onClick={(e) => this.deleteHive(record.id, e)}>Delete</Button>
-			)*/
 		}];
 
 		return(
@@ -85,7 +82,7 @@ class ActionsDetails extends Component {
 			{
 				!this.state.isLoading && this.state.actionsHistory.length === 0 ? (
 					<div className="no-polls-found">
-						<h2>You haven't performed any action in this apiary.</h2>
+						<h2>You haven't performed any action in this hive.</h2>
 					</div>	
 				) : null
 			}
@@ -125,7 +122,7 @@ class ActionsDetails extends Component {
 	}
 
 	loadActionsHistory() {
-		let promise = getActionsHistory(this.props.match.params.apiaryId);
+		let promise = getActionsHistoryForHive(this.props.match.params.hiveId);
 
 		if(!promise) {
 			return;
@@ -173,4 +170,4 @@ class ActionsDetails extends Component {
 	}
 }
 
-export default withRouter(ActionsDetails);
+export default withRouter(ActionsDetailsForHive);

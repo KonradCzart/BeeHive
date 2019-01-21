@@ -353,6 +353,13 @@ export function getActionsHistory(apiaryId) {
     });
 }
 
+export function getActionsHistoryForHive(hiveId) {
+    return request({
+        url: API_BASE_URL + '/hive/actions-history/' + hiveId,
+        method: 'GET'
+    });
+}
+
 export function getMyPrivileges(apiaryId) {
     return request({
         url: API_BASE_URL + '/privileges/my_privileges/' + apiaryId,

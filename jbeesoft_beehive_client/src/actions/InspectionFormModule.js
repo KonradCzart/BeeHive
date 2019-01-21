@@ -25,7 +25,7 @@ class InspectionFormModule extends Component {
 		const WrappedInspectionForm = Form.create()(InspectionForm);
 
 		return (
-			<div className="apiary-list">
+			<div style={{float: 'left'}}>
 				<Button className="formButton" type="primary" onClick={this.showModalInspection}>Perform inspection</Button>
 				<WrappedInspectionForm
 					wrappedComponentRef={this.saveInspectionRef}
