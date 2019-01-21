@@ -1,20 +1,20 @@
 package com.beehive.infrastructure.payload;
 
 public class WeatherForecastDTO {
-    public double rainMililitersPer3h;
+    private double rainMililitersPer3h;
 
-    public double minTemp;
-    public double maxTemp;
-    public double temp;
-    public double pressure;
-    public int humidity;
+    private double minTemp;
+    private double maxTemp;
+    private double temp;
+    private double pressure;
+    private int humidity;
 
-    public int cloudsPercentage;
+    private int cloudsPercentage;
 
-    public double windSpeed;
-    public double windDeg;
+    private double windSpeed;
+    private double windDeg;
 
-    public String weatherType;
+    private String weatherType;
 
     public WeatherForecastDTO(double rainMililitersPer3h, double minTemp, double maxTemp, double temp,
                               double pressure, int  humidity, int cloudsPercentage, double windSpeed, double windDeg, String weatherType) {
@@ -40,5 +40,16 @@ public class WeatherForecastDTO {
     public double getWindSpeed() { return windSpeed; }
     public double getWindDeg() { return windDeg; }
     public String getWeatherType() { return weatherType; }
+
+    public void setRainMililitersPer3h(double rainMililitersPer3h) { this.rainMililitersPer3h = rainMililitersPer3h; }
+    public void setMinTemp(double minTemp) { this.minTemp = minTemp; }
+    public void setMaxTemp(double maxTemp) { this.maxTemp = maxTemp; }
+    public void setTemp(double temp) { this.temp = temp; }
+    public void setPressure(double pressure) { this.pressure = pressure; }
+    public void setHumidity(int humidity) { this.humidity = humidity; }
+    public void setCloudsPercentage(int cloudsPercentage) { this.cloudsPercentage = cloudsPercentage; }
+    public void setWindSpeed(double windSpeed) { this.windSpeed = windSpeed; }
+    public void setWindDeg(double windDeg) { this.windDeg = windDeg; }
+    public void setWeatherType(String weatherType) { this.weatherType = weatherType; }
 }
 
