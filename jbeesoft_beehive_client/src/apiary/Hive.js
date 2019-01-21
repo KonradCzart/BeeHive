@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import './ApiaryList.css';
 import { Form, Button, notification } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getHiveData, addQueenToHive, editQueenInHive, editHive, deleteQueenFromHive, changeQueen } from '../util/APIUtils';
+import { getHiveData, addQueenToHive, editQueenInHive, editHive, deleteQueenFromHive,
+		 changeQueen, getMyPrivileges } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import AddQueenForm from './AddQueenForm';
 import EditQueenForm from './EditQueenForm';
 import EditHiveForm from './EditHiveForm';
 import InspectionFormModule from '../actions/InspectionFormModule';
 import {HiveStats} from "../stats/Stats";
+import ActionForms from '../actions/ActionForms';
 
 class Hive extends Component {
 	_isMounted = false;
@@ -19,9 +21,11 @@ class Hive extends Component {
 		this.receivedElements = [];
 		this.queenData = [];
 		this.loadHiveData = this.loadHiveData.bind(this);
+		this.loadPrivileges = this.loadPrivileges.bind(this);
 
 		this.state = {
 			hiveData: [],
+			privileges: [],
 			isLoading: false,
 			date: date,
 			oldDate: date,
@@ -30,12 +34,14 @@ class Hive extends Component {
 	}
 
 	render() {
-
 		const {isLoading} = this.state;
 
 		if(isLoading || this.state.hiveData.name === undefined) {
 			return <LoadingIndicator />;
 		}
+
+		var hiveIdForAction = [];
+		hiveIdForAction.push(this.props.match.params.id);
 
 		const WrappedAddQueenForm = Form.create()(AddQueenForm);
 		const WrappedEditQueenForm = Form.create()(EditQueenForm);
@@ -49,15 +55,18 @@ class Hive extends Component {
 						<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>Edit queen</Button>
 					)
 				}
-				<h1>Hive name: <span className='apiary-name'>{this.state.hiveData.name}</span></h1>
+				<h1><span className='apiary-name'>Hive name: </span>{this.state.hiveData.name}</h1>
+				
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>Edit hive</Button>
-				<h1>Type: <span className='apiary-name'>{this.state.hiveData.typeName}</span></h1>
+				<h1><span className='apiary-name'>Type: </span>{this.state.hiveData.typeName}</h1>
+				
 				{
 					this.state.hiveData.queenDTO !== null ? (
 						<Button style={{float: 'right'}} type="primary" onClick={this.handleDeleteQueen}>Delete queen</Button>
 					) : null
 				}
-				<h1>Box number: <span className='apiary-name'>{this.state.hiveData.boxNumber}</span></h1>
+				<h1><span className='apiary-name'>Box number: </span>{this.state.hiveData.boxNumber}</h1>
+				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 
 				<WrappedEditHiveForm
 					wrappedComponentRef={this.saveFormRef1}
@@ -85,22 +94,22 @@ class Hive extends Component {
 							onCancel={this.handleCancel} onCreate={this.handleEdit} queenData={this.state.hiveData.queenDTO}
 							{...this.props} />
 						<div className="no-polls-found">
-							<h1>Queen:</h1>
-							<h2>Race: <span className='apiary-name'>{this.state.hiveData.queenDTO.raceName}</span></h2>
-							<h2>Age: <span className='apiary-name'>{this.state.hiveData.queenDTO.age}</span></h2>
-							<h2>Color: <span className='apiary-name'>{this.state.hiveData.queenDTO.color}</span></h2>
-							<h2>Is reproducing: <span className='apiary-name'>{this.state.hiveData.queenDTO.isReproducting ? 'Yes' : 'No'}</span></h2>
-							<h2>Description: <span className='apiary-name'>{this.state.hiveData.queenDTO.description}</span></h2>
+							<h1><span className='apiary-name'>Queen:</span></h1>
+							<h2><span className='apiary-name'>Race: </span>{this.state.hiveData.queenDTO.raceName}</h2>
+							<h2><span className='apiary-name'>Date of birth: </span>{this.state.hiveData.queenDTO.age}</h2>
+							<h2><span className='apiary-name'>Color: </span>{this.state.hiveData.queenDTO.color}</h2>
+							<h2><span className='apiary-name'>Is reproducing: </span>{this.state.hiveData.queenDTO.isReproducting ? 'Yes' : 'No'}</h2>
+							<h2><span className='apiary-name'>Description: </span>{this.state.hiveData.queenDTO.description}</h2>
 						</div>	
 						</div>
 					) : null
 				}
 
-				{/*PAWEMIX INJECT*/}
-				<HiveStats headerText="Hive stats" apiId={this.state.hiveData.apiaryId} hiveIds={[this.state.hiveData.id]}/>
-				{/*PAWEMIX INJECT*/}
-
-				<InspectionFormModule hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
+                {/*PAWEMIX INJECT*/}
+                <HiveStats headerText="Hive stats" apiId={this.state.hiveData.apiaryId} hiveIds={[this.state.hiveData.id]}/>
+                {/*PAWEMIX INJECT*/}
+				<InspectionFormModule style={{float: 'left'}} privileges={this.state.privileges} hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
+				<ActionForms style={{float: 'right'}} privileges={this.state.privileges} affectedHives={hiveIdForAction} apiaryId={this.state.hiveData.apiaryId} />
 
 				{
 					this.state.isLoading ? 
@@ -116,6 +125,22 @@ class Hive extends Component {
 	};
 
 	showModal = () => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		this.setState({ visible: true });
 	}
 
@@ -124,6 +149,22 @@ class Hive extends Component {
 	}
 
 	showModal1 = () => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		this.setState({ visible1: true });
 	}
 
@@ -245,6 +286,22 @@ class Hive extends Component {
 	}
 
 	handleDeleteQueen = () => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		deleteQueenFromHive(this.props.match.params.id)
 		.then(response => {
 			notification.success({
@@ -283,6 +340,47 @@ class Hive extends Component {
 		});
 	}
 
+	loadPrivileges() {
+		let promise = getMyPrivileges(this.props.match.params.apiaryId);
+
+		if(!promise) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		promise
+		.then(response => {
+			if(this._isMounted) {
+				this.setState({
+					privileges: response,
+					isLoading: false
+				});
+			}
+		})
+		.catch(error => {
+			this.setState({error, isLoading: false});
+		});
+	}
+
+	handleActionsDetails = (e) => {
+		var notPrivileged = true;
+		
+		this.state.privileges.forEach((item) => 
+			{if(item.name === "HIVE_STATS_READING") {
+				this.props.history.push("/actions_hive/" + this.props.match.params.id);
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+		}
+	}
+
 	componentDidUpdate(nextProps) {
 		if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
 			this.setState({
@@ -290,10 +388,12 @@ class Hive extends Component {
 				isLoading: false
 			});
 			this.loadHiveData();
+			this.loadPrivileges();
 		}
 
 		if(this.state.date !== this.state.oldDate) {
 			this.loadHiveData();
+			this.loadPrivileges();
 			const date = this.state.date;
 			this.setState({
 				oldDate: date
@@ -304,6 +404,7 @@ class Hive extends Component {
 	componentDidMount() {
 		this._isMounted = true;
 		this.loadHiveData();
+		this.loadPrivileges();
 	}
 
 	componentWillUnmount() {

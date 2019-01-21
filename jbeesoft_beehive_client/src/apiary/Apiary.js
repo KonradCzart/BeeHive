@@ -39,7 +39,7 @@ class Apiary extends Component {
 			dataIndex: 'name',
 			key: 'name',
 			render: (text, record) => (
-				<a href={'/hive/' + record.id}>{text}</a>
+				<a href={'/hive/' + this.props.match.params.id + '/' + record.id}>{text}</a>
 			)
 		}, {
 			title: 'Hive type',
@@ -84,13 +84,13 @@ class Apiary extends Component {
 		return (
 			<div className="apiary-list">
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal}>New hive</Button>
-				<h1>Apiary name: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.name}</span></h1>
+				<h1><span className='apiary-name'>Apiary name: </span>{this.state.apiaryData.apiaryINFO.name}</h1>
 				
 				<Button style={{float: 'right'}} type="primary" onClick={this.showModal1}>Edit Apiary</Button>
-				<h1>Country: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.country}</span></h1>
+				<h1><span className='apiary-name'>Country: </span>{this.state.apiaryData.apiaryINFO.country}</h1>
 				
 				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
-				<h1>City: <span className='apiary-name'>{this.state.apiaryData.apiaryINFO.city}</span></h1>
+				<h1><span className='apiary-name'>City: </span>{this.state.apiaryData.apiaryINFO.city}</h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
 					visible={this.state.visible}

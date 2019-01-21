@@ -30,7 +30,7 @@ class ActionForms extends Component {
 		const WrappedTreatmentForm = Form.create()(TreatmentForm);
 
 		return (
-			<div className="apiary-list">
+			<div>
 				<Button className="formButton" type="primary" onClick={this.showModalHoneyCollection}>Collect honey</Button>
 				<WrappedHoneyCollectionForm
 					wrappedComponentRef={this.saveHoneyCollectRef}

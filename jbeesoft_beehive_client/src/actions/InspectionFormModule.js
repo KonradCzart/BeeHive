@@ -25,7 +25,7 @@ class InspectionFormModule extends Component {
 		const WrappedInspectionForm = Form.create()(InspectionForm);
 
 		return (
-			<div className="apiary-list">
+			<div style={{float: 'left'}}>
 				<Button className="formButton" type="primary" onClick={this.showModalInspection}>Perform inspection</Button>
 				<WrappedInspectionForm
 					wrappedComponentRef={this.saveInspectionRef}
@@ -50,6 +50,22 @@ class InspectionFormModule extends Component {
 	//Inspection
 
 	showModalInspection = () => {
+		var notPrivileged = true;
+		
+		this.props.privileges.forEach((item) => 
+			{if(item.name === "HIVE_EDITING") {
+				notPrivileged = false;
+			}}
+		);
+
+		if(notPrivileged) {
+			notification.warning({
+				message: 'BeeHive App',
+				description: 'You are not privileged to perform this action'
+			});
+			return;
+		}
+
 		this.setState({ inspectionVisible: true });
 	}
 

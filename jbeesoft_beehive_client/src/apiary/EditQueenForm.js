@@ -75,7 +75,7 @@ class EditQueenForm extends Component {
 				)}
 				</FormItem>
 
-				<FormItem label="Age:">
+				<FormItem label="Date of birth:">
 				{getFieldDecorator('age', {
 					rules: [{ type: 'object', required: true, message: 'Please select time!' }],
 					initialValue: moment(this.props.queenData.age, "YYYY-MM-DD")
@@ -84,7 +84,7 @@ class EditQueenForm extends Component {
 						format="YYYY-MM-DD"
 						name="age"
 						type="text"
-						placeholder="Select age" />
+						placeholder="Select date of birth" />
 				)}
 				</FormItem>
 				<FormItem label="Is reproducing:">
