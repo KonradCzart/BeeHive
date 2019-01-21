@@ -1,6 +1,6 @@
 package com.beehive.domain.weather;
 
-import com.beehive.infrastructure.payload.ValueResponse;
+import com.beehive.infrastructure.payload.WeatherForecastDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -19,17 +19,17 @@ public class WeatherService {
     private RestTemplate restTemplate = new RestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public List<Record> getForecast(String city) throws IOException {
+    public List<WeatherForecastDTO> getForecast(String city) throws IOException {
         String REST_URI = String.format("%s%s%s%s%s",url, "forecast?q=", city, "&units=imperial&type=accurate&", appid);
 
         String json = restTemplate.getForObject(REST_URI, String.class);
         return DeserializedForecast(json);
     }
 
-    private List<Record> DeserializedForecast(String json) throws IOException {
+    private List<WeatherForecastDTO> DeserializedForecast(String json) throws IOException {
 
         Map<String, Object> map = objectMapper.readValue(json, new TypeReference<Map<String,Object>>(){});
-        List<Record> recordList = new ArrayList();
+        List<WeatherForecastDTO> recordList = new ArrayList();
         return recordList;
     }
 }

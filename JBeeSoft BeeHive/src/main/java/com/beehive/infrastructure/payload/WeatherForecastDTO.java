@@ -1,6 +1,6 @@
-package com.beehive.domain.weather;
+package com.beehive.infrastructure.payload;
 
-public class Record {
+public class WeatherForecastDTO {
     public double rainMililitersPer3h;
 
     public double minTemp;
@@ -16,8 +16,8 @@ public class Record {
 
     public String weatherType;
 
-    public Record(double rainMililitersPer3h, double minTemp, double maxTemp, double temp,
-                  double pressure, int  humidity, int cloudsPercentage, double windSpeed, double windDeg, String weatherType) {
+    public WeatherForecastDTO(double rainMililitersPer3h, double minTemp, double maxTemp, double temp,
+                              double pressure, int  humidity, int cloudsPercentage, double windSpeed, double windDeg, String weatherType) {
         this.rainMililitersPer3h = rainMililitersPer3h;
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
