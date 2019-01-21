@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './forms/ApiaryList.css';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import { getActionsHistory } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
+import ActionDetailsModal  from './ActionDetailsModal';
 
 class ActionsDetails extends Component {
 	_isMounted = false;
@@ -28,7 +29,9 @@ class ActionsDetails extends Component {
 			key: 'date',
 			render: (text, record) => (
 				record.date.substring(0, 10) + '\u00A0\u00A0' + record.date.substring(11, 16)
-			)
+			),
+			sorter: (a, b) => a.date.localeCompare(b.date),
+			sortDirections: ['descend', 'ascend']
 		}, {
 			title: 'Affected hives',
 			dataIndex: 'affectedHives',
@@ -46,11 +49,31 @@ class ActionsDetails extends Component {
 		}, {
 			title: 'Action name',
 			dataIndex: 'actionName',
-			key: 'actionName'
+			key: 'actionName',
+			filters: [{
+				text: 'Treatment',
+				value: 'Treatment',
+			}, {
+				text: 'Queen Changing',
+				value: 'Queen Changing',
+			}, {
+				text: 'Honey Collecting',
+				value: 'Honey Collecting',
+			}, {
+				text: 'Feeding',
+				value: 'Feeding',
+			}, {
+				text: 'Inspection',
+				value: 'Inspection',
+			}],
+			onFilter: (value, record) => record.actionName.indexOf(value) === 0
 		}, {
-			title: 'Delete',
+			title: 'Details',
 			dataIndex: 'deleteHive',
 			key: 'id',
+			render : (text, record) => (
+				<Button type="default" onClick={(e) => this.showModal(record, e)}>Details</Button>
+			)
 			/*render : (text, record) => (
 				<Button type="default" onClick={(e) => this.deleteHive(record.id, e)}>Delete</Button>
 			)*/
@@ -77,8 +100,27 @@ class ActionsDetails extends Component {
 				this.state.isLoading ? 
 				<LoadingIndicator /> : null
 			}
+			<ActionDetailsModal
+					visible={this.state.visible}
+					onCancel={this.handleCancel}
+					actionDetails={this.state.actionDetails}
+					{...this.props}
+				/>
 			</div>
 		)
+	}
+
+	state = {
+		visible: false
+	};
+
+	showModal = (actionDetails, e) => {
+		this.setState({ actionDetails: actionDetails })
+		this.setState({ visible: true });
+	}
+
+	handleCancel = () => {
+		this.setState({ visible: false });
 	}
 
 	loadActionsHistory() {
