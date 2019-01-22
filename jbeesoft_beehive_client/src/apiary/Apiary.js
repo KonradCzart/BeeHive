@@ -91,6 +91,15 @@ class Apiary extends Component {
 				
 				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 
+				<RedirectButton privileges={this.state.privileges}
+					privilege="APIARY_STATS_READING"
+					history={this.props.history} path={"/stats_api/" + this.state.apiaryData.apiaryINFO.id}
+					style={{float: "right", clear: 'right'}}
+					type="primary"
+					className="statisticsButton">
+					Apiary statistics
+				</RedirectButton>
+
 				<h1><span className='apiary-name'>City: </span>{this.state.apiaryData.apiaryINFO.city}</h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
@@ -114,14 +123,6 @@ class Apiary extends Component {
 
 				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
 					userId={this.props.currentUser.id}/>
-
-                <RedirectButton privileges={this.state.privileges}
-                    privilege="APIARY_STATS_READING"
-                    history={this.props.history} path={"/stats_api/" +
-                this.state.apiaryData.apiaryINFO.id}
-                    style={{float: "right"}} type="primary">
-                    Apiary statistics
-                </RedirectButton>
 
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
