@@ -23,6 +23,8 @@ import Notifications from "../user/notifications/Notifications";
 import ActionsDetails from "../actions/ActionsDetails";
 import ActionsDetailsForHive from "../actions/ActionsDetailsForHive";
 import { Layout, notification } from 'antd';
+import {ApiaryStatsSite} from "../stats/ApiaryStatsSite";
+import {HiveStatsSite} from "../stats/HiveStatsSite";
 const { Content } = Layout;
 
 class App extends Component {
@@ -123,9 +125,15 @@ class App extends Component {
 					<Route path="/apiary/:id" 
 						render={(props) => <Apiary isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 					</Route>
-					
+
 					<Route path="/hive/:apiaryId/:id" 
 						render={(props) => <Hive isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+					</Route>
+
+                    <Route path="/stats_api/:apiId" render={(props) => <ApiaryStatsSite isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+                    </Route>
+
+					<Route path="/stats_hive/:apiId/:hiveId" render={(props) => <HiveStatsSite isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
 					</Route>
 					
 					<Route path="/actions/:apiaryId" 

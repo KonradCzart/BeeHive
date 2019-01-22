@@ -1,10 +1,10 @@
 import {ACCESS_TOKEN, API_BASE_URL} from "../constants";
 
 class Request {
-    constructor(url, method, args) {
+    constructor(url, method, args = false) {
         this.url = url;
         this.method = method;
-        this.body = JSON.stringify(args);
+        this.body = args? JSON.stringify(args) : false;
     }
 
     ok(response, json) {
@@ -20,8 +20,9 @@ class Request {
         if(localStorage.getItem(ACCESS_TOKEN))
             headers.append("Authorization",
                 "Bearer " + localStorage.getItem(ACCESS_TOKEN));
-        return fetch(this.url,
-            {headers: headers, method: this.method, body: this.body})
+        const dict = {headers: headers, method: this.method};
+        if(this.body) dict.body = this.body;
+        return fetch(this.url, dict)
             .then(response =>
                 response.json().then(json => {
                     if(!this.ok(response, json)) return Promise.reject(json);
@@ -148,4 +149,14 @@ export function getContributorStats(apiId, startDate, endDate) {
     const url = API_BASE_URL + "/statistics/contributor/" + apiId;
     const args = {beginningDate: startDate, endDate: endDate};
     return new ContributorStatRequest(url, "POST", args).build();
+}
+
+/**
+ *
+ * @param apiId {number}
+ * @returns {Promise}
+ */
+export function getHives(apiId) {
+    const url = API_BASE_URL + "/apiary/" + apiId;
+    return new Request(url, "GET").build();
 }

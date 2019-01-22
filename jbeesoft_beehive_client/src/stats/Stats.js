@@ -1,6 +1,6 @@
 import React from "react";
 import "./Stats.css";
-import {Card, DatePicker, Table} from "antd";
+import {Col, DatePicker, Divider, Layout, Row, Table} from "antd";
 import moment from "moment";
 import {
     ACT_OUT_ACTION,
@@ -22,21 +22,18 @@ import LoadingIndicator from "../common/LoadingIndicator";
 import {WarningIndicator} from "../common/WarningIndicator";
 
 const {RangePicker} = DatePicker;
+const {Header, Content} = Layout;
 
 const KEYS_APIID = "apiId";
-const DEFAULTS_APIID = 0;
-
 const KEYS_HEADERTEXT = "headerText";
-const DEFAULTS_HEADERTEXT = "Statistics";
-
 const KEYS_HIVEIDS = "hiveIds";
-const DEFAULTS_HIVEIDS = [];
 
 const FORMAT_DATE = "DD-MM-YYYY";
 
 class StatFacade {
 
     constructor() {
+        this.clearData = this.clearData.bind(this);
         this.clearData();
     }
 
@@ -64,13 +61,7 @@ export class HiveStats extends React.Component {
 
         this.startDate = moment().subtract(1, "weeks").startOf("day");
         this.endDate = moment().endOf("day");
-
-        this.apiId = this.props[KEYS_APIID] || DEFAULTS_APIID;
-        this.headerText = this.props[KEYS_HEADERTEXT] || DEFAULTS_HEADERTEXT;
-        this.hiveIds = this.props[KEYS_HIVEIDS] || DEFAULTS_HIVEIDS;
-
         this.facade = new StatFacade();
-
         this.cols = [
             {
                 title: "Action",
@@ -106,54 +97,72 @@ export class HiveStats extends React.Component {
         };
         this.handleRangeChange = this.handleRangeChange.bind(this);
         this.refreshStats = this.refreshStats.bind(this);
-
-        this.refreshStats(this.apiId);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentDidUpdate = this.componentDidUpdate.bind(this);
     }
 
+    /**
+     * if apiId or hiveIds differ, refreshStats
+     */
+    componentDidUpdate(nextProps) {
+        if(this.props.apiId !== nextProps.apiId)
+            this.refreshStats(this.props.apiId);
+        else if(this.props.hiveIds.length !== nextProps.hiveIds.length)
+            this.refreshStats(this.props.apiId);
+        else
+            for(let i = 0; i < this.props.hiveIds.length; i++)
+                if(this.props.hiveIds[i] !== nextProps.hiveIds[i]) {
+                    this.refreshStats(this.props.apiId);
+                    return;
+                }
+    }
+
+    componentDidMount() {
+        this.refreshStats(this.props[KEYS_APIID]);
+    }
 
     refreshStats(apiId) {
 
         this.facade.clearData();
         let fetchFailed = false;
 
-        getFeedingStats(apiId, this.startDate, this.endDate, this.hiveIds)
-            .then(json => {
+        getFeedingStats(apiId, this.startDate, this.endDate,
+            this.props[KEYS_HIVEIDS]).then(json => {
+
+            this.facade.addData(json);
+
+            getHoneyStats(apiId, this.startDate, this.endDate,
+                this.props[KEYS_HIVEIDS]).then(json => {
 
                 this.facade.addData(json);
 
-                getHoneyStats(apiId, this.startDate, this.endDate, this.hiveIds)
-                    .then(json => {
+                getTreatmentStats(apiId, this.startDate, this.endDate,
+                    this.props.hiveIds).then(json => {
+                    this.facade.addData(json);
+                    this.setState({
+                        loading: false,
+                        error: false,
+                        data: this.facade.data
+                    })
 
-                        this.facade.addData(json);
-
-                        getTreatmentStats(apiId, this.startDate, this.endDate,
-                            this.hiveIds).then(json => {
-
-                            this.facade.addData(json);
-                            this.setState({
-                                loading: false,
-                                error: false,
-                                data: this.facade.data
-                            })
-
-                        }).catch(json => {
-
-                            if(!fetchFailed) {
-                                fetchFailed = true;
-                                this.setState(
-                                    {loading: false, error: json.message});
-                            }
-                        });
-
-                    }).catch(json => {
+                }).catch(json => {
 
                     if(!fetchFailed) {
                         fetchFailed = true;
-                        this.setState({loading: false, error: json.message});
+                        this.setState(
+                            {loading: false, error: json.message});
                     }
                 });
 
             }).catch(json => {
+
+                if(!fetchFailed) {
+                    fetchFailed = true;
+                    this.setState({loading: false, error: json.message});
+                }
+            });
+
+        }).catch(json => {
 
             if(!fetchFailed) {
                 fetchFailed = true;
@@ -165,29 +174,39 @@ export class HiveStats extends React.Component {
     handleRangeChange(objArray, strArray) {
         this.startDate = objArray[0];
         this.endDate = objArray[1];
-        this.refreshStats(this.apiId);
+        this.refreshStats(this.props[KEYS_APIID]);
     }
 
     render() {
+
         const range = [this.startDate, this.endDate];
 
         const tableJSX = this.state.loading?
             <LoadingIndicator/> : this.state.error?
                 <WarningIndicator messageJSX={this.state.error}/> :
                 <Table bordered dataSource={this.state.data}
-                    columns={this.cols} size="small"/>;
+                    columns={this.cols} size="medium"/>;
 
-        const rangeJSX = (
-            <div className="rangePickerWrapper"><RangePicker
-                format={FORMAT_DATE} defaultValue={range}
-                onChange={this.handleRangeChange} className="rangePicker"/>
-            </div>);
+        const rangeJSX = (<RangePicker format={FORMAT_DATE} defaultValue={range}
+            onChange={this.handleRangeChange}/>);
 
         return (
-            <Card title={this.headerText} extra={rangeJSX}
-                className="statBlock">
-                {tableJSX}
-            </Card>
+            <Layout>
+                <Header>
+                    <Row gutter={32}>
+                        <Col span={12}>
+                            {this.props[KEYS_HEADERTEXT]}
+                        </Col>
+                        <Col span={12}>
+                            {rangeJSX}
+                        </Col>
+                    </Row>
+                </Header>
+                <Divider/>
+                <Content>
+                    {tableJSX}
+                </Content>
+            </Layout>
         );
     }
 }
@@ -196,7 +215,6 @@ export class HiveStats extends React.Component {
  * ### props:
  * * headerText : _String_;
  * * apiId: _String_;
- * * hiveIds: _Array(Integer)_;
  */
 export class ContributorStats extends React.Component {
 
@@ -205,9 +223,6 @@ export class ContributorStats extends React.Component {
 
         this.startDate = moment().subtract(1, "weeks").startOf("day");
         this.endDate = moment().endOf("day");
-
-        this.apiId = this.props[KEYS_APIID] || DEFAULTS_APIID;
-        this.headerText = this.props[KEYS_HEADERTEXT] || DEFAULTS_HEADERTEXT;
 
         this.facade = new StatFacade();
 
@@ -246,8 +261,11 @@ export class ContributorStats extends React.Component {
         };
         this.handleRangeChange = this.handleRangeChange.bind(this);
         this.refreshStats = this.refreshStats.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+    }
 
-        this.refreshStats(this.apiId);
+    componentDidMount() {
+        this.refreshStats(this.props[KEYS_APIID]);
     }
 
     refreshStats(apiId) {
@@ -269,7 +287,7 @@ export class ContributorStats extends React.Component {
     handleRangeChange(objArray, strArray) {
         this.startDate = objArray[0];
         this.endDate = objArray[1];
-        this.refreshStats(this.apiId);
+        this.refreshStats(this.props[KEYS_APIID]);
     }
 
     render() {
@@ -279,19 +297,28 @@ export class ContributorStats extends React.Component {
             <LoadingIndicator/> : this.state.error?
                 <WarningIndicator messageJSX={this.state.error}/> :
                 <Table bordered dataSource={this.state.data}
-                    columns={this.cols} size="small"/>;
+                    columns={this.cols} size="medium"/>;
 
-        const rangeJSX = (
-            <div className="rangePickerWrapper"><RangePicker
-                format={FORMAT_DATE} defaultValue={range}
-                onChange={this.handleRangeChange} className="rangePicker"/>
-            </div>);
+        const rangeJSX = (<RangePicker format={FORMAT_DATE} defaultValue={range}
+            onChange={this.handleRangeChange}/>);
 
         return (
-            <Card title={this.headerText} extra={rangeJSX}
-                className="statBlock">
-                {tableJSX}
-            </Card>
+            <Layout>
+                <Header>
+                    <Row gutter={32}>
+                        <Col span={12}>
+                            {this.props[KEYS_HEADERTEXT]}
+                        </Col>
+                        <Col span={12}>
+                            {rangeJSX}
+                        </Col>
+                    </Row>
+                </Header>
+                <Divider/>
+                <Content>
+                    {tableJSX}
+                </Content>
+            </Layout>
         );
     }
 }

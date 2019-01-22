@@ -8,6 +8,7 @@ import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
 import {Contributors} from "../contributors/Contributors";
 import {ContributorStats, HiveStats} from "../stats/Stats";
+import {RedirectButton} from "../common/Buttons";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -90,6 +91,15 @@ class Apiary extends Component {
 				<h1><span className='apiary-name'>Country: </span>{this.state.apiaryData.apiaryINFO.country}</h1>
 				
 				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
+
+				<RedirectButton privileges={this.state.privileges}
+					privilege="APIARY_STATS_READING"
+					history={this.props.history} path={"/stats_api/" +
+						this.state.apiaryData.apiaryINFO.id}
+					style={{float: "right"}} type="primary">
+					Apiary statistics
+				</RedirectButton>
+
 				<h1><span className='apiary-name'>City: </span>{this.state.apiaryData.apiaryINFO.city}</h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
@@ -110,15 +120,6 @@ class Apiary extends Component {
 					userID={this.props.currentUser.id}
 					apiaryData={this.state.apiaryData.apiaryINFO}
 				/>
-				{/*PAWEMIX INJECT START*/}
-				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
-							  userId={this.props.currentUser.id}/>
-				<HiveStats hiveIds={this.state.apiaryData.hives.map(hive => hive.id)}
-                    headerText="Hives stats"
-					apiId={this.state.apiaryData.apiaryINFO.id}/>
-				<ContributorStats headerText="Contributors stats"
-					apiId={this.state.apiaryData.apiaryINFO.id}/>
-				{/*PAWEMIX INJECT END*/}
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
 						<div className="no-polls-found">
