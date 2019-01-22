@@ -161,13 +161,34 @@ export function getHives(apiId) {
     return new Request(url, "GET").build();
 }
 
+class WeatherRequest extends Request {
+    transform(json) {
+        json = super.transform(json)[0];
+        return {
+            type: json.weatherType,
+
+            clouds: json.cloudsPercentage,
+            humid: json.humidity,
+            rain: json.rainMililitersPer3h,
+
+            minTemp: json.minTemp,
+            temp: json.temp,
+            maxTemp: json.maxTemp,
+
+            press: json.pressure,
+            deg: json.windDeg,
+            speed: json.windSpeed
+        };
+    }
+}
+
 /**
  * @param apiId {number} apiary ID
  * @returns {Promise}
  */
 export function getWeather(apiId) {
     const url = API_BASE_URL + "/weather/" + apiId;
-    return new Request(url, "GET").build();
+    return new WeatherRequest(url, "GET").build();
 }
 
 
@@ -200,16 +221,7 @@ export function getTodayHotNotifs(today) {
     return new TodayHotNotifsRequest(url, "GET", today).build();
 }
 
-class PrivilegeRequest extends Request {
-
-    transform(json) {
-        json = super.transform(json);
-        console.log("PRIVILEGE REQUEST", json);
-        return json;
-    }
-}
-
 export function getMyPrivileges(apiId) {
     const url = API_BASE_URL + "/privileges/my_privileges/" + apiId;
-    return new PrivilegeRequest(url, "GET").build();
+    return new Request(url, "GET").build();
 }

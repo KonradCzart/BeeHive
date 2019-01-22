@@ -8,6 +8,7 @@ import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
 import {RedirectButton} from "../common/Buttons";
 import {Contributors} from "../contributors/Contributors";
+import {WeatherComponent} from "../weather/WeatherComponent";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -123,6 +124,9 @@ class Apiary extends Component {
 
 				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
 					userId={this.props.currentUser.id}/>
+
+				<WeatherComponent apiId={this.state.apiaryData.apiaryINFO.id}
+					city={this.state.apiaryData.apiaryINFO.city}/>
 
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
