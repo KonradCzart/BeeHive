@@ -43,15 +43,54 @@ public class WeatherForecastDTO {
     public double getWindDeg() { return windDeg; }
     public String getWeatherType() { return weatherType; }
 
-    public void setRainMililitersPer3h(double rainMililitersPer3h) { this.rainMililitersPer3h = rainMililitersPer3h; }
-    public void setMinTemp(double minTemp) { this.minTemp = (minTemp -32)*5/9; }
-    public void setMaxTemp(double maxTemp) { this.maxTemp = (maxTemp -32)*5/9; }
-    public void setTemp(double temp) { this.temp = (temp -32)*5/9; }
-    public void setPressure(double pressure) { this.pressure = pressure; }
-    public void setHumidity(int humidity) { this.humidity = humidity; }
-    public void setCloudsPercentage(int cloudsPercentage) { this.cloudsPercentage = cloudsPercentage; }
-    public void setWindSpeed(double windSpeed) { this.windSpeed = windSpeed; }
-    public void setWindDeg(double windDeg) { this.windDeg = windDeg; }
-    public void setWeatherType(String weatherType) { this.weatherType = weatherType; }
+    public void setRainMililitersPer3h(double rainMililitersPer3h) { 
+    	this.rainMililitersPer3h = rainMililitersPer3h; 
+    }
+    
+    public void setMinTemp(double minTemp) { 
+    	this.minTemp = round((minTemp -32)*5/9, 2); 
+    }
+    
+    public void setMaxTemp(double maxTemp) {
+    	this.maxTemp = round((maxTemp -32)*5/9,2); 
+    	
+    }
+    
+    public void setTemp(double temp) { 
+    	this.temp = round((temp -32)*5/9, 2); 
+    }
+    
+    public void setPressure(double pressure) { 
+    	this.pressure = pressure; 
+    }
+    
+    public void setHumidity(int humidity) { 
+    	this.humidity = humidity; 
+    }
+    
+    public void setCloudsPercentage(int cloudsPercentage) { 
+    	this.cloudsPercentage = cloudsPercentage; 
+    }
+    
+    public void setWindSpeed(double windSpeed) { 
+    	this.windSpeed = windSpeed; 
+    }
+    
+    public void setWindDeg(double windDeg) { 
+    	this.windDeg = windDeg; 
+    }
+    
+    public void setWeatherType(String weatherType) { 
+    	this.weatherType = weatherType; 
+    }
+    
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
 }
 
