@@ -32,7 +32,6 @@ public class WeatherController
 
 //public static void main(String args[]) throws IOException, JSONException{
 //       WeatherService w = new WeatherService();
-//       w.getForecast("Sosnowiec");
-
+//       w.getForecast("Wrocław");
 //}
 }

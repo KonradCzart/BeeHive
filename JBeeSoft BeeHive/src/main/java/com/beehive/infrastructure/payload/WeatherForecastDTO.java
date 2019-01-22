@@ -21,9 +21,9 @@ public class WeatherForecastDTO {
     public WeatherForecastDTO(double rainMililitersPer3h, double minTemp, double maxTemp, double temp,
                               double pressure, int  humidity, int cloudsPercentage, double windSpeed, double windDeg, String weatherType) {
         this.rainMililitersPer3h = rainMililitersPer3h;
-        this.minTemp = minTemp;
-        this.maxTemp = maxTemp;
-        this.temp = temp;
+        this.minTemp = (minTemp -32)*5/9;
+        this.maxTemp = (maxTemp -32)*5/9;
+        this.temp = (temp -32)*5/9;
         this.pressure = pressure;
         this.humidity = humidity;
         this.cloudsPercentage = cloudsPercentage;
@@ -44,9 +44,9 @@ public class WeatherForecastDTO {
     public String getWeatherType() { return weatherType; }
 
     public void setRainMililitersPer3h(double rainMililitersPer3h) { this.rainMililitersPer3h = rainMililitersPer3h; }
-    public void setMinTemp(double minTemp) { this.minTemp = minTemp; }
-    public void setMaxTemp(double maxTemp) { this.maxTemp = maxTemp; }
-    public void setTemp(double temp) { this.temp = temp; }
+    public void setMinTemp(double minTemp) { this.minTemp = (minTemp -32)*5/9; }
+    public void setMaxTemp(double maxTemp) { this.maxTemp = (maxTemp -32)*5/9; }
+    public void setTemp(double temp) { this.temp = (temp -32)*5/9; }
     public void setPressure(double pressure) { this.pressure = pressure; }
     public void setHumidity(int humidity) { this.humidity = humidity; }
     public void setCloudsPercentage(int cloudsPercentage) { this.cloudsPercentage = cloudsPercentage; }

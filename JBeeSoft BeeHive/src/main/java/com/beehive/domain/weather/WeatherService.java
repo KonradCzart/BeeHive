@@ -41,7 +41,7 @@ public class WeatherService {
             JSONObject jo;
             JSONObject temp;
             JSONArray temp2;
-            for(int i = 0; i<2; i++)
+            for(int i = 0; i<1; i++)
             {
                 WeatherForecastDTO r = new WeatherForecastDTO();
                 jo = arr.optJSONObject(i);
@@ -56,7 +56,7 @@ public class WeatherService {
                 }
 
                 temp = (JSONObject) jo.get("main");
-                r.setMinTemp( Double.valueOf(temp.get("temp_min").toString()));
+                r.setMinTemp(Double.valueOf(temp.get("temp_min").toString()));
                 r.setMaxTemp(Double.valueOf( temp.get("temp_max").toString()));
                 r.setTemp(Double.valueOf( temp.get("temp").toString()));
                 r.setPressure(Double.valueOf(temp.get("pressure").toString()));
