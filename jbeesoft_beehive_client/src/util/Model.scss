@@ -1,0 +1,58 @@
+@import "Structure";
+
+%div-bottomDivider {
+  border: 1px $checked;
+  border-bottom-style: solid;
+}
+
+%cell-centeringContainerMd {
+  display: block;
+  padding: 24px;
+  max-width: $size-viewport-md;
+  width: auto;
+  height: auto;
+}
+
+%text-headline2 {
+  font-size: $size-text-headline2;
+  line-height: $size-text-headline2;
+}
+
+%div-headline2 {
+  @extend %text-headline2;
+  margin-top: $size-margin-headline2;
+  margin-bottom: $size-margin-headline2;
+}
+
+%text-body {
+  font-size: $size-text-body;
+  margin-top: $size-margin-body;
+  margin-bottom: $size-margin-body;
+}
+
+%cell-inlinedText {
+  margin-left: 16px;
+}
+
+%cell-headline2 {
+  @extend %text-headline2;
+  @extend %cell-inlinedText;
+  @extend %wrapContent;
+}
+
+%cell-centeredParagraph {
+  @extend %text-body;
+  display: block;
+  height: auto;
+  width: auto;
+  text-align: center;
+  max-width: $size-viewport-sm;
+
+}
+
+%cell-centeredIconMd {
+  display: block;
+  font-size: $size-text-icon;
+  margin-top: $size-margin-icon;
+  margin-bottom: $size-margin-icon;
+}

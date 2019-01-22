@@ -15,6 +15,7 @@ public class Role {
     @NaturalId
     @Column(length = 60)
     private RoleName name;
+    
 
     public Role() {
 
@@ -39,4 +40,5 @@ public class Role {
     public void setName(RoleName name) {
         this.name = name;
     }
+ 
 }

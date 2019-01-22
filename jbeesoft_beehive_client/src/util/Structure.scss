@@ -1,0 +1,218 @@
+$primary: #ffab00;
+
+$success: #64dd17;
+$warning: #ff6d00;
+$error: #d50000;
+
+$checked: #546e7a;
+$solid: #263238;
+
+$size-text-body: 14px;
+$size-margin-body: 8px;
+
+$size-text-headline2: 24px;
+$size-line-headline2: 28px;
+$size-margin-headline2: 16px;
+
+$size-text-icon: 32px;
+$size-margin-icon: 24px;
+
+$size-viewport-md: 768px;
+$size-viewport-sm: 640px;
+
+%borderBox {
+  box-sizing: border-box;
+}
+
+@mixin hor-wrapContent {
+  width: auto;
+}
+
+%hor-wrapContent {
+  width: auto;
+}
+
+@mixin ver-wrapContent {
+  height: auto;
+}
+
+%ver-wrapContent {
+  height: auto;
+}
+
+@mixin wrapContent {
+  @include hor-wrapContent;
+  @include ver-wrapContent;
+}
+
+%wrapContent {
+  @extend %hor-wrapContent;
+  @extend %ver-wrapContent;
+}
+
+@mixin hor-matchParent {
+  width: 100%;
+}
+
+%hor-matchParent {
+  width: 100%;
+}
+
+@mixin ver-matchParent {
+  height: 100%;
+}
+
+%ver-matchParent {
+  height: 100%;
+}
+
+@mixin matchParent {
+  @include hor-matchParent;
+  @include ver-matchParent;
+}
+
+%matchParent {
+  @extend %hor-matchParent;
+  @extend %ver-matchParent;
+}
+
+%block {
+  display: block;
+}
+
+%flex {
+  display: flex;
+}
+
+%inlineBlock {
+  display: inline-block;
+}
+
+%inlineFlex {
+  display: inline-flex;
+}
+
+@mixin flex {
+  display: flex;
+}
+
+@mixin inlineFlex {
+  display: inline-flex;
+}
+
+@mixin flex-row-wrap {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+@mixin block {
+  display: block;
+}
+
+@mixin inlineBlock {
+  display: inline-block;
+}
+
+@mixin size-width($numer, $denom) {
+  width: $numer / $denom * 100%;
+}
+
+@mixin size-width-max-abs($pixels) {
+  max-width: $pixels * 1px;
+}
+
+@mixin size-width-abs($pixels) {
+  width: $pixels * 1px;
+}
+
+@mixin size-height($numer, $denom) {
+  height: $numer / $denom * 100%;
+}
+
+@mixin size-height-abs($pixels) {
+  height: $pixels * 1px;
+}
+
+@mixin size-abs($pixels) {
+  @include size-width-abs($pixels);
+  @include size-height-abs($pixels);
+}
+
+@mixin size($numer, $denom) {
+  @include size-width($numer, $denom);
+  @include size-height($numer, $denom);
+}
+
+@mixin margin-left($pixels) {
+  margin-left: $pixels * 1px;
+}
+
+@mixin margin-right($pixels) {
+  margin-right: $pixels * 1px;
+}
+
+@mixin margin-horizontal($pixels) {
+  @include margin-left($pixels);
+  @include margin-right($pixels);
+}
+
+@mixin margin-top($pixels) {
+  margin-top: $pixels * 1px;
+}
+
+@mixin margin-bottom($pixels) {
+  margin-bottom: $pixels * 1px;
+}
+
+@mixin margin-vertical($pixels) {
+  @include margin-top($pixels);
+  @include margin-bottom($pixels);
+}
+
+@mixin margin($pixels) {
+  margin: $pixels;
+}
+
+@mixin margin-horizontal-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin margin-vertical-center {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+@mixin flex-centerize-hor {
+  justify-content: center;
+}
+
+@mixin flex-centerize-ver {
+  align-items: center;
+}
+
+@mixin flex-centerize {
+  @include flex-centerize-hor;
+  @include flex-centerize-ver;
+}
+
+@mixin flex-toRight {
+  justify-content: end;
+}
+
+@mixin float-toRight {
+  float: right;
+}
+
+@mixin border($thickness, $color, $radius) {
+  border: ($thickness * 1px) solid ($color * 1px);
+  border-radius: $radius * 1px;
+}
+
+@mixin text-color($color) {
+  color: $color;
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+}

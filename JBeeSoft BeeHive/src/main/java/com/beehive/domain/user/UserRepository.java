@@ -8,9 +8,12 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+	
     Optional<User> findByEmail(String email);
 
     Optional<User> findByUsernameOrEmail(String username, String email);
+    
+    Optional<User> findById(Long id);
 
     List<User> findByIdIn(List<Long> userIds);
 
@@ -19,5 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+    
+    List<User> findByUsernameContaining(String username);
+    
 }
 

@@ -1,6 +1,8 @@
 package com.beehive.domain.user;
 
+import com.beehive.domain.apiary.Apiary;
 import com.beehive.domain.dateaudit.DateAudit;
+import com.beehive.domain.privileges.PrivilegeProfile;
 import com.beehive.domain.userrole.Role;
 
 import org.hibernate.annotations.NaturalId;
@@ -8,7 +10,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -21,7 +27,10 @@ import java.util.Set;
         })
 })
 public class User extends DateAudit {
-    @Id
+ 
+	private static final long serialVersionUID = 4050814255685071574L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -48,16 +57,22 @@ public class User extends DateAudit {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    
+    @OneToMany(mappedBy = "targetUser")
+    @MapKey(name = "affectedApiary")
+    private Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap;
 
     public User() {
 
     }
 
-    public User(String name, String username, String email, String password) {
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    public User(UserBuilder builder) {
+    	this.id = builder.id;
+        this.name = builder.name;
+        this.username = builder.username;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.privilegeProfileForApiaryMap = builder.privilegeProfileForApiaryMap;
     }
 
     public Long getId() {
@@ -107,4 +122,78 @@ public class User extends DateAudit {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+    
+    public Map<Apiary, PrivilegeProfile> getPrivilegeProfileForApiaryMap() {
+		return privilegeProfileForApiaryMap;
+	}
+
+	public void setPrivilegeProfileForApiaryMap(Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap) {
+		this.privilegeProfileForApiaryMap = privilegeProfileForApiaryMap;
+	}
+
+	public Optional<PrivilegeProfile> getPrivilegeProfileForApiary(Apiary apiary) {
+		return Optional.ofNullable(privilegeProfileForApiaryMap.get(apiary));
+	}
+
+	public void updatePrivilegeProfileForApiary(PrivilegeProfile profile, Apiary apiary) {
+		privilegeProfileForApiaryMap.put(apiary, profile);
+	}
+	
+	public void removePrivilegeProfileForApiary(Apiary apiary) {
+		privilegeProfileForApiaryMap.remove(apiary);
+	}
+	
+	public Collection<PrivilegeProfile> getAllPrivilegeProfiles() {
+		return privilegeProfileForApiaryMap.values();
+	}
+    
+    public static UserBuilder builder() {
+    	return new UserBuilder();
+    }
+    
+    public static class UserBuilder {
+    	
+    	private Long id;
+        private String name;
+        private String username;
+        private String email;
+        private String password;
+        private Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap;
+        
+        public UserBuilder withId(Long id) {
+			this.id = id;
+			return this;
+		}
+        
+        public UserBuilder withName(String name) {
+			this.name = name;
+			return this;
+		}
+        
+        public UserBuilder withUsername(String username) {
+			this.username = username;
+			return this;
+		}
+        
+        public UserBuilder withEmail(String email) {
+			this.email = email;
+			return this;
+		}
+        
+        public UserBuilder withPassword(String password) {
+			this.password = password;
+			return this;
+		}
+        
+        public UserBuilder withPrivilegeProfileForApiaryMap(Map<Apiary, PrivilegeProfile> privilegeProfileForApiaryMap) {
+			this.privilegeProfileForApiaryMap = privilegeProfileForApiaryMap;
+			return this;
+		}
+        
+        public User build() {
+			return new User(this);
+		}
+    	
+    }
+    
 }
