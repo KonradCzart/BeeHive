@@ -65,18 +65,22 @@ class Hive extends Component {
 						<Button style={{float: 'right'}} type="primary" onClick={this.handleDeleteQueen}>Delete queen</Button>
 					) : null
 				}
-				<h1><span className='apiary-name'>Box number: </span>{this.state.hiveData.boxNumber}</h1>
 				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
-
-                {/*PAWEMIX INJECT*/}
+				
+				{/*PAWEMIX INJECT*/}
 				<RedirectButton privileges={this.state.privileges}
 					privilege="HIVE_STATS_READING" history={this.props.history}
 					path={"/stats_hive/" + this.state.hiveData.apiaryId + '/' +
 						this.state.hiveData.id}
-					style={{float: "right"}} type="primary">
+					style={{float: "right", clear: 'right'}} type="primary"
+					className="statisticsButton">
 					Hive statistics
 				</RedirectButton>
                 {/*PAWEMIX INJECT*/}
+
+				<h1><span className='apiary-name'>Box number: </span>{this.state.hiveData.boxNumber}</h1>
+				
+
 
 				<WrappedEditHiveForm
 					wrappedComponentRef={this.saveFormRef1}

@@ -92,9 +92,10 @@ class Apiary extends Component {
 
 				<RedirectButton privileges={this.state.privileges}
 					privilege="APIARY_STATS_READING"
-					history={this.props.history} path={"/stats_api/" +
-						this.state.apiaryData.apiaryINFO.id}
-					style={{float: "right"}} type="primary">
+					history={this.props.history} path={"/stats_api/" + this.state.apiaryData.apiaryINFO.id}
+					style={{float: "right", clear: 'right'}}
+					type="primary"
+					className="statisticsButton">
 					Apiary statistics
 				</RedirectButton>
 
