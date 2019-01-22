@@ -139,22 +139,23 @@ public class StatisticsService {
 	
 	public StatisticsDTO calculateStatistics(String typeName, List<QuantityStatistic> statistics) {
 		
-		Double amount=0.0;
+		BigDecimal amount = new BigDecimal(0.0);
 		BigDecimal averagePrice = new BigDecimal(0.0);
 		BigDecimal totalPrice = new BigDecimal(0.0);
 		BigDecimal tmpAmount = new BigDecimal(0.0);
 		BigDecimal tmpPrice = new BigDecimal(0.0);
 		
 		for (var stat : statistics) {
-			amount += stat.getAmount();
 			tmpAmount = new BigDecimal(stat.getAmount());
+			amount = amount.add(tmpAmount);
 			tmpPrice =stat.getPrice();
 			tmpPrice = tmpPrice.multiply(tmpAmount);
 			totalPrice = totalPrice.add(tmpPrice);
 		}
 		
-		averagePrice = totalPrice.divide(new BigDecimal(amount), RoundingMode.HALF_EVEN).setScale(2, RoundingMode.HALF_EVEN);
+		averagePrice = totalPrice.divide(amount, RoundingMode.HALF_EVEN).setScale(2, RoundingMode.HALF_EVEN);
 		totalPrice = totalPrice.setScale(2, RoundingMode.HALF_EVEN);
+		amount = amount.setScale(2, RoundingMode.HALF_EVEN);
 		
 		return StatisticsDTO.builder()
 				.withName(typeName)

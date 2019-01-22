@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class StatisticsDTO {
 	
 	private String name;
-	private Double amount;
+	private BigDecimal amount;
 	private BigDecimal averagePrice;
 	private BigDecimal totalPrice;	
 	
@@ -24,11 +24,11 @@ public class StatisticsDTO {
 		this.name = name;
 	}
 
-	public Double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
@@ -54,7 +54,7 @@ public class StatisticsDTO {
 	
 	public static class Builder{
 		private String name;
-		private Double amount;
+		private BigDecimal amount;
 		private BigDecimal averagePrice;
 		private BigDecimal totalPrice;	
 		
@@ -64,7 +64,7 @@ public class StatisticsDTO {
 			return this;
 		}
 		
-		public Builder withAmount(Double amount) {
+		public Builder withAmount(BigDecimal amount) {
 			this.amount = amount;
 			return this;
 		}
