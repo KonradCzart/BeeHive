@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import './AppHeader.css';
 import { Layout, Menu, Dropdown, Icon } from 'antd';
+import {NotificationBadge} from "../notifications/NotificationBadge";
 const Header = Layout.Header;
 
 class AppHeader extends Component {
@@ -31,7 +32,7 @@ class AppHeader extends Component {
 
             <Menu.Item key="/notifications">
                 <Link to="/notifications">
-                    <Icon type="notification" className="nav-icon"/>
+                    <NotificationBadge/>
                 </Link>
             </Menu.Item>,
 

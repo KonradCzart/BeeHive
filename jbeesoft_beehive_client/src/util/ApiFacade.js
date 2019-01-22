@@ -76,6 +76,7 @@ export const CON_OUT_INSPECT = "ins";
 export const CON_OUT_FEEDING = "fed";
 export const CON_OUT_TREATMENT = "trt";
 export const CON_OUT_HONEY = "hon";
+
 /**
  * ## output:
  * * con : _String_ contributor username;
@@ -152,11 +153,49 @@ export function getContributorStats(apiId, startDate, endDate) {
 }
 
 /**
- *
- * @param apiId {number}
+ * @param apiId {number} apiary ID
  * @returns {Promise}
  */
 export function getHives(apiId) {
     const url = API_BASE_URL + "/apiary/" + apiId;
     return new Request(url, "GET").build();
+}
+
+/**
+ * @param apiId {number} apiary ID
+ * @returns {Promise}
+ */
+export function getWeather(apiId) {
+    const url = API_BASE_URL + "/weather/" + apiId;
+    return new Request(url, "GET").build();
+}
+
+
+class TodayHotNotifsRequest extends Request {
+
+    /**
+     * @param url {string}
+     * @param method {string}
+     * @param today {Moment}
+     */
+    constructor(url, method, today) {
+        super(url, method, false);
+        this.today = today;
+    }
+
+    transform(json) {
+        json = super.transform(json);
+        let today = this.today.format("YYYY-MM-DD");
+        return json[today]? json[today].filter(
+            (notif => !notif.isRealize)) : [];
+    }
+}
+
+/**
+ * @param today {Moment}
+ * @returns {Promise}
+ */
+export function getTodayHotNotifs(today) {
+    const url = API_BASE_URL + "/notification/me";
+    return new TodayHotNotifsRequest(url, "GET", today).build();
 }

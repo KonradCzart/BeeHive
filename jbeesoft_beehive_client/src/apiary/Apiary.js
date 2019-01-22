@@ -6,8 +6,6 @@ import { addHive, getAllHiveTypes, getAllHives, editApiary, deleteHive, getMyPri
 import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
-import {Contributors} from "../contributors/Contributors";
-import {ContributorStats, HiveStats} from "../stats/Stats";
 import {RedirectButton} from "../common/Buttons";
 
 const FormItem = Form.Item;
