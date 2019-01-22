@@ -107,21 +107,22 @@ export class HiveStats extends React.Component {
     /**
      * if apiId or hiveIds differ, refreshStats
      */
-    componentDidUpdate(nextProps) {
-        if(this.props.apiId !== nextProps.apiId)
+    componentDidUpdate(oldProps) {
+        if(this.props.apiId !== oldProps.apiId)
             this.refreshStats(this.props.apiId);
-        else if(this.props.hiveIds.length !== nextProps.hiveIds.length)
+        else if(this.props.hiveIds.length !== oldProps.hiveIds.length)
             this.refreshStats(this.props.apiId);
         else
             for(let i = 0; i < this.props.hiveIds.length; i++)
-                if(this.props.hiveIds[i] !== nextProps.hiveIds[i]) {
+                if(this.props.hiveIds[i] !== oldProps.hiveIds[i]) {
                     this.refreshStats(this.props.apiId);
                     return;
                 }
     }
 
     componentDidMount() {
-        this.refreshStats(this.props[KEYS_APIID]);
+        if(this.props.hiveIds.length > 0)
+            this.refreshStats(this.props[KEYS_APIID]);
     }
 
     refreshStats(apiId) {
