@@ -1,6 +1,8 @@
 import React from "react";
 import {getWeather} from "../util/ApiFacade";
-import {Card, Col, Divider, Icon, Row} from "antd";
+import {Card, Col, Divider, Icon, Popover, Row} from "antd";
+import LoadingIndicator from "../common/LoadingIndicator";
+import {WarningIndicator} from "../common/WarningIndicator";
 
 /**
  * # props:
@@ -36,14 +38,22 @@ export class WeatherComponent extends React.Component {
     }
 
     render() {
+        const header = (<h2>{"Recent weather for " + this.props.city}</h2>);
+
+        if(this.state.loading)
+            return (<Card title={header}><LoadingIndicator/></Card>);
+        if(this.state.error)
+            return (<Card title={header}><WarningIndicator
+                messageJSX={this.state.error}/></Card>);
+
         const type = (<h2><Icon type="cloud"/> {this.state.weather.type}</h2>);
 
         return (
-            <Card title={<h2>{"Recent weather for " + this.props.city}</h2>}
-                extra={type}>
+            <Card title={header} extra={type}>
                 <Row gutter={32}>
                     <Col span={6}>
-                        <h2><Icon type="fire"/></h2>
+                        <h2><Popover content="Temperature"><Icon
+                            type="fire"/></Popover></h2>
                         <Divider type="vertical"/>
                     </Col>
                     <Col span={6}>
@@ -60,35 +70,43 @@ export class WeatherComponent extends React.Component {
                 </Row>
                 <Row gutter={32}>
                     <Col span={8}>
-                        <h2><Icon type="cloud"/> {this.state.weather.clouds}%
+                        <h2><Popover content="Nebulosity"><Icon
+                            type="cloud"/></Popover> {this.state.weather.clouds}%
                         </h2>
                         <Divider type="vertical"/>
                     </Col>
                     <Col span={8}>
-                        <h2><Icon type="experiment"/> {this.state.weather.humid}%
-                            <Divider type="vertical"/>
+                        <h2><Popover content="Humidity"><Icon
+                            type="experiment"/></Popover> {this.state.weather.humid}%
                         </h2>
+                        <Divider type="vertical"/>
                     </Col>
                     <Col span={8}>
-                        <h2><Icon
-                            type="cloud-download"/> {this.state.weather.rain} mm/3h
+                        <h2><Popover content="Downfall"><Icon
+                            type="cloud-download"/></Popover> {this.state.weather.rain} mm/3h
                         </h2>
                     </Col>
                 </Row>
                 <Row gutter={32}>
                     <Col span={8}>
-                        <h2><Icon type="dashboard"/> {this.state.weather.press} hPa</h2>
+                        <h2><Popover content="Air pressure"><Icon
+                            type="dashboard"/></Popover> {this.state.weather.press} hPa
+                        </h2>
                         <Divider type="vertical"/>
                     </Col>
                     <Col span={8}>
-                        <h2><Icon type="compass"/> {this.state.weather.deg}°</h2>
+                        <h2><Popover content="Wind direction"><Icon
+                            type="compass"/></Popover> {this.state.weather.deg}°
+                        </h2>
                         <Divider type="vertical"/>
                     </Col>
                     <Col span={8}>
-                        <h2><Icon type="rocket"/> {this.state.weather.speed} km/h</h2>
+                        <h2><Popover content="Wind speed"><Icon
+                            type="rocket"/></Popover> {this.state.weather.speed} km/h
+                        </h2>
                     </Col>
                 </Row>
             </Card>
-    );
+        );
     }
-    }
+}
