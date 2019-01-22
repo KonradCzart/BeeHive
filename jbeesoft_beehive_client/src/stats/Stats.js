@@ -30,6 +30,9 @@ const KEYS_HIVEIDS = "hiveIds";
 
 const FORMAT_DATE = "DD-MM-YYYY";
 
+const MIN_DATE = moment().subtract(1500, "years");
+const MAX_DATE = moment().add(1500, "years");
+
 class StatFacade {
 
     constructor() {
@@ -172,8 +175,8 @@ export class HiveStats extends React.Component {
     }
 
     handleRangeChange(objArray, strArray) {
-        this.startDate = objArray[0];
-        this.endDate = objArray[1];
+        this.startDate = objArray[0] || MIN_DATE;
+        this.endDate = objArray[1] || MAX_DATE;
         this.refreshStats(this.props[KEYS_APIID]);
     }
 
@@ -285,8 +288,8 @@ export class ContributorStats extends React.Component {
     }
 
     handleRangeChange(objArray, strArray) {
-        this.startDate = objArray[0];
-        this.endDate = objArray[1];
+        this.startDate = objArray[0] || MIN_DATE;
+        this.endDate = objArray[1] || MAX_DATE;
         this.refreshStats(this.props[KEYS_APIID]);
     }
 
