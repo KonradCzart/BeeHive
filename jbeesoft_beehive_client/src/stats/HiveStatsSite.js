@@ -8,7 +8,6 @@ export class HiveStatsSite extends React.Component {
 
     render() {
 
-
         const headerJSX = (
             <Row gutter={32}>
                 <Col span={4}>

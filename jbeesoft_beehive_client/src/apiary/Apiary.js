@@ -7,6 +7,7 @@ import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
 import {RedirectButton} from "../common/Buttons";
+import {Contributors} from "../contributors/Contributors";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -119,6 +120,10 @@ class Apiary extends Component {
 					userID={this.props.currentUser.id}
 					apiaryData={this.state.apiaryData.apiaryINFO}
 				/>
+
+				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
+					userId={this.props.currentUser.id}/>
+
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
 						<div className="no-polls-found">

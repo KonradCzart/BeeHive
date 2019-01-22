@@ -199,3 +199,17 @@ export function getTodayHotNotifs(today) {
     const url = API_BASE_URL + "/notification/me";
     return new TodayHotNotifsRequest(url, "GET", today).build();
 }
+
+class PrivilegeRequest extends Request {
+
+    transform(json) {
+        json = super.transform(json);
+        console.log("PRIVILEGE REQUEST", json);
+        return json;
+    }
+}
+
+export function getMyPrivileges(apiId) {
+    const url = API_BASE_URL + "/privileges/my_privileges/" + apiId;
+    return new PrivilegeRequest(url, "GET").build();
+}
