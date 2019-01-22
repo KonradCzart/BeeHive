@@ -22,7 +22,6 @@ export class NotificationBadge extends React.Component {
 
     getTodayNotifications() {
         getTodayHotNotifs(moment()).then(json => {
-            console.log("TODAY'S NOTIFICATIONS: ", json);
             this.setState({count: json.length})
         }).catch(json => {
             this.setState({count: 0})

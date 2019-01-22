@@ -68,16 +68,6 @@ class Hive extends Component {
 				<h1><span className='apiary-name'>Box number: </span>{this.state.hiveData.boxNumber}</h1>
 				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 
-                {/*PAWEMIX INJECT*/}
-				<RedirectButton privileges={this.state.privileges}
-					privilege="HIVE_STATS_READING" history={this.props.history}
-					path={"/stats_hive/" + this.state.hiveData.apiaryId + '/' +
-						this.state.hiveData.id}
-					style={{float: "right"}} type="primary">
-					Hive statistics
-				</RedirectButton>
-                {/*PAWEMIX INJECT*/}
-
 				<WrappedEditHiveForm
 					wrappedComponentRef={this.saveFormRef1}
 					visible={this.state.visible1}
@@ -117,6 +107,16 @@ class Hive extends Component {
 
 				<InspectionFormModule style={{float: 'left'}} privileges={this.state.privileges} hiveId={this.props.match.params.id} apiaryId={this.state.hiveData.apiaryId} />
 				<ActionForms style={{float: 'right'}} privileges={this.state.privileges} affectedHives={hiveIdForAction} apiaryId={this.state.hiveData.apiaryId} />
+
+                {/*PAWEMIX INJECT*/}
+                <RedirectButton privileges={this.state.privileges}
+                    privilege="HIVE_STATS_READING" history={this.props.history}
+                    path={"/stats_hive/" + this.state.hiveData.apiaryId + '/' +
+                    this.state.hiveData.id}
+                    style={{float: "right"}} type="primary">
+                    Hive statistics
+                </RedirectButton>
+                {/*PAWEMIX INJECT*/}
 
 				{
 					this.state.isLoading ? 

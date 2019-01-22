@@ -3,10 +3,15 @@ import {Col, Divider, Layout, Row} from "antd";
 import {BackIcon} from "../common/Buttons";
 import {ContributorStats, HiveStats} from "./Stats";
 import {HivesChecker} from "./HivesChecker";
+import {getHives, getMyPrivileges} from "../util/ApiFacade";
+import LoadingIndicator from "../common/LoadingIndicator";
+import {WarningIndicator} from "../common/WarningIndicator";
 
-const {Header, Content, Sider} = Layout;
+const {Header, Content} = Layout;
 
 const KEYS_API_NAME = "apiName";
+
+const HIVE_STATS_READING = "HIVE_STATS_READING";
 
 /**
  * ## props:
@@ -17,11 +22,51 @@ export class ApiaryStatsSite extends React.Component {
 
     constructor(props) {
         super(props);
-        this.apiId = this.props.match.params.apiId;
         this.state = {
+            loading: true,
+            error: false,
+            hives: [],
             hiveIds: [],
+            privileges: [],
         };
         this.handleHivesChange = this.handleHivesChange.bind(this);
+        this.refreshHives = this.refreshHives.bind(this);
+        this.refreshPrivileges = this.refreshPrivileges.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.isPrivileged = this.isPrivileged.bind(this);
+    }
+
+    refreshHives(apiId) {
+        getHives(apiId).then(json => {
+            this.setState({
+                loading: false,
+                error: false,
+                hives: json.hives,
+                hiveIds: json.hives.map((hive) => hive.id)
+            });
+        }).catch(json => {
+            this.setState({loading: false, error: json.message});
+        })
+    }
+
+    refreshPrivileges() {
+        getMyPrivileges(this.props.match.params.apiId).then(json => {
+            this.setState({loading: false, error: false, privileges: json});
+        }).catch(json => {
+            this.setState({loading: false, error: json.message});
+        });
+    }
+
+    componentDidMount() {
+        this.refreshHives(this.props.match.params.apiId);
+        this.refreshPrivileges(this.props.match.params.apiId);
+    }
+
+    isPrivileged() {
+        for(let privilege of this.state.privileges)
+            if(privilege.name === HIVE_STATS_READING)
+                return true;
+        return false;
     }
 
     handleHivesChange(hiveIds) {
@@ -29,6 +74,11 @@ export class ApiaryStatsSite extends React.Component {
     }
 
     render() {
+        if(this.state.loading)
+            return <LoadingIndicator/>;
+        if(this.state.error)
+            return <WarningIndicator messageJSX={this.state.error}/>;
+
         return (
             <Layout>
                 <Header>
@@ -42,23 +92,19 @@ export class ApiaryStatsSite extends React.Component {
                     </Row>
                 </Header>
                 <Content>
-                    <Layout>
-                        <Sider>
-                            <Divider />
-                            <HivesChecker apiId={this.apiId}
-                                onChange={this.handleHivesChange}/>
-                        </Sider>
-                        <Content>
-                            <Divider/>
-                            <HiveStats headerText={<h2>Hives statistics</h2>}
-                                apiId={this.apiId}
-                                hiveIds={this.state.hiveIds}/>
-                            <Divider />
-                            <ContributorStats
-                                headerText={<h2>Contributors statistics</h2>}
-                                apiId={this.apiId}/>
-                        </Content>
-                    </Layout>
+                    <Divider/>
+                    <HivesChecker hives={this.state.hives}
+                        disabled={!this.isPrivileged()}
+                        loading={this.state.loading} error={this.state.error}
+                        onChange={this.handleHivesChange}/>
+                    <Divider/>
+                    <HiveStats headerText={<h2>Hives statistics</h2>}
+                        apiId={this.props.match.params.apiId}
+                        hiveIds={this.state.hiveIds}/>
+                    <Divider/>
+                    <ContributorStats
+                        headerText={<h2>Contributors statistics</h2>}
+                        apiId={this.props.match.params.apiId}/>
                 </Content>
             </Layout>
         );

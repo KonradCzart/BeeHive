@@ -39,11 +39,20 @@ export class RedirectButton extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.isPrivileged = this.isPrivileged.bind(this);
     }
 
+    isPrivileged() {
+        for(let privilege of this.props.privileges.map((priv) => priv.name))
+            if(privilege === this.props.privilege)
+                return true;
+        return false;
+    }
+
+
     handleClick() {
-        for(let privilege of this.props.privileges) {
-            if(privilege.name === this.props.privilege) {
+        for(let privilege of this.props.privileges.map((priv) => priv.name)) {
+            if(privilege === this.props.privilege) {
                 this.props.history.push(this.props.path);
                 return;
             }
@@ -56,7 +65,7 @@ export class RedirectButton extends React.Component {
     }
 
     render() {
-        return (<Button
+        return (<Button disabled={!this.isPrivileged()}
             onClick={this.handleClick} {...this.props}>{this.props.children}</Button>);
     }
 }

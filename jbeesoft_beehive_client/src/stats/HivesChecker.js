@@ -1,46 +1,41 @@
 import React from "react";
 import {Checkbox, Divider} from "antd";
-import {getHives} from "../util/ApiFacade";
 import {WarningIndicator} from "../common/WarningIndicator";
 import LoadingIndicator from "../common/LoadingIndicator";
 
 /**
  * ## props:
  * * apiId : _Number_ apiary ID of which hives will be represented;
+ * * loading : _Boolean_ is data still being fetched;
+ * * error : false|_String_ was there an error during data fetching;
+ * * hives : _Array(___Hive___)_ hives to be displayed;
+ * * disabled : _Boolean_ whether the whole component should be disabled;
  * * onChange : _Function(Array(Number))_.
+ *
+ * ## Hive:
+ * * id : _Number_ ID of the hive;
+ * * name : _String_ full name of the hive.
  */
 export class HivesChecker extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            error: false,
-            hives: [],
-            hivesChecked: [],
-            allChecked: false,
+            hivesChecked: [...this.props.hives],
+            allChecked: true,
             indeterminate: false,
         };
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.refreshHives = this.refreshHives.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeAll = this.handleChangeAll.bind(this);
+        this.transform = this.transform.bind(this);
     }
 
-    componentDidMount() {
-        this.refreshHives(this.props.apiId);
-    }
-
-    refreshHives(apiId) {
-        getHives(apiId).then(json => {
-            this.setState({loading: false, error: false, hives: json.hives});
-        }).catch(json => {
-            this.setState({loading: false, error: json.message});
-        })
+    transform(hives) {
+        return hives.map((hive) => '(' + hive.id + ") " + hive.name);
     }
 
     handleChangeAll(event) {
-        let hivesChecked = event.target.checked? this.state.hives : [];
+        let hivesChecked = event.target.checked? this.props.hives : [];
         this.setState({
             hivesChecked,
             indeterminate: false,
@@ -51,11 +46,12 @@ export class HivesChecker extends React.Component {
 
     handleChange(hivesCheckedStr) {
         let indeterminate = !!this.state.hivesChecked.length &&
-            (this.state.hivesChecked.length < this.state.hives.length);
+            (this.state.hivesChecked.length < this.props.hives.length);
         let allChecked =
-            this.state.hivesChecked.length === this.state.hives.length;
-        let hivesChecked = this.state.hives.filter(
-            (hive) => hivesCheckedStr.includes(hive.name));
+            this.state.hivesChecked.length === this.props.hives.length;
+        let hivesChecked = this.props.hives.filter(
+            (hive) => hivesCheckedStr.includes(
+                '(' + hive.id + ") " + hive.name));
         this.setState({
             hivesChecked,
             indeterminate,
@@ -71,14 +67,16 @@ export class HivesChecker extends React.Component {
             return (<WarningIndicator messageJSX={this.state.error}/>);
         return (
             <div>
-                <h2>Hives</h2>
+                <h2>Selected hives</h2>
                 <Divider/>
                 <Checkbox checked={this.state.allChecked}
                     indeterminate={this.state.indeterminate}
+                    disabled={this.props.disabled}
                     onChange={this.handleChangeAll}>Select all</Checkbox>
                 <Checkbox.Group
-                    options={this.state.hives.map((hive) => hive.name)}
-                    value={this.state.hivesChecked.map((hive) => hive.name)}
+                    disabled={this.props.disabled}
+                    options={this.transform(this.props.hives)}
+                    value={this.transform(this.state.hivesChecked)}
                     onChange={this.handleChange}/>
             </div>
         );

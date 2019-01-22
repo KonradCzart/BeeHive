@@ -7,6 +7,7 @@ import LoadingIndicator  from '../common/LoadingIndicator';
 import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
 import {RedirectButton} from "../common/Buttons";
+import {Contributors} from "../contributors/Contributors";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -90,14 +91,6 @@ class Apiary extends Component {
 				
 				<Button style={{float: 'right'}} type="primary" onClick={this.handleActionsDetails}>Show performed actions</Button>
 
-				<RedirectButton privileges={this.state.privileges}
-					privilege="APIARY_STATS_READING"
-					history={this.props.history} path={"/stats_api/" +
-						this.state.apiaryData.apiaryINFO.id}
-					style={{float: "right"}} type="primary">
-					Apiary statistics
-				</RedirectButton>
-
 				<h1><span className='apiary-name'>City: </span>{this.state.apiaryData.apiaryINFO.city}</h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
@@ -118,6 +111,18 @@ class Apiary extends Component {
 					userID={this.props.currentUser.id}
 					apiaryData={this.state.apiaryData.apiaryINFO}
 				/>
+
+				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
+					userId={this.props.currentUser.id}/>
+
+                <RedirectButton privileges={this.state.privileges}
+                    privilege="APIARY_STATS_READING"
+                    history={this.props.history} path={"/stats_api/" +
+                this.state.apiaryData.apiaryINFO.id}
+                    style={{float: "right"}} type="primary">
+                    Apiary statistics
+                </RedirectButton>
+
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
 						<div className="no-polls-found">

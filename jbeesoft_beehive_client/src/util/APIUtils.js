@@ -1,8 +1,6 @@
 import {
     ACCESS_TOKEN,
     API_BASE_URL,
-    WEATHER_APPID,
-    WEATHER_BASE_URL
 } from '../constants';
 
 const request = (options) => {
@@ -27,14 +25,6 @@ const request = (options) => {
         })
     );
 };
-
-export function getCurrentWeather(location) {
-    // TODO do poprawy
-    return request({
-	url: WEATHER_BASE_URL + "forecast?q=" + location + "&units=imperial&type=accurate&" + WEATHER_APPID,
-	method: "GET",
-    });
-}
 
 export function login(loginRequest) {
     return request({
