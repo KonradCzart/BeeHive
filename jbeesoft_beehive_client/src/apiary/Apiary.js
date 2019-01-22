@@ -128,6 +128,7 @@ class Apiary extends Component {
 					userId={this.props.currentUser.id}/>
 
 				<Modal
+					width={720}
 					visible={this.state.weatherVisible}
 					title="Weather"
 					okText="OK"
