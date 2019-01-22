@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.ObjectInput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,23 +41,25 @@ public class WeatherService {
             JSONObject jo;
             JSONObject temp;
             JSONArray temp2;
-            for(int i = 0; i<1; i++)
+            for(int i = 0; i<2; i++)
             {
                 WeatherForecastDTO r = new WeatherForecastDTO();
                 jo = arr.optJSONObject(i);
 
-                temp = (JSONObject) jo.get("rain");
+
                 try{
+                    temp = (JSONObject) jo.get("rain");
                     r.setRainMililitersPer3h((double) temp.get("3h"));
                 }catch (Exception e){
-                    r.setRainMililitersPer3h((double) 0);
+                    r.setRainMililitersPer3h(0);
+
                 }
 
                 temp = (JSONObject) jo.get("main");
-                r.setMinTemp((double) temp.get("temp_min"));
-                r.setMaxTemp((double) temp.get("temp_max"));
-                r.setTemp((double) temp.get("temp"));
-                r.setPressure((double) temp.get("pressure"));
+                r.setMinTemp( Double.valueOf(temp.get("temp_min").toString()));
+                r.setMaxTemp(Double.valueOf( temp.get("temp_max").toString()));
+                r.setTemp(Double.valueOf( temp.get("temp").toString()));
+                r.setPressure(Double.valueOf(temp.get("pressure").toString()));
                 r.setHumidity((int) temp.get("humidity"));
 
                 temp = (JSONObject) jo.get("clouds");
@@ -64,7 +67,7 @@ public class WeatherService {
 
                 temp = (JSONObject) jo.get("wind");
                 r.setWindDeg(Double.valueOf(String.valueOf(temp.get("deg"))));
-                r.setWindSpeed((double) temp.get("speed"));
+                r.setWindSpeed(Double.valueOf(temp.get("speed").toString()));
 
                 temp2 = (JSONArray) jo.get("weather");
                 temp = temp2.optJSONObject(0);

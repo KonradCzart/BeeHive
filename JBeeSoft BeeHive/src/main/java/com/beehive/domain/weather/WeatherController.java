@@ -30,9 +30,9 @@ public class WeatherController
         return weatherService.getForecast(apiary.getLocation().getCity());
     }
 
-// public static void main(String args[]) throws IOException, JSONException{
-//        WeatherService w = new WeatherService();
-//        w.getForecast("London");
+//public static void main(String args[]) throws IOException, JSONException{
+//       WeatherService w = new WeatherService();
+//       w.getForecast("Sosnowiec");
 
 //}
 }
