@@ -177,7 +177,7 @@ public class StatisticsService {
 		if(hives.size() > 1) {
 			privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.APIARY_STATS_READING));
 		} else {
-			privilegeService.validateHasUserAllRequiredPermissions(user, apiary, Set.of(Privilege.HIVE_STATS_READING));
+			privilegeService.validateHasUserAnyOfListedPermissions(user, apiary, Set.of(Privilege.HIVE_STATS_READING, Privilege.APIARY_STATS_READING));
 		}
 	}
 	
