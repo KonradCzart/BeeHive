@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 public class WeatherService {
 	
-	private static final String WEATHER_API_URL = "http://api.openweathermap.org/data/2.5/weather";
+    private static final String WEATHER_API_URL = "http://api.openweathermap.org/data/2.5/weather";
     private static final String APP_ID = "e68fc9cac657fcc8ebc1711aa6c8957d";
     private RestTemplate restTemplate = new RestTemplate();
         
