@@ -163,7 +163,7 @@ export function getHives(apiId) {
 
 class WeatherRequest extends Request {
     transform(json) {
-        json = super.transform(json)[0];
+        json = super.transform(json);
         return {
             type: json.weatherType,
 
