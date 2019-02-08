@@ -8,6 +8,7 @@ import EditApiaryForm from './EditApiaryForm';
 import ActionForms from '../actions/ActionForms';
 import {RedirectButton} from "../common/Buttons";
 import {Contributors} from "../contributors/Contributors";
+import {WeatherComponent} from "../weather/WeatherComponent";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -100,6 +101,8 @@ class Apiary extends Component {
 					Apiary statistics
 				</RedirectButton>
 
+				<Button style={{float: 'right', clear: 'right'}} className="statisticsButton" type="primary" onClick={this.showWeather}>Show weather</Button>
+
 				<h1><span className='apiary-name'>City: </span>{this.state.apiaryData.apiaryINFO.city}</h1>
 				<WrappedAddHiveForm
 					wrappedComponentRef={this.saveFormRef}
@@ -123,6 +126,18 @@ class Apiary extends Component {
 
 				<Contributors apiaryId={this.state.apiaryData.apiaryINFO.id}
 					userId={this.props.currentUser.id}/>
+
+				<Modal
+					width={720}
+					visible={this.state.weatherVisible}
+					title="Weather"
+					okText="OK"
+					onCancel={this.handleCancelWeather}
+					onOk={this.handleCancelWeather}
+				>
+					<WeatherComponent apiId={this.state.apiaryData.apiaryINFO.id}
+									  city={this.state.apiaryData.apiaryINFO.city}/>
+				</Modal>
 
 				{
 					!this.state.isLoading && this.state.apiaryData.hives.length === 0 ? (
@@ -151,7 +166,8 @@ class Apiary extends Component {
 
 	state = {
 		visible: false,
-		visible1: false
+		visible1: false,
+		weatherVisible: false
 	};
 
 	onSelectChange = (selectedRowKeys) => {
@@ -198,12 +214,20 @@ class Apiary extends Component {
 		this.setState({ visible1: true });
 	}
 
+	showWeather = () => {
+		this.setState({ weatherVisible: true });
+	}
+
 	handleCancel = () => {
 		this.setState({ visible: false });
 	}
 
 	handleCancel1 = () => {
 		this.setState({ visible1: false });
+	}
+
+	handleCancelWeather = () => {
+		this.setState({ weatherVisible: false });
 	}
 
 	handleTypeChange = (type) => {
