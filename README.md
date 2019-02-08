@@ -13,19 +13,10 @@ spring.datasource.password= root123
 ```
 Create database named beehiveDB with root's password root123.
 
-4. Build project with maven and run is as Java Application (entry point for appliaction is BeeHiveApplication class)
-5. Run this script on beehiveDB
-```
-INSERT INTO roles(name) VALUES('ROLE_USER');
-INSERT INTO roles(name) VALUES('ROLE_ADMIN');
-
-INSERT INTO privileges(name, readable_name, description) VALUES('OWNER_PRIVILEGE', 'Apiary Owner', 'Right to grant privileges for owned apiary');
-INSERT INTO privileges(name, readable_name, description) VALUES('HIVE_EDITING', 'Hive actions', 'Right to perform actions like honey collectiong or feeding');
-INSERT INTO privileges(name, readable_name, description) VALUES('APIARY_EDITING', 'Apiary actions', 'Right to remove/add/modify hives in apiary');
-INSERT INTO privileges(name, readable_name, description) VALUES('HIVE_STATS_READING', 'Hive statistics', 'Right to read statistics of each hive in apiary');
-INSERT INTO privileges(name, readable_name, description) VALUES('APIARY_STATS_READING', 'Apiary statistics', 'Right to read general statistics of whole apairy.');
-```
-6. Try register and login to your account with Postman. (requests examples can be found on slack)
+4. Build project with maven and run it as Java Application (entry point for appliaction is BeeHiveApplication class)
+5. Run 'BeeHiveDB - populating script.sql' script on beehiveDB
+6. Build web client using 'npm build' command executed in 'jbeesoft_beehive_client' folder.
+7. Run web client, it can be done via 'npm start' command executed in 'jbeesoft_beehive_client' folder.
 
 # Backend API endpoints manual
 While the server is running, you may interact with it in the following ways:
@@ -138,17 +129,3 @@ While the server is running, you may interact with it in the following ways:
 	"price": 3.99
 }
 ```
-# Adding a new Apiary
-* choosing localisation on map - Weather module warns, if unpleasant weather conditions in the area are a threat to bees in that Apiary and you should not perform a survey on those Hives
-
-# Adding a new Hive to an existing Apiary
-* choosing a race of mother's bees (choose a race from the database, where its attributes are stored)
-* bee mother's date of birth | last date when she laid eggs
-* Hive type (Warszawski/Wielkopolski, corpuses amount)
-* starting power
-
-# Commiting to a Hive
-* survey
-* honey collection
-
-_developer branch_
