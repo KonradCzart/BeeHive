@@ -14,9 +14,9 @@ spring.datasource.password= root123
 Create database named beehiveDB with root's password root123.
 
 4. Build project with maven and run it as Java Application (entry point for appliaction is BeeHiveApplication class)
-5. Run 'BeeHiveDB - populating script.sql' script on beehiveDB
-6. Build web client using 'npm build' command executed in 'jbeesoft_beehive_client' folder.
-7. Run web client, it can be done via 'npm start' command executed in 'jbeesoft_beehive_client' folder.
+5. Run `BeeHiveDB - populating script.sql` script on beehiveDB
+6. Build web client using `npm build` command executed in `jbeesoft_beehive_client` folder.
+7. Run web client, it can be done via `npm start` command executed in `jbeesoft_beehive_client` folder.
 
 # Backend API endpoints manual
 While the server is running, you may interact with it in the following ways:
